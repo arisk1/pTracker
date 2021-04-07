@@ -6,6 +6,10 @@ const app = express();
 
 app.use(express.json());
 /***  ENDPOINTS ***/
+//home
+const homeRouter = require('./routers/home');
+app.use(homeRouter);
+
 //users
 const usersRouter = require('./routers/users');
 app.use(usersRouter);
