@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const Portfolio = require('../../src/db/schemas/Portfolio');
 const User = require('../../src/db/schemas/User');
 
 const user1Id = new mongoose.Types.ObjectId();
@@ -28,38 +29,50 @@ const user2 = {
     }]
 }
 
-// const task1 = {
-//     _id : new mongoose.Types.ObjectId(),
-//     description: 'First task',
-//     completed : false ,
-//     owner : user1Id
-// }
-// const task2 = {
-//     _id : new mongoose.Types.ObjectId(),
-//     description: 'Second task',
-//     completed : true ,
-//     owner : user1Id
-// }
+const portfolio1 = {
+    _id : new mongoose.Types.ObjectId(),
+    name: 'First p',
+    owner : user1Id,
+    coins : [{
+        coinId : "eth",
+        holdings : 0,
+        pnl : 0 
+    }]
+}
+const portfolio2 = {
+    _id : new mongoose.Types.ObjectId(),
+    name: 'Second p',
+    owner : user1Id,
+    coins : [{
+        coinId : "eth",
+        holdings : 0,
+        pnl : 0 
+    }]
+}
 
-// const task3 = {
-//     _id : new mongoose.Types.ObjectId(),
-//     description: 'Third task',
-//     completed : true ,
-//     owner : user2Id
-// }
+const portfolio3 = {
+    _id : new mongoose.Types.ObjectId(),
+    name: 'Third p',
+    owner : user2Id,
+    coins : [{
+        coinId : "eth",
+        holdings : 0,
+        pnl : 0 
+    }]
+}
 
 
 
 const populateDatabase = async () => {
     //clean the database
     await User.deleteMany();
-    // await Task.deleteMany();
-    //add 2 users + 3 tasks for testing
+     await Portfolio.deleteMany();
+    //add 2 users + 3 portfolios for testing
     await new User(user1).save();
     await new User(user2).save();
-    // await new Task(task1).save();
-    // await new Task(task2).save();
-    // await new Task(task3).save();
+    await new Portfolio(portfolio1).save();
+    await new Portfolio(portfolio2).save();
+    await new Portfolio(portfolio3).save();
 
 }
 
@@ -67,6 +80,6 @@ const populateDatabase = async () => {
 module.exports = {
     user1Id,user2Id,
     user1,user2,
-    // task1,task2,task3,
+    portfolio1,portfolio2,portfolio3,
     populateDatabase
 }

@@ -12,7 +12,7 @@ test('Should signup a new user', async () => {
         password: "HeHepassw!99"
     }).expect(201);
 
-    //Assert that the databse was changed cirrectly
+    //Assert that the databse was changed correctly
     const user = await User.findById(response.body.user._id);
     expect(user).not.toBeNull();
 
@@ -27,6 +27,22 @@ test('Should signup a new user', async () => {
 
     //Expect password not to be plain text
     expect(user.password).not.toBe('HeHepassw!99');
+});
+
+test('Should not signup a new user with invalid email', async () => {
+    const response = await request(app).post('/users').send({
+        name: "testAris",
+        email: "testarisexample.com",
+        password: "HeHepassw!99"
+    }).expect(400);
+});
+
+test('Should not signup a new user with invalid password', async () => {
+    const response = await request(app).post('/users').send({
+        name: "testAris",
+        email: "testaris@example.com",
+        password: "password"
+    }).expect(400);
 });
 
 test('Should login an existing user', async () => {
@@ -111,6 +127,16 @@ test('Should update valid user fields', async () => {
         email: "dummy@email.com"
     });
 })
+
+test('Should not be able to update user,not authenticated', async () => {
+    await request(app)
+        .patch('/users/me')
+        .send({
+            name: 'testdummyname',
+            email: "dummy@email.com"
+        })
+        .expect(401); //error code when we do not provide authorization token
+});
 
 test('Should not update invalid user fields', async () => {
     await request(app)

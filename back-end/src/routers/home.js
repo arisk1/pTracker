@@ -7,9 +7,12 @@ const  {coinListMarkets }= require("../utils/coingeckoApi.js");
 //sorted by marketcap
 
 router.get('/home', async (req, res) => {
-
-    const coins = await coinListMarkets();
-    res.status(200).send(coins);
+    try{
+        const coins = await coinListMarkets();
+        res.status(200).send(coins.data);
+    }catch(e){
+        res.status(400).send(e);
+    }
 });
 
 module.exports = router

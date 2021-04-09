@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Portfolio = require("./Portfolio");
+
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -18,15 +20,6 @@ const userSchema = new mongoose.Schema({
         validate(value){
             if(!validator.isEmail(value)){
                 throw new Error('Email is invalid');
-            }
-        }
-    },
-    age: {
-        type: Number,
-        default : 0,
-        validate(value){
-            if(value < 0){
-                throw new Error('Age must be a negative number');
             }
         }
     },
@@ -55,11 +48,11 @@ const userSchema = new mongoose.Schema({
 
 //create virtual attributes 
 
-// userSchema.virtual('tasks', {
-//     ref : 'Portfolio', //reference to Portfolio model
-//     localField : '_id',
-//     foreignField : 'owner'
-// });
+userSchema.virtual('portfolios', {
+    ref : 'Portfolio', //reference to Portfolio model
+    localField : '_id',
+    foreignField : 'owner'
+});
 
 //create our own resuable functions
 
@@ -111,12 +104,12 @@ userSchema.pre('save', async function (next) {
     next();
 })
 
-// //delete user's portfolios when the user is removed 
-// userSchema.pre('remove', async function (next) {
-//     const user = this;
-//     await Portfolio.deleteMany({owner : user._id});
-//     next();
-// });
+//delete user's portfolios when the user is removed 
+userSchema.pre('remove', async function (next) {
+    const user = this;
+    await Portfolio.deleteMany({owner : user._id});
+    next();
+});
 
 const User = mongoose.model("User", userSchema);
 
