@@ -1,9 +1,10 @@
 const express = require('express');
 require('./db/mongoose');
+const cors = require('./middleware/cors.js');
 
 
 const app = express();
-
+app.use(cors);
 app.use(express.json());
 /***  ENDPOINTS ***/
 //home
