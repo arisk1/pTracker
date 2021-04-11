@@ -7,14 +7,14 @@ import {BrowserRouter as Router,Switch, Route,Link} from 'react-router-dom';
 
 function App() {
   return (
-    <Router>
-    <div className="App">
+    <Router >
+      <div className="App"  >
       <Header/>
-      <Switch>
+      <Switch >
               <Route exact path="/" component={Home}></Route>   
-            </Switch>
-     <Footer/>
-    </div>
+      </Switch>
+      <Footer />
+      </div>
     </Router>
   );
 }

@@ -1,5 +1,8 @@
 import axios from 'axios';
 import React , {useEffect, useState} from 'react';
+import {Container, ListGroup, ListGroupItem,Row,Col} from 'react-bootstrap';
+import CoinList from '../CoinList/CoinList';
+
 
 function Home() {
     const [coins,setCoins] = useState([]);
@@ -8,17 +11,14 @@ function Home() {
         const res = await axios.get('http://localhost:3001/home');
         setCoins(res.data);
     }
+    
     useEffect(()=>{
         fetchData();
     })
     return(
-        <ul>
-        {coins.map(coin => (
-            <li key={coin.id}>
-                {coin.id}
-            </li>
-        ))}
-        </ul>
+        <>
+            {CoinList(coins)}
+        </>
     )
 }
 

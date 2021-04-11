@@ -1,11 +1,10 @@
-import './Footer.css';
 import {Row,Col,Container} from 'react-bootstrap';
 
 
 
 function Footer() {
     return(
-        <Container fluid className="fixed-bottom footerbg">
+        <Container fluid className="Footer footerbg ">
             <Row>
                 <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                     <Row className="text-md-left" >
