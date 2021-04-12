@@ -4,7 +4,17 @@ import {Row,Col,Container} from 'react-bootstrap';
 
 function Footer() {
     return(
-        <Container fluid className="Footer footerbg ">
+        <div>
+        <Container className='new-footer'>
+        <Row className="cop2">
+                <Col>Terms&Service &#8226; Contanct Us</Col>
+            </Row>
+            <Row className="cop">
+                <Col>©2021 pTracker</Col>
+            </Row>
+        </Container>
+        <Container fluid className="Footer">  
+        <Container  style={{padding:'0 20px 0 20px'}}>
             <Row>
                 <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                     <Row className="text-md-left" >
@@ -36,9 +46,11 @@ function Footer() {
                 </Col>
             </Row>
             <Row className="cop">
-                <Col>Copyright 2021©</Col>
+                <Col>©2021 pTracker</Col>
             </Row>
         </Container>
+        </Container>
+        </div>
     )
 }
 

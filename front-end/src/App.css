@@ -42,7 +42,7 @@
 .Footer {
   position: absolute;
   padding-top: 8px;
-  padding-bottom: 8px;
+  /* padding-bottom: 8px; */
   /* width: 100%; */
   bottom: 0;
   left: 0;
@@ -51,9 +51,39 @@
   text-align: center;
 }
 
+.new-footer{
+  display: none;
+}
+
+@media only screen and (max-width: 767px) {
+  .Footer {
+    display: none!important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .new-footer {
+    display: block;
+    position: absolute;
+  padding-top: 8px;
+  /* padding-bottom: 8px; */
+  /* width: 100%; */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: grey;
+    text-align: center;
+  }
+}
+
 .cop{
   color: #D0D0D0;
   font-size : 12px;
+}
+
+.cop2{
+  color: black;
+  font-size : 16px;
 }
 
 .Header {
@@ -70,6 +100,14 @@ body .bg-dark {
   margin: 10px 10px 10px 10px;
 }
 
+.form-outline {
+  outline: none;
+  box-shadow:none !important;
+  border:1px solid #D0D0D0 !important;
+  }
 
+  div.container {
+    padding:0px;
+  }
 
 

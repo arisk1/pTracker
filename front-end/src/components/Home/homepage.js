@@ -16,9 +16,9 @@ function Home() {
         fetchData();
     })
     return(
-        <>
+        <div>
             {CoinList(coins)}
-        </>
+        </div>
     )
 }
 
