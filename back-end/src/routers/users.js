@@ -88,7 +88,7 @@ router.post('/users/login', async (req, res) => {
             token
         });
     } catch (e) {
-        res.status(400).send();
+        res.status(400).send(e.message);
     }
 });
 
