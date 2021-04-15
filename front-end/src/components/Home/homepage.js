@@ -14,7 +14,7 @@ function Home() {
     
     useEffect(()=>{
         fetchData();
-    })
+    },[])
     return(
         <div>
             {CoinList(coins)}

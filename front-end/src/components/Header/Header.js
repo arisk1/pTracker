@@ -1,5 +1,8 @@
 import {Navbar,Nav,NavDropdown,Form,FormControl,Button, Container} from 'react-bootstrap';
 import logo from './orbz_moon.png';
+import LogIn from '../LogIn/logIn.js';
+import SignUp from '../SignUp/signUp.js';
+
 
 function Header() {
     return (
@@ -28,8 +31,10 @@ function Header() {
       </NavDropdown>
     </Nav>
     <Form inline  >
-      <FormControl type="text" placeholder="Search" className="mr-sm-2 form-outline" />
-      <Button variant="outline-dark">Search</Button>
+      <LogIn/>
+      <SignUp/>
+    <FormControl type="text" placeholder="Search" className="form-outline" />
+      
     </Form>
   </Navbar.Collapse>
   </Container>
