@@ -12,7 +12,6 @@ function LoginModal(props) {
   const [errorMsg, setErrorMsg] = useState(false);
 
   const ShowError = () => {
-    if(errorMsg)
     return(
     <Form.Text className=""  style={{color : "red" , paddingBottom : "1vh" , fontSize : "14px" }}>
       Wrong credentrial please try again or Sign up.
@@ -25,8 +24,9 @@ function LoginModal(props) {
         "email" : email ,
         "password" : password
       });
-      console.log(res.data.user);
+      console.log(res.data);
       props.onHide();
+      props.showUserIcon();
     }catch(e){
       setErrorMsg(true);
       console.log(e.message)
@@ -40,7 +40,8 @@ const loginHandler = (e) =>{
     
     return (
       <Modal
-        {...props}
+        show = {props.show}
+        onHide = {props.onHide}
         size="md"
         aria-labelledby="contained-modal-title-vcenter"
         centered

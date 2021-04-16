@@ -2,9 +2,39 @@ import {Navbar,Nav,NavDropdown,Form,FormControl,Button, Container} from 'react-b
 import logo from './orbz_moon.png';
 import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
+import userIcon from './userIcon.png';
+import { useState } from 'react';
+
 
 
 function Header() {
+
+    const [showIcon , setShowIcon] = useState(false);
+    const ShowUserIcon = () => {
+      return (
+        <img
+        alt="pTracker-logo"
+        src={userIcon}
+         width="30"
+        height="30"
+        className="d-inline-block align-middle user-img"
+        
+      />
+      );
+    }
+    const ShowSignUpAndLogIn = () => {
+      return (
+        <>
+        <LogIn  
+          showUserIcon={() => setShowIcon(true)} 
+        />
+        <SignUp  
+          showUserIcon={() => setShowIcon(true)} 
+        />
+        </>
+      )
+    }
+
     return (
        
   <Navbar  bg="dark" expand="lg">
@@ -31,8 +61,8 @@ function Header() {
       </NavDropdown>
     </Nav>
     <Form inline  >
-      <LogIn/>
-      <SignUp/>
+      { showIcon ? <ShowUserIcon/>   : null }
+      { !showIcon ? <ShowSignUpAndLogIn/>  : null }
     <FormControl type="text" placeholder="Search" className="form-outline" />
       
     </Form>

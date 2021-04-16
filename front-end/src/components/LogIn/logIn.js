@@ -3,7 +3,7 @@ import LoginModal from '../modals/loginModal.js';
 import React , { useState} from 'react';
 //make a call to the api 
 
-function LogIn() {
+function LogIn(props) {
 
     const [modalShow, setModalShow] = useState(false);
     const hideModal = () => {
@@ -16,7 +16,7 @@ function LogIn() {
          <LoginModal
             show={modalShow}
             onHide={() => setModalShow(false)}
-            // set={hideModal} 
+            showUserIcon={props.showUserIcon}
         />
       </>
     )
