@@ -1,4 +1,4 @@
-import {Container, ListGroup, ListGroupItem, Row, Col} from 'react-bootstrap';
+import { ListGroup,Row, Col} from 'react-bootstrap';
 
 function CoinList(coins) {
     const topInfo = () => {
@@ -37,7 +37,7 @@ function CoinList(coins) {
                             style={{
                             textAlign: 'left'
                         }}>{coin.market_cap_rank}</Col>
-                        <Col><img className="img" src={coin.image}/></Col>
+                        <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
                         <Col>{coin.id}</Col>
                         <Col>{coin.current_price}</Col>
                         <Col

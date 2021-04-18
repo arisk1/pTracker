@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {Container, ListGroup, ListGroupItem, Row, Col} from 'react-bootstrap';
 import CoinList from '../CoinList/CoinList';
 
 function Home() {

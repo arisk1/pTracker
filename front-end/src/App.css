@@ -96,11 +96,11 @@ body .bg-dark {
     margin: 10px;
 }
 
-.form-outline {
-    /* outline: none; */
-    /* box-shadow: none !important; */
-    /* border: 1px solid #D0D0D0 !important; */
-}
+/* .form-outline {
+    outline: none; 
+    box-shadow: none !important;
+     border: 1px solid #D0D0D0 !important; 
+} */
 
 .user-icon-outline {
     outline: none;
@@ -137,7 +137,11 @@ div.container {
     margin-right: 10px;
 
 }
-.dropdown-menu {
-    background-color: yellow;
-  }
+
+
+@media only screen and (max-width: 992px) {
+    .my-form-inline {
+        flex: 100%;
+    }
+}
 

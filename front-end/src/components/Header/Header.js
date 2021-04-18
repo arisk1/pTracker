@@ -5,7 +5,7 @@ import {
     Form,
     FormControl,
     Container,
-    Dropdown,
+    Dropdown
 } from 'react-bootstrap';
 import logo from './orbz_moon.png';
 import LogIn from '../LogIn/logIn.js';
@@ -54,7 +54,7 @@ function Header() {
         );
     }
     const ShowSignUpAndLogIn = () => {
-        return (<> <LogIn setUser={setUser} showUserIcon={() => setShowIcon(true)}/> < SignUp showUserIcon = {
+        return (<> <LogIn setUser={setUser} showUserIcon={() => setShowIcon(true)}/> < SignUp setUser={setUser} showUserIcon = {
             () => setShowIcon(true)
         } /> </>)
     }
@@ -83,16 +83,21 @@ function Header() {
                             <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                    <Form inline>
-                        {showIcon
+                    <Nav>
+                    {showIcon
                             ? <ShowUserIcon/>
                             : null}
                         {!showIcon
                             ? <ShowSignUpAndLogIn/>
                             : null}
-                        <FormControl type="text" placeholder="Search" className="form-outline"/>
-
+                    </Nav>
+                    
+                    <Form className="form-inline">
+                    
+                        <FormControl  type="text" placeholder="Search" className="mr-sm-2 my-form-inline"/>
+                    
                     </Form>
+                    
                 </Navbar.Collapse>
             </Container>
         </Navbar>
