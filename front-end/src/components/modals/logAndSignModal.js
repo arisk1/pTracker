@@ -18,7 +18,7 @@ function LogAndSignModal(props) {
 
     const rotateModals = () => {
         props.rotate();
-        setErrorMsg(false);
+        resetErrorHandlers();
     }
 
     const resetErrorHandlers=()=>{
@@ -35,7 +35,7 @@ function LogAndSignModal(props) {
                 paddingBottom: "1vh",
                 fontSize: "14px"
             }}>
-                Wrong credentrial please try again or
+                Wrong credentrials please try again or
                 <Button variant="link" className="p-1" onClick={() => rotateModals()}>
                     Sign Up
                 </Button>
@@ -124,7 +124,7 @@ function LogAndSignModal(props) {
                     setErrorValMsg(2);
                 }
             }
-            console.log(error);
+            console.log(error.response);
         }
     }
 
@@ -171,14 +171,16 @@ function LogAndSignModal(props) {
                         <Form.Control
                             onChange={(e) => setName(e.target.value)}
                             type="text"
-                            placeholder="Enter your name"/>
+                            placeholder="Enter your name"
+                            required/>
                     </Form.Group>}
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control
                             onChange={(e) => setEmail(e.target.value)}
                             type="email"
-                            placeholder="Enter email"/>
+                            placeholder="Enter email"
+                            required/>
                     </Form.Group>
                     {(errorValMsg===1)
                         ? <ShowValidationError/>
@@ -188,7 +190,8 @@ function LogAndSignModal(props) {
                         <Form.Control
                             onChange={(e) => setPassword(e.target.value)}
                             type="password"
-                            placeholder="Password"/>
+                            placeholder="Password"
+                            required/>
                     </Form.Group>
                     {(errorValMsg===2)
                         ? <ShowValidationError/>
