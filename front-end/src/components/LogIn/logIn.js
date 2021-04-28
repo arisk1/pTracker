@@ -1,5 +1,4 @@
 import {Button} from 'react-bootstrap';
-// import LoginModal from '../modals/loginModal.js';
 import React, {useState} from 'react';
 import LogAndSignModal from '../modals/logAndSignModal';
 

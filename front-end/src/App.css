@@ -139,9 +139,11 @@ div.container {
 }
 
 
+
 @media only screen and (max-width: 992px) {
     .my-form-inline {
         flex: 100%;
     }
 }
+
 

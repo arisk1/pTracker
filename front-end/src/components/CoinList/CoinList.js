@@ -1,8 +1,34 @@
-import { ListGroup,Row, Col} from 'react-bootstrap';
+import { useState } from 'react';
+import { ListGroup,Row, Col,Button} from 'react-bootstrap';
+import upArrow from './up-arrow.png';
+import downArrow from './down-arrow.png';
 
-function CoinList(coins) {
+function CoinList(props) {
+    const [reverseCoins,setReverseCoins] = useState(false);
+    const ArrowToggle = () => {
+        if(!reverseCoins){
+            return(
+                <img
+                alt="downArrow-logo"
+                src={downArrow}
+                width="15"
+                height="15"
+                className="d-inline-block align-middle user-img"/>
+            )
+        }else{
+            return(
+                <img
+                alt="upArrow-logo"
+                src={upArrow}
+                width="15"
+                height="15"
+                className="d-inline-block align-middle user-img"/>
+            )
+        }
+        
+    }
     const topInfo = () => {
-        if (coins.length > 0) {
+        if (props.coins.length > 0) {
             return (
                 <ListGroup.Item
                     style={{
@@ -16,38 +42,77 @@ function CoinList(coins) {
                         <Col>Symbol</Col>
                         <Col>Coin</Col>
                         <Col>Price</Col>
-                        <Col
+                        <Col as={Button}
+                        className='px-15 py-0 hover-mc'
+                        variant=""
+                        onClick={()=>setReverseCoins(!reverseCoins)}
                             style={{
                             textAlign: 'right'
-                        }}>MarketCap
+                        }}>
+                            <ArrowToggle/>
+                            MarketCap
                         </Col>
                     </Row>
                 </ListGroup.Item>
             )
         }
     }
+
+    const coinsMap = () => {
+        if(!reverseCoins){
+            return(
+                props.coins.map((coin,idx) => (
+                    <ListGroup.Item key={idx} >
+                        <Row className="align-items-center">
+                            <Col
+                                style={{
+                                textAlign: 'left'
+                            }}>{coin.market_cap_rank}</Col>
+                            <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
+                            <Col>{coin.id}</Col>
+                            <Col>{coin.current_price}</Col>
+                            <Col
+                                style={{
+                                textAlign: 'right'
+                            }}>
+                            {coin.market_cap}
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                ))
+            )
+        }else{
+            return(
+                props.coins.map((coin,idx) => (
+                    <ListGroup.Item key={idx} >
+                        <Row className="align-items-center">
+                            <Col
+                                style={{
+                                textAlign: 'left'
+                            }}>{coin.market_cap_rank}</Col>
+                            <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
+                            <Col>{coin.id}</Col>
+                            <Col>{coin.current_price}</Col>
+                            <Col
+                                style={{
+                                textAlign: 'right'
+                            }}>
+                            {coin.market_cap}
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                )).reverse()
+            )
+        }
+        
+    }
+
+
     return (
 
         <ListGroup variant="flush">
             {topInfo()}
-            {coins.map((coin,idx) => (
-                <ListGroup.Item key={idx} >
-                    <Row className="align-items-center">
-                        <Col
-                            style={{
-                            textAlign: 'left'
-                        }}>{coin.market_cap_rank}</Col>
-                        <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
-                        <Col>{coin.id}</Col>
-                        <Col>{coin.current_price}</Col>
-                        <Col
-                            style={{
-                            textAlign: 'right'
-                        }}>${coin.market_cap}
-                        </Col>
-                    </Row>
-                </ListGroup.Item>
-            ))}
+            {coinsMap()}
         </ListGroup>
     )
 }
