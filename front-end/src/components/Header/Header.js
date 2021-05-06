@@ -13,9 +13,9 @@ import SignUp from '../SignUp/signUp.js';
 import Logout from '../Logout/logOut.js';
 import userIcon from './userIcon.png';
 import React , {useEffect, useState} from 'react';
-import axios from 'axios';
 import {Link,useHistory} from 'react-router-dom';
-
+import {supportedCurrencies} from '@arisk1/cg-functions';
+ 
 
 function Header() {
     let history = useHistory();
@@ -73,7 +73,8 @@ function Header() {
 
     useEffect(()=>{
         const fetchVsCurrencies = async() => {
-            const res = await axios.get('https://api.coingecko.com/api/v3/simple/supported_vs_currencies');
+            // const res = await axios.get('https://api.coingecko.com/api/v3/simple/supported_vs_currencies');
+            const res = await supportedCurrencies();
             setVsCurrencies(res.data);
         }
         
