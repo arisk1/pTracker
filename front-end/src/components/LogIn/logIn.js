@@ -1,9 +1,9 @@
-import {Button} from 'react-bootstrap';
-import React, {useState} from 'react';
+import { Button } from 'react-bootstrap';
+import React, { useState, Fragment } from 'react';
 import LogAndSignModal from '../modals/logAndSignModal';
 
 
-function LogIn(props) {
+const LogIn = (props) => {
 
     const [modalShow,
         setModalShow] = useState(false);
@@ -15,7 +15,7 @@ function LogIn(props) {
     }
 
     return ( 
-        <> 
+        <Fragment> 
             <Button
             variant="outline-light"
             onClick={() => btnClick()}
@@ -28,7 +28,7 @@ function LogIn(props) {
                 showUserIcon = {props.showUserIcon} 
                 setUser = {props.setUser}
             /> 
-        </>)
+        </Fragment>)
 
 }
 

@@ -4,7 +4,7 @@ import CoinList from '../CoinList/CoinList';
 import {Button,ButtonGroup,ListGroup,Col,Row} from 'react-bootstrap';
 import { useLocation } from 'react-router';
 
-function Home() {
+const Home = () => {
     let location =  useLocation();
     console.log(location.state)
     const [coins,

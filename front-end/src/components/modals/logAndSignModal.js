@@ -3,7 +3,7 @@ import logo from '../Header/orbz_moon.png';
 import React, {useState} from 'react';
 import axios from 'axios';
 
-function LogAndSignModal(props) {
+const LogAndSignModal = (props) => {
 
     const [email,
         setEmail] = useState("");
@@ -187,11 +187,14 @@ function LogAndSignModal(props) {
                         : null}
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control
+                        {/* <div className="grid-2"> */}
+                            <Form.Control
                             onChange={(e) => setPassword(e.target.value)}
                             type="password"
                             placeholder="Password"
                             required/>
+                            {/* <i className="far fa-eye" onClick={}></i> */}
+                        {/* </div> */}
                     </Form.Group>
                     {(errorValMsg===2)
                         ? <ShowValidationError/>

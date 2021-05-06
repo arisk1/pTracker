@@ -12,12 +12,12 @@ import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import Logout from '../Logout/logOut.js';
 import userIcon from './userIcon.png';
-import React , {useEffect, useState} from 'react';
-import {Link,useHistory} from 'react-router-dom';
-import {supportedCurrencies} from '@arisk1/cg-functions';
+import React , { useEffect, useState, Fragment } from 'react';
+import { Link,useHistory } from 'react-router-dom';
+import { supportedCurrencies } from '@arisk1/cg-functions';
  
 
-function Header() {
+const Header = () => {
     let history = useHistory();
     const [showIcon,setShowIcon] = useState(false);
     const [user,setUser] = useState({});
@@ -59,9 +59,9 @@ function Header() {
         );
     }
     const ShowSignUpAndLogIn = () => {
-        return (<> <LogIn setUser={setUser} showUserIcon={() => setShowIcon(true)}/> < SignUp setUser={setUser} showUserIcon = {
+        return (<Fragment> <LogIn setUser={setUser} showUserIcon={() => setShowIcon(true)}/> < SignUp setUser={setUser} showUserIcon = {
             () => setShowIcon(true)
-        } /> </>)
+        } /> </Fragment>)
     }
    
     useEffect(()=>{
@@ -96,29 +96,25 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
                         <NavDropdown title={title.toUpperCase()} id="basic-nav-dropdown">
-                        <Dropdown.Header>  Supported Currencies  </Dropdown.Header>
-                        <Dropdown.Divider />
+                            <Dropdown.Header>  Supported Currencies  </Dropdown.Header>
+                            <Dropdown.Divider />
                             {VsCurrencies.map((cur,idx)=>(
-                                <NavDropdown.Item onClick={()=> setTitle(cur)}  key={idx}>{cur.toUpperCase()}</NavDropdown.Item>
+                                <NavDropdown.Item onClick={()=> setTitle(cur)}  key={idx}>
+                                    {cur.toUpperCase()}
+                                </NavDropdown.Item>
                             ))}
-                            
                         </NavDropdown>
+                        <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
                     </Nav>
                     <Nav>
                     {showIcon
                             ? <ShowUserIcon/>
-                            : null}
-                        {!showIcon
-                            ? <ShowSignUpAndLogIn/>
-                            : null}
+                            : <ShowSignUpAndLogIn/>}
                     </Nav>
                     
                     <Form className="form-inline">
-                    
                         <FormControl  type="text" placeholder="Search" className="mr-sm-2 my-form-inline"/>
-                    
                     </Form>
                     
                 </Navbar.Collapse>

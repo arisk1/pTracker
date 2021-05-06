@@ -146,4 +146,14 @@ div.container {
     }
 }
 
+.grid-2 {
+    display: grid;
+    grid-template-columns: 90% auto;
+    grid-gap: 1rem;
+  }
 
+.fa-eye {
+    text-align: center !important;
+    margin-top: 40% !important;
+    cursor: pointer !important;
+}

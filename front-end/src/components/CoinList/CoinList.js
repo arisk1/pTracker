@@ -3,7 +3,7 @@ import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from './up-arrow.png';
 import downArrow from './down-arrow.png';
 
-function CoinList(props) {
+const CoinList = (props) => {
     const [reverseCoins,setReverseCoins] = useState(false);
     const ArrowToggle = () => {
         if(!reverseCoins){

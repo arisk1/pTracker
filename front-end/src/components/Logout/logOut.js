@@ -2,7 +2,7 @@ import {Dropdown} from 'react-bootstrap';
 import React from 'react';
 import axios from 'axios';
 
-function LogOut(props) {
+const LogOut = (props) => {
 
     let dropDownLinkStyle = {
         color: 'red',
