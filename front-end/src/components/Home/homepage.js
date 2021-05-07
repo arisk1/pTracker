@@ -29,7 +29,7 @@ const Home = () => {
             setCurrency(location.state.title);
         }
         const fetchData = async() => {
-            const res = await axios.post('http://localhost:3001/home',{
+            const res = await axios.post('/home',{
                 "currency" : currency,
                 "order" : 'market_cap_desc' ,
                 "pageIndex" : pageIndex

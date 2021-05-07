@@ -10,7 +10,7 @@ const LogOut = (props) => {
 
     const logOutUser = async() => {
         try {
-            const res = await axios.post('http://localhost:3001/users/logout',{}, {
+            const res = await axios.post('/users/logout',{}, {
                 headers: {
                     Authorization: 'Bearer '+ props.token            
                 }

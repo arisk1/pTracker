@@ -9,12 +9,12 @@ const LogAndSignModal = (props) => {
         setEmail] = useState("");
     const [password,
         setPassword] = useState("");
+    const [name,
+        setName] = useState("");
     const [errorMsg,
         setErrorMsg] = useState(false);
     const [errorValMsg,
         setErrorValMsg] = useState(0);
-    const [name,
-        setName] = useState("");
 
     const rotateModals = () => {
         props.rotate();
@@ -89,7 +89,7 @@ const LogAndSignModal = (props) => {
 
     const fetchUser = async() => {
         try {
-            const res = await axios.post('http://localhost:3001/users/login', {
+            const res = await axios.post('/users/login', {
                 "email": email,
                 "password": password
             });
@@ -105,7 +105,7 @@ const LogAndSignModal = (props) => {
 
     const signUpUser = async() => {
         try {
-            const res = await axios.post('http://localhost:3001/users', {
+            const res = await axios.post('/users', {
                 "email": email,
                 "password": password,
                 "name": name
