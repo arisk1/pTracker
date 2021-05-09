@@ -1,7 +1,6 @@
 import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../Header/orbz_moon.png';
 import React, { useState, useContext, useEffect} from 'react';
-import axios from 'axios';
 import AuthContext from '../../context/auth/authContext';
 
 const LogAndSignModal = (props) => {
@@ -28,12 +27,6 @@ const LogAndSignModal = (props) => {
         if(isAuthenticated){
             // props.history.push('/');
             props.onHide();
-        }
-
-        if(error && error.code == 400){
-            console.log(error.msg)
-            setErrorMsg(true);
-            clearErrors();
         }
         // eslint-disable-next-line
     }, [error, isAuthenticated])
@@ -110,19 +103,29 @@ const LogAndSignModal = (props) => {
         );
     }
 
-    const callHandler = (e) => {
+    const callHandler = async (e) => {
         e.preventDefault();
         if (props.loginVar) {
-            login({
+            const res = await login({
                 email,
                 password
             })
+            if(res.status == 400){
+                setErrorMsg(true);
+            }
         } else {
-            signup({
+            const res = await signup({
                 email,
                 password,
                 name
             })
+            if(res.status == 400){
+                if(res.data.name==="MongoError"){
+                    setErrorValMsg(1);
+                }else if(res.data.name==="ValidationError"){
+                    setErrorValMsg(2);
+                }
+            }
         }
     }
 

@@ -1,6 +1,5 @@
 import {Dropdown} from 'react-bootstrap';
-import React, { useContext, useEffect, Fragment } from 'react';
-import axios from 'axios';
+import React, { useContext } from 'react';
 import AuthContext from '../../context/auth/authContext';
 
 const LogOut = (props) => {

@@ -5,11 +5,9 @@ import AuthContext from './authContext';
 import authReducer from './authReducer';
 import {
     SIGNUP_SUCCESS,
-    SIGNUP_FAIL,
     USER_LOADED,
     AUTH_ERROR,
     LOGIN_SUCCESS,
-    LOGIN_FAIL,
     LOGOUT,
     CLEAR_ERRORS
 } from '../types'
@@ -56,11 +54,9 @@ const AuthState = (props) => {
                 payload: res.data
             })
             loadUser()
+            return res
         } catch (err) {
-            dispatch({
-                type: SIGNUP_FAIL,
-                payload: err.response.data.msg
-            })
+            return err.response
         }
     }
 
@@ -79,11 +75,9 @@ const AuthState = (props) => {
                 payload: res.data
             })
             loadUser()
+            return res
         } catch (err) {
-            dispatch({
-                type: LOGIN_FAIL,
-                payload: err.response.data
-            })
+            return err.response
         }
     }
 

@@ -73,7 +73,7 @@ router.post('/users', async (req, res) => {
         });
     } catch (e) {
         // res.status(400).send(e);
-        res.status(400).json({code:400, msg:e.message});
+        res.status(400).send(e)
     }
 
 });
