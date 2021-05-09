@@ -25,8 +25,6 @@ const LogIn = (props) => {
                 rotate={()=>setLoginVar(!loginVar)}
                 show = {modalShow}
                 onHide = {() => setModalShow(false)}
-                showUserIcon = {props.showUserIcon} 
-                setUser = {props.setUser}
             /> 
         </Fragment>)
 

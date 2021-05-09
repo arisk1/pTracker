@@ -1,30 +1,19 @@
 import {Dropdown} from 'react-bootstrap';
-import React from 'react';
+import React, { useContext, useEffect, Fragment } from 'react';
 import axios from 'axios';
+import AuthContext from '../../context/auth/authContext';
 
 const LogOut = (props) => {
+    const authContext = useContext(AuthContext);
+    const { logout } = authContext;
 
     let dropDownLinkStyle = {
         color: 'red',
     };
 
-    const logOutUser = async() => {
-        try {
-            const res = await axios.post('/users/logout',{}, {
-                headers: {
-                    Authorization: 'Bearer '+ props.token            
-                }
-            })
-            console.log(res);
-            props.hideUserIcon();
-        } catch (e) {
-            console.log(e.message)
-        }
-    }
-
     const logoutHandler = (e) => {
         e.preventDefault();
-        logOutUser();
+        logout()
     }
 
     return (

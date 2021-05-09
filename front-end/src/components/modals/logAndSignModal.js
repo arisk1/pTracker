@@ -1,20 +1,43 @@
-import {Modal, Button, Form} from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../Header/orbz_moon.png';
-import React, {useState} from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import axios from 'axios';
+import AuthContext from '../../context/auth/authContext';
 
 const LogAndSignModal = (props) => {
+    // context
+    const authContext = useContext(AuthContext);
+    const { login, signup, error, isAuthenticated, clearErrors } = authContext;
 
-    const [email,
-        setEmail] = useState("");
-    const [password,
-        setPassword] = useState("");
-    const [name,
-        setName] = useState("");
+    // states
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        password: ''
+    })
+
     const [errorMsg,
         setErrorMsg] = useState(false);
     const [errorValMsg,
         setErrorValMsg] = useState(0);
+
+    const { name, email, password } = user;
+    const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value })
+
+    useEffect(() => {
+        if(isAuthenticated){
+            // props.history.push('/');
+            props.onHide();
+        }
+
+        if(error && error.code == 400){
+            console.log(error.msg)
+            setErrorMsg(true);
+            clearErrors();
+        }
+        // eslint-disable-next-line
+    }, [error, isAuthenticated])
+
 
     const rotateModals = () => {
         props.rotate();
@@ -87,53 +110,19 @@ const LogAndSignModal = (props) => {
         );
     }
 
-    const fetchUser = async() => {
-        try {
-            const res = await axios.post('/users/login', {
-                "email": email,
-                "password": password
-            });
-            console.log(res.data);
-            props.onHide();
-            props.showUserIcon();
-            props.setUser(res.data);
-        } catch (e) {
-            setErrorMsg(true);
-            console.log(e.message)
-        }
-    }
-
-    const signUpUser = async() => {
-        try {
-            const res = await axios.post('/users', {
-                "email": email,
-                "password": password,
-                "name": name
-            });
-            console.log(res.data);
-            props.onHide();
-            props.showUserIcon();
-            props.setUser(res.data);
-        } catch (error) {
-            if (error.response) {
-                if(error.response.data.name==="MongoError"){
-                    //email is already used
-                    setErrorValMsg(1);
-                }else if(error.response.data.name==="ValidationError"){
-                    //password error  : !password , length >= 6
-                    setErrorValMsg(2);
-                }
-            }
-            console.log(error.response);
-        }
-    }
-
     const callHandler = (e) => {
         e.preventDefault();
         if (props.loginVar) {
-            fetchUser();
+            login({
+                email,
+                password
+            })
         } else {
-            signUpUser();
+            signup({
+                email,
+                password,
+                name
+            })
         }
     }
 
@@ -169,16 +158,18 @@ const LogAndSignModal = (props) => {
                         : <Form.Group controlId="formBasicName">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={onChange}
                             type="text"
+                            name="name"
                             placeholder="Enter your name"
                             required/>
                     </Form.Group>}
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={onChange}
                             type="email"
+                            name="email"
                             placeholder="Enter email"
                             required/>
                     </Form.Group>
@@ -189,8 +180,9 @@ const LogAndSignModal = (props) => {
                         <Form.Label>Password</Form.Label>
                         {/* <div className="grid-2"> */}
                             <Form.Control
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={onChange}
                             type="password"
+                            name="password"
                             placeholder="Password"
                             required/>
                             {/* <i className="far fa-eye" onClick={}></i> */}

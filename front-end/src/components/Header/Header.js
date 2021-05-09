@@ -12,15 +12,17 @@ import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import Logout from '../Logout/logOut.js';
 import userIcon from './userIcon.png';
-import React , { useEffect, useState, Fragment } from 'react';
+import React , { useEffect, useState, Fragment, useContext } from 'react';
 import { Link,useHistory } from 'react-router-dom';
 import { supportedCurrencies } from '@arisk1/cg-functions';
- 
+import AuthContext from '../../context/auth/authContext';
+
 
 const Header = () => {
+    const authContext = useContext(AuthContext);
+    const { isAuthenticated } = authContext
+       
     let history = useHistory();
-    const [showIcon,setShowIcon] = useState(false);
-    const [user,setUser] = useState({});
     const [VsCurrencies,setVsCurrencies] = useState([]);
     const [title,setTitle] = useState("usd");
         const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -42,7 +44,6 @@ const Header = () => {
             </a>
           ));
     const ShowUserIcon = () => {
-        console.log(user)
         return (
 
             <Dropdown >
@@ -52,16 +53,20 @@ const Header = () => {
                     <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                     <Dropdown.Divider/>
-                    <Logout token={user.token} hideUserIcon={() => setShowIcon(false)}/>
+                    <Logout />
+
                 </Dropdown.Menu>
             </Dropdown>
 
         );
     }
     const ShowSignUpAndLogIn = () => {
-        return (<Fragment> <LogIn setUser={setUser} showUserIcon={() => setShowIcon(true)}/> < SignUp setUser={setUser} showUserIcon = {
-            () => setShowIcon(true)
-        } /> </Fragment>)
+        return (
+            <Fragment>
+                <LogIn />
+                < SignUp />
+            </Fragment>
+        )
     }
    
     useEffect(()=>{
@@ -73,7 +78,6 @@ const Header = () => {
 
     useEffect(()=>{
         const fetchVsCurrencies = async() => {
-            // const res = await axios.get('https://api.coingecko.com/api/v3/simple/supported_vs_currencies');
             const res = await supportedCurrencies();
             setVsCurrencies(res.data);
         }
@@ -92,7 +96,8 @@ const Header = () => {
                         width="40"
                         height="40"
                         className="d-inline-block align-middle"/>
-                    pTracker</Navbar.Brand>
+                        pTracker
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
@@ -108,9 +113,7 @@ const Header = () => {
                         <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
                     </Nav>
                     <Nav>
-                    {showIcon
-                            ? <ShowUserIcon/>
-                            : <ShowSignUpAndLogIn/>}
+                        {isAuthenticated ? <ShowUserIcon/> : <ShowSignUpAndLogIn/>}
                     </Nav>
                     
                     <Form className="form-inline">

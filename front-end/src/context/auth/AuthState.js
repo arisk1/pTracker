@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import axios from 'axios';
 import setAuthToken from '../../utils/setAuthToken'
 import AuthContext from './authContext';
@@ -18,7 +18,7 @@ const AuthState = (props) => {
     // define initial state
     const initialState = {
         token: localStorage.getItem('token'),
-        isAuthenticated: null,
+        isAuthenticated: false,
         user: null,
         error: null
     }
@@ -82,20 +82,20 @@ const AuthState = (props) => {
         } catch (err) {
             dispatch({
                 type: LOGIN_FAIL,
-                payload: err.response.data.msg
+                payload: err.response.data
             })
         }
     }
 
     // logout
-    const logout = () => {
+    const logout = async () => {
         try {
-            const res = await axios.post('/users/logout', formData, config);
+            await axios.post('/users/logout');
             dispatch({ type: LOGOUT })
         } catch (err) {
-            dispatch({ type: LOGOUT, payload: err.response.data.msg })  //?
+            console.log(err.response)
+            dispatch({ type: AUTH_ERROR, payload: err.response.data.error })  //?
         }
-        // dispatch({ type: LOGOUT })
     }
 
     // clear errors
