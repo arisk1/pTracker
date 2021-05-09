@@ -51,7 +51,7 @@ const AuthState = (props) => {
             const res = await axios.post('/users', formData, config);
             dispatch({
                 type: SIGNUP_SUCCESS,
-                payload: res.data
+                payload: {token: res.data.token}
             })
             loadUser()
             return res
@@ -72,7 +72,7 @@ const AuthState = (props) => {
             const res = await axios.post('/users/login', formData, config);
             dispatch({
                 type: LOGIN_SUCCESS,
-                payload: res.data
+                payload: {token: res.data.token}
             })
             loadUser()
             return res

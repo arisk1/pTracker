@@ -68,11 +68,10 @@ router.post('/users', async (req, res) => {
         sendWelcomeEmail(user.email , user.name);
         const token = await user.generateAuthToken();
         res.status(201).send({
-            // user,
+            user,
             token
         });
     } catch (e) {
-        // res.status(400).send(e);
         res.status(400).send(e)
     }
 
@@ -85,12 +84,11 @@ router.post('/users/login', async (req, res) => {
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
         res.status(200).send({
-            // user,
+            user,
             token
         });
     } catch (e) {
-        // res.status(400).send(e.message);
-        res.status(400).json({code:400, msg:e.message});
+        res.status(400).send(e.message);
     }
 });
 

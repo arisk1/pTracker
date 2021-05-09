@@ -1,0 +1,137 @@
+openapi: "3.0.2"
+info:
+  description: Portfolio Tracker API very basic Documentation
+  title: Portfolio Tracker
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Development server
+    
+paths:
+  /users/me:
+    get:
+      tags:
+        - users-me
+      summary: Get currently logged in user
+      description: Returns the user that is currently logged in
+      operationId: get-users-me
+      responses:
+        '200':
+          description: Successful
+          
+    patch:
+      tags:
+        - users-me
+      summary: Customize user's profile
+      description: Customize user's profile
+      operationId: patch-users-me
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+    
+    delete:
+      tags:
+        - users-me
+      summary: Delete user
+      description: Delete user
+      operationId: delete-users-me
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+  
+  /users/me/avatar:
+    post:
+      tags:
+        - users-me-avatar
+      summary: Upload user image
+      description: Upload the user's profile image
+      operationId: post-users-me-avatar
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+          
+    delete:
+      tags:
+        - users-me-avatar
+      summary: Upload user image
+      description: Upload the user's profile image
+      operationId: delete-users-me-avatar
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+          
+  /users/:id/avatar:
+    get:
+      tags:
+        - users-me-avatar
+      summary: Serve user image
+      description: Find and return the user's profile image
+      operationId: get-users-id-avatar
+      responses:
+        '200':
+          description: Successful
+        '404':
+          description: Not found
+          
+  /users:
+    post:
+      tags:
+        - users
+      summary: Singup user
+      description: Performs user signup
+      operationId: signup
+      responses:
+        '201':
+          description: User created
+        '400':
+          description: Bad request
+          
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login user
+      description: Performs user login
+      operationId: login
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+          
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Logout user
+      description: Performs user single logout
+      operationId: logout
+      responses:
+        '200':
+          description: Successful
+        '500':
+          description: Internal server error
+          
+  /users/logoutAll:
+    post:
+      tags:
+        - users
+      summary: Logout user from all sessions
+      description: Performs user logout from all sessions
+      operationId: logoutAll
+      responses:
+        '200':
+          description: Successful
+        '500':
+          description: Internal server error
+
+          
+          

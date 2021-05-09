@@ -1,5 +1,6 @@
 import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../Header/orbz_moon.png';
+import PropTypes from 'prop-types';
 import React, { useState, useContext, useEffect} from 'react';
 import AuthContext from '../../context/auth/authContext';
 
@@ -25,7 +26,6 @@ const LogAndSignModal = (props) => {
 
     useEffect(() => {
         if(isAuthenticated){
-            // props.history.push('/');
             props.onHide();
         }
         // eslint-disable-next-line
@@ -206,6 +206,14 @@ const LogAndSignModal = (props) => {
             </Modal.Body>
         </Modal>
     );
+}
+
+// prop types
+LogAndSignModal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired,
+    loginVar: PropTypes.bool.isRequired,
+    rotate: PropTypes.func.isRequired
 }
 
 export default LogAndSignModal;
