@@ -75,14 +75,14 @@ router.post('/', async (req, res) => {
 
     try {
         await user.save();
-        sendWelcomeEmail(user.email , user.name);
+        // sendWelcomeEmail(user.email , user.name);
         const token = await user.generateAuthToken();
         res.status(201).send({
             user,
             token
         });
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send({ error: e.errors });
     }
 
 });
@@ -100,7 +100,7 @@ router.post('/login', async (req, res) => {
             token
         });
     } catch (e) {
-        res.status(400).send(e.message);
+        res.status(400).send({ error: e.message });
     }
 });
 
@@ -140,25 +140,40 @@ router.post('/logoutAll', auth, async (req, res) => {
 // @desc    Customize user's profile
 // @access  Private
 router.patch('/me', auth, async (req, res) => {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['name', 'email', 'password', 'age'];
+    const updates = Object.keys(req.body);    
+    const allowedUpdates = ['name', 'email', 'password'];
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidOperation) {
         return res.status(400).send({
-            error: 'Invalid updates!'
+            error: 'Invalid updates'
         });
     }
 
     try {
+        //check if password is provided
+        const includesPass = updates.includes("password")
+        if(includesPass){
+            const current = req.body.password.current
+            const updated = req.body.password.updated
+            if(updated && current){
+                // check if email exists and 'current' given matches - if not, the error will be caught
+                const user = await User.findByCredentials(req.user.email, current)
+                req.body.password = updated
+            }
+            else{
+                res.status(400).send({
+                    error: 'Provide current and new password correctly'
+                })
+            }
+        }
 
         updates.forEach((update) => req.user[update] = req.body[update]);
         await req.user.save()
         res.status(200).send(req.user);
-
     } catch (e) {
         //Bad request
-        res.status(400).send(e);
+        res.status(400).send({error:e.message});
     }
 });
 
