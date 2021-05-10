@@ -6,7 +6,7 @@ const  {coinListMarkets }= require("../utils/coingeckoApi.js");
 //homepage with the top 100 coins
 //sorted by marketcap
 
-router.post('/home', async (req, res) => {
+router.post('/', async (req, res) => {
     try{
         const coins = await coinListMarkets(req.body.currency,req.body.order,req.body.pageIndex);
         res.status(200).send(coins.data);

@@ -19,13 +19,17 @@ const upload = multer({
 });
 const router = new express.Router();
 
-//users profile
-router.get('/users/me', auth, async (req, res) => {
+// @route   GET p-tracker-api/users/me
+// @desc    Get users profile
+// @access  Private
+router.get('/me', auth, async (req, res) => {
     res.status(200).send(req.user);
 });
 
-//upload profile picture
-router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+// @route   POST p-tracker-api/users/me/avatar
+// @desc    Upload user image
+// @access  Private
+router.post('/me/avatar', auth, upload.single('avatar'), async (req, res) => {
     //convert image to the png format and resize it
     const buffer = await sharp(req.file.buffer).resize({ width:250,height:250 }).png().toBuffer();
     req.user.avatar = buffer;
@@ -37,8 +41,10 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) 
     });
 });
 
-//serve profile picture
-router.get('/users/:id/avatar', async (req, res) => {
+// @route   GET p-tracker-api/users/:id/avatar
+// @desc    Serve some user's image
+// @access  Public
+router.get('/:id/avatar', async (req, res) => {
     try {
         const user = await  User.findById(req.params.id);
         if (!user || !user.avatar) {
@@ -52,15 +58,19 @@ router.get('/users/:id/avatar', async (req, res) => {
     }
 });
 
-//delete profile picture
-router.delete('/users/me/avatar', auth, async (req, res) => {
+// @route   DELETE p-tracker-api/users/me/avatar
+// @desc    Delete user's image
+// @access  Private
+router.delete('/me/avatar', auth, async (req, res) => {
     req.user.avatar = undefined;
     req.user.save();
     res.status(200).send();
 });
 
-//sign up a user
-router.post('/users', async (req, res) => {
+// @route   POST p-tracker-api/users
+// @desc    Signup a user
+// @access  Public
+router.post('/', async (req, res) => {
     const user = new User(req.body);
 
     try {
@@ -77,8 +87,10 @@ router.post('/users', async (req, res) => {
 
 });
 
-//login a user 
-router.post('/users/login', async (req, res) => {
+// @route   POST p-tracker-api/users/login
+// @desc    Login a user
+// @access  Public 
+router.post('/login', async (req, res) => {
 
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password);
@@ -92,8 +104,10 @@ router.post('/users/login', async (req, res) => {
     }
 });
 
-//logout a user
-router.post('/users/logout', auth, async (req, res) => {
+// @route   POST p-tracker-api/users/logout
+// @desc    Logout a user
+// @access  Private
+router.post('/logout', auth, async (req, res) => {
 
     try {
         //delete a specific token - from the session user wants to log out
@@ -109,8 +123,10 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 });
 
-//delete all tokens - logout from all sessions
-router.post('/users/logoutAll', auth, async (req, res) => {
+// @route   POST p-tracker-api/users/logoutAll
+// @desc    Logout a user from all sessions
+// @access  Private
+router.post('/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = [];
         await req.user.save();
@@ -120,8 +136,10 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     }
 });
 
-//customize user's profile
-router.patch('/users/me', auth, async (req, res) => {
+// @route   PATCH p-tracker-api/users/me
+// @desc    Customize user's profile
+// @access  Private
+router.patch('/me', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['name', 'email', 'password', 'age'];
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
@@ -144,8 +162,10 @@ router.patch('/users/me', auth, async (req, res) => {
     }
 });
 
-//delete a users profile
-router.delete('/users/me', auth, async (req, res) => {
+// @route   DELETE p-tracker-api/users/me
+// @desc    Delete user
+// @access  Private
+router.delete('/me', auth, async (req, res) => {
     try {
 
         await req.user.remove();

@@ -9,15 +9,15 @@ app.use(express.json());
 /***  ENDPOINTS ***/
 //home
 const homeRouter = require('./routers/home');
-app.use(homeRouter);
+app.use('/p-tracker-api/home', homeRouter);
 
 //users
 const usersRouter = require('./routers/users');
-app.use(usersRouter);
+app.use('/p-tracker-api/users', usersRouter);
 
 //portfolios
 const portfolioRouter = require('./routers/portfolio');
-app.use(portfolioRouter);
+app.use('/p-tracker-api/portfolios', portfolioRouter);
 
 
 module.exports = app

@@ -5,7 +5,10 @@ const auth = require('../middleware/auth');
 const router = new express.Router();
 
 
-router.post('/portfolios', auth ,async (req, res) => {
+// @route   POST p-tracker-api/portfolios
+// @desc    Add new portfolio?
+// @access  Private
+router.post('/', auth ,async (req, res) => {
     
     const portfolio = new Portfolio({
         ...req.body, //ES6 way to store all fieds of req.body 
@@ -19,8 +22,10 @@ router.post('/portfolios', auth ,async (req, res) => {
     }
 });
 
-//GET /portfolios?sortBy=createdAt_asc
-router.get('/portfolios',auth ,async (req, res) => {
+// @route   GET p-tracker-api/portfolios
+// @desc    Get user's portfolios - expected: GET /portfolios?sortBy=createdAt_asc
+// @access  Private
+router.get('/',auth ,async (req, res) => {
     const sort = {};
     if(req.query.sortBy){
         const parts = req.query.sortBy.split('_');
@@ -43,7 +48,10 @@ router.get('/portfolios',auth ,async (req, res) => {
     }
 });
 
-router.get('/portfolios/:id', auth ,async (req, res) => {
+// @route   GET p-tracker-api/portfolios/:id
+// @desc    Get a specific user's portfolio
+// @access  Private
+router.get('/:id', auth ,async (req, res) => {
     const _id = req.params.id;
 
     try{
@@ -63,7 +71,10 @@ router.get('/portfolios/:id', auth ,async (req, res) => {
     }
 });
 
-router.delete('/portfolios/:id',auth , async (req,res)=> {
+// @route   DELETE p-tracker-api/portfolios/:id
+// @desc    Delete a specific user's portfolio
+// @access  Private
+router.delete('/:id',auth , async (req,res)=> {
     try {
         const portfolio = await Portfolio.findOneAndDelete({_id : req.params.id , owner : req.user._id});
         if (!portfolio) {
@@ -76,8 +87,11 @@ router.delete('/portfolios/:id',auth , async (req,res)=> {
         res.status(400).send(e);
     }
 });
-//rename your portfolio
-router.patch('/portfolios/:id/rename',auth , async (req,res)=> {
+
+// @route   PATCH p-tracker-api/portfolios/:id/rename
+// @desc    Rename a user's portfolio
+// @access  Private
+router.patch('/:id/rename',auth , async (req,res)=> {
     if(!req.body.name){
         return res.status(400).send({error : 'Invalid updates!'});
     }
@@ -98,8 +112,10 @@ router.patch('/portfolios/:id/rename',auth , async (req,res)=> {
     }
 });
 
-//add coins to your portfolio
-router.patch('/portfolios/:id/add',auth , async (req,res)=> {
+// @route   PATCH p-tracker-api/portfolios/:id/add
+// @desc    Add coins to user's portfolio
+// @access  Private
+router.patch('/:id/add',auth , async (req,res)=> {
     if(!req.body.coinName){
         return res.status(400).send({error : 'Invalid updates!'});
     }
@@ -117,8 +133,11 @@ router.patch('/portfolios/:id/add',auth , async (req,res)=> {
         res.status(400).send(e);
     }
 });
-//remove coins from your portfolio
-router.patch('/portfolios/:id/remove',auth , async (req,res)=> {
+
+// @route   PATCH p-tracker-api/portfolios/:id/remove
+// @desc    Remove coins from user's portfolio
+// @access  Private
+router.patch('/:id/remove',auth , async (req,res)=> {
     if(!req.body.coinName){
         return res.status(400).send({error : 'Invalid updates!'});
     }
@@ -136,8 +155,11 @@ router.patch('/portfolios/:id/remove',auth , async (req,res)=> {
         res.status(400).send(e);
     }
 });
-//remove all coins from your portfolio
-router.patch('/portfolios/:id/removeAll',auth , async (req,res)=> {
+
+// @route   PATCH p-tracker-api/portfolios/:id/removeAll
+// @desc    Remove all coins from user's portfolio
+// @access  Private
+router.patch('/:id/removeAll',auth , async (req,res)=> {
     try {
         const portfolio = await Portfolio.findOne({_id : req.params.id , owner : req.user._id});
        
