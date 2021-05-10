@@ -12,9 +12,11 @@ const {
 
 beforeEach(populateDatabase);
 
+const baseURL = process.env.BASE_URL || ''
+
 test('Should create portfolio for user', async () => {
     const response = await request(app)
-        .post('/portfolios')
+        .post(`${baseURL}/portfolios`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             name: 'name1'
@@ -30,7 +32,7 @@ test('Should create portfolio for user', async () => {
 
 test('Should fetch portfolios for user', async () => {
     const response = await request(app)
-        .get('/portfolios')
+        .get(`${baseURL}/portfolios`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send()
         .expect(200);
@@ -40,7 +42,7 @@ test('Should fetch portfolios for user', async () => {
 
 test('Should fetch portfolios for user and sort them', async () => {
     const response = await request(app)
-        .get('/portfolios?sortBy=createdAt_asc')
+        .get(`${baseURL}/portfolios?sortBy=createdAt_asc`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send()
         .expect(200);
@@ -53,7 +55,7 @@ test('Should fetch portfolios for user and sort them', async () => {
 
 test('Should not be able to delete onothers users porfolio' , async()=>{
     const response = await request(app)
-        .delete(`/portfolios/${portfolio1._id}`)
+        .delete(`${baseURL}/portfolios/${portfolio1._id}`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send()
         .expect(404);
@@ -63,7 +65,7 @@ test('Should not be able to delete onothers users porfolio' , async()=>{
 
 test('Should not create a portfolio with invalid name' , async()=>{
     const response = await request(app)
-        .post('/portfolios')
+        .post(`${baseURL}/portfolios`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             "name" : ""
@@ -73,7 +75,7 @@ test('Should not create a portfolio with invalid name' , async()=>{
 
 test('Should not be able to rename a portfolio with invalid name' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/rename`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/rename`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             "name" : ""
@@ -83,7 +85,7 @@ test('Should not be able to rename a portfolio with invalid name' , async()=>{
 
 test('Should not be able to rename onother users portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/rename`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/rename`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send({
             "name" : "newhehe"
@@ -93,7 +95,7 @@ test('Should not be able to rename onother users portfolio' , async()=>{
 
 test('Should be able to rename his own portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/rename`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/rename`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             "name" : "newhehe"
@@ -107,7 +109,7 @@ test('Should be able to rename his own portfolio' , async()=>{
 
 test('Should delete users portfolio', async () => {
     const response = await request(app)
-    .delete(`/portfolios/${portfolio1._id}`)
+    .delete(`${baseURL}/portfolios/${portfolio1._id}`)
     .set('Authorization', `Bearer ${user1.tokens[0].token}`)
     .send() 
     .expect(200);
@@ -119,14 +121,14 @@ test('Should delete users portfolio', async () => {
 
 test('Should not delete users portfolio if not authenticated', async () => {
     const response = await request(app)
-    .delete(`/portfolios/${portfolio1._id}`)
+    .delete(`${baseURL}/portfolios/${portfolio1._id}`)
     .send() 
     .expect(401);
 });
 
 test('Should fetch portfolios for user', async () => {
     const response = await request(app)
-        .get(`/portfolios/${portfolio1._id}`)
+        .get(`${baseURL}/portfolios/${portfolio1._id}`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send()
         .expect(200);
@@ -137,14 +139,14 @@ test('Should fetch portfolios for user', async () => {
 
 test('Should not fetch portfolios for user if not authenticated', async () => {
     const response = await request(app)
-        .get(`/portfolios/${portfolio1._id}`)
+        .get(`${baseURL}/portfolios/${portfolio1._id}`)
         .send()
         .expect(401);
 });
 
 test('Should not fetch portfolios from other users', async () => {
     const response = await request(app)
-        .get(`/portfolios/${portfolio1._id}`)
+        .get(`${baseURL}/portfolios/${portfolio1._id}`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send()
         .expect(404);
@@ -152,7 +154,7 @@ test('Should not fetch portfolios from other users', async () => {
 
 test('Should be able to add coin to his own portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/add`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             "coinName" : "btc"
@@ -167,7 +169,7 @@ test('Should be able to add coin to his own portfolio' , async()=>{
 
 test('Should not be able to add coin to other users portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/add`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send({
             "coinName" : "btc"
@@ -177,7 +179,7 @@ test('Should not be able to add coin to other users portfolio' , async()=>{
 
 test('Should not be able to add coin if not authenticated' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/add`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .send({
             "coinName" : "btc"
         }) 
@@ -186,7 +188,7 @@ test('Should not be able to add coin if not authenticated' , async()=>{
 
 test('Should be able to remove coin from his own portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/remove`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             "coinName" : "eth"
@@ -198,7 +200,7 @@ test('Should be able to remove coin from his own portfolio' , async()=>{
 
 test('Should not be able to remove coin if not authenticated' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/remove`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .send({
             "coinName" : "btc"
         }) 
@@ -207,7 +209,7 @@ test('Should not be able to remove coin if not authenticated' , async()=>{
 
 test('Should not be able to remove coin to other users portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/remove`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send({
             "coinName" : "btc"
@@ -217,7 +219,7 @@ test('Should not be able to remove coin to other users portfolio' , async()=>{
 
 test('Should be able to remove all coin from his own portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/removeAll`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/removeAll`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send() 
         .expect(200);
@@ -227,7 +229,7 @@ test('Should be able to remove all coin from his own portfolio' , async()=>{
 
 test('Should not be able to remove all coin from other users portfolio' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/removeAll`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/removeAll`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send() 
         .expect(404);
@@ -235,7 +237,7 @@ test('Should not be able to remove all coin from other users portfolio' , async(
 
 test('Should not be able to remove all coin if not authenticated' , async()=>{
     const response = await request(app)
-        .patch(`/portfolios/${portfolio1._id}/removeAll`)
+        .patch(`${baseURL}/portfolios/${portfolio1._id}/removeAll`)
         .send({
             "coinName" : "btc"
         }) 

@@ -7,17 +7,20 @@ const app = express();
 app.use(cors);
 app.use(express.json());
 /***  ENDPOINTS ***/
+
+const baseURL = process.env.BASE_URL || ''
+
 //home
 const homeRouter = require('./routers/home');
-app.use('/p-tracker-api/home', homeRouter);
+app.use(`${baseURL}/home`, homeRouter);
 
 //users
 const usersRouter = require('./routers/users');
-app.use('/p-tracker-api/users', usersRouter);
+app.use(`${baseURL}/users`, usersRouter);
 
 //portfolios
 const portfolioRouter = require('./routers/portfolio');
-app.use('/p-tracker-api/portfolios', portfolioRouter);
+app.use(`${baseURL}/portfolios`, portfolioRouter);
 
 
 module.exports = app

@@ -5,8 +5,10 @@ const {user1Id , user1 , populateDatabase} = require('./fixtures/db');
 
 beforeEach(populateDatabase);
 
+const baseURL = process.env.BASE_URL || ''
+
 test('Should signup a new user', async () => {
-    const response = await request(app).post('/users').send({
+    const response = await request(app).post(`${baseURL}/users`).send({
         name: "testAris",
         email: "testaris@example.com",
         password: "HeHepassw!99"
@@ -30,7 +32,7 @@ test('Should signup a new user', async () => {
 });
 
 test('Should not signup a new user with invalid email', async () => {
-    const response = await request(app).post('/users').send({
+    const response = await request(app).post(`${baseURL}/users`).send({
         name: "testAris",
         email: "testarisexample.com",
         password: "HeHepassw!99"
@@ -38,7 +40,7 @@ test('Should not signup a new user with invalid email', async () => {
 });
 
 test('Should not signup a new user with invalid password', async () => {
-    const response = await request(app).post('/users').send({
+    const response = await request(app).post(`${baseURL}/users`).send({
         name: "testAris",
         email: "testaris@example.com",
         password: "password"
@@ -46,7 +48,7 @@ test('Should not signup a new user with invalid password', async () => {
 });
 
 test('Should login an existing user', async () => {
-    const response = await request(app).post('/users/login').send({
+    const response = await request(app).post(`${baseURL}/users/login`).send({
         email: user1.email,
         password: user1.password
     }).expect(200);
@@ -59,7 +61,7 @@ test('Should login an existing user', async () => {
 });
 
 test('Should not login nonexistent user', async () => {
-    await request(app).post('/users/login').send({
+    await request(app).post(`${baseURL}/users/login`).send({
         email: "wrongusername",
         password: "WhAtEVeR123!"
     }).expect(400);
@@ -67,7 +69,7 @@ test('Should not login nonexistent user', async () => {
 
 test('Should get profile for user', async () => {
     await request(app)
-        .get('/users/me')
+        .get(`${baseURL}/users/me`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send()
         .expect(200);
@@ -75,14 +77,14 @@ test('Should get profile for user', async () => {
 
 test('Should not get profile for non authenitcated user', async () => {
     await request(app)
-        .get('/users/me')
+        .get(`${baseURL}/users/me`)
         .send()
         .expect(401); //error code when we do not provide authorization token
 });
 
 test('Should delete users profile', async () => {
     await request(app)
-        .delete('/users/me')
+        .delete(`${baseURL}/users/me`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send()
         .expect(200);
@@ -94,14 +96,14 @@ test('Should delete users profile', async () => {
 
 test('Should not be able to delete user,not authenticated', async () => {
     await request(app)
-        .delete('/users/me')
+        .delete(`${baseURL}/users/me`)
         .send()
         .expect(401); //error code when we do not provide authorization token
 });
 
 test('Should upload avatar image', async () => {
     await request(app)
-        .post('/users/me/avatar')
+        .post(`${baseURL}/users/me/avatar`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .attach('avatar', 'tests/fixtures/profile-pic.jpg')
         .expect(200);
@@ -113,7 +115,7 @@ test('Should upload avatar image', async () => {
 
 test('Should update valid user fields', async () => {
     await request(app)
-        .patch('/users/me')
+        .patch(`${baseURL}/users/me`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             name: 'testdummyname',
@@ -130,7 +132,7 @@ test('Should update valid user fields', async () => {
 
 test('Should not be able to update user,not authenticated', async () => {
     await request(app)
-        .patch('/users/me')
+        .patch(`${baseURL}/users/me`)
         .send({
             name: 'testdummyname',
             email: "dummy@email.com"
@@ -140,7 +142,7 @@ test('Should not be able to update user,not authenticated', async () => {
 
 test('Should not update invalid user fields', async () => {
     await request(app)
-        .patch('/users/me')
+        .patch(`${baseURL}/users/me`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
             location: 'testdummyname',
