@@ -20,7 +20,7 @@ import AuthContext from '../../context/auth/authContext';
 
 const Header = () => {
     const authContext = useContext(AuthContext);
-    const { isAuthenticated } = authContext
+    const { isAuthenticated, loadUser } = authContext
        
     let history = useHistory();
     const [VsCurrencies,setVsCurrencies] = useState([]);
@@ -84,6 +84,13 @@ const Header = () => {
         
         fetchVsCurrencies();
     },[])
+
+    useEffect(() => {
+        // load user where component loads
+        
+        loadUser();
+        // esling-disable-next-line
+    }, [])
 
     return (
 

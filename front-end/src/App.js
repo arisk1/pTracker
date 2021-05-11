@@ -6,12 +6,6 @@ import Profile from './components/Profile/Profile';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
 import AuthState from './context/auth/AuthState'
-import setAuthToken from './utils/setAuthToken'
-
-
-if(localStorage.token) {
-    setAuthToken(localStorage.token)
-  }
 
 function App() {
     return (

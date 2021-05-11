@@ -3,12 +3,8 @@ import React, {useEffect, useState, useContext} from 'react';
 import CoinList from '../CoinList/CoinList';
 import {Button,ButtonGroup,ListGroup,Col,Row} from 'react-bootstrap';
 import { useLocation } from 'react-router';
-import AuthContext from '../../context/auth/authContext';
 
 const Home = () => {
-    // context
-    const authContext = useContext(AuthContext);
-
     let location =  useLocation();
     console.log(location.state)
     const [coins,
@@ -25,12 +21,6 @@ const Home = () => {
     const pageHandleDown = () => {
         setPageIndex(pageIndex - 1);
     }
-
-    useEffect(() => {
-        // load user where component loads
-        authContext.loadUser();
-        // esling-disable-next-line
-    }, [])
 
     
     useEffect(() => {
