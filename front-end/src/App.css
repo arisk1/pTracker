@@ -148,6 +148,12 @@ div.container {
 
 .grid-2 {
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2rem;
+  }
+
+.grid-2-pass {
+    display: grid;
     grid-template-columns: 90% auto;
     grid-gap: 1rem;
   }
@@ -156,4 +162,8 @@ div.container {
     text-align: center !important;
     margin-top: 40% !important;
     cursor: pointer !important;
+}
+
+.bordered {
+    border: 1px solid
 }

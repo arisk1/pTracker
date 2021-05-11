@@ -49,7 +49,7 @@ const Header = () => {
             <Dropdown >
                 <Dropdown.Toggle as={CustomToggle} className="user-icon-outline border-0 p-1" variant="" id="dropdown-basic" />
                 <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                    <Dropdown.Item as={Link} to={{pathname:'/profile'}}>Profile</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                     <Dropdown.Divider/>
