@@ -6,7 +6,7 @@ import { supportedCurrencies } from '@arisk1/cg-functions';
 
 const CurrencyState = (props) => {
     const initialState = {
-        currency : "usd",
+        currency : 'usd',
         vsCurrencies : []
     }
 
@@ -16,7 +16,11 @@ const CurrencyState = (props) => {
 
     //GET_CURRENCIES
     const getCurrencies = async () => {
-        localStorage.setItem('currency', 'usd')
+        if(localStorage.currency){
+            setCurrency(localStorage.currency);     
+        }else{
+            localStorage.setItem('currency', 'usd')
+        }
         const res = await supportedCurrencies();
         dispatch({
             type : GET_CURRENCIES,

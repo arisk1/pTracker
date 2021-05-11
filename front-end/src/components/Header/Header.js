@@ -70,15 +70,17 @@ const Header = () => {
    
     useEffect(()=>{
         getCurrencies();
+        // load user where component loads
+        loadUser();
         //eslint-disable-next-line
     },[])
 
-    useEffect(() => {
-        // load user where component loads
+    // useEffect(() => {
+       
         
-        loadUser();
-        // eslint-disable-next-line
-    }, [])
+       
+    //     // eslint-disable-next-line
+    // }, [])
 
     return (
 
