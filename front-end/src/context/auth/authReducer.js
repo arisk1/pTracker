@@ -4,7 +4,8 @@ import {
     AUTH_ERROR,
     LOGIN_SUCCESS,
     LOGOUT,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    UPDATE_SUCCESS
 } from '../types'
 
 export default (state, action) => {
@@ -18,6 +19,7 @@ export default (state, action) => {
                 isAuthenticated: true
             }
         case USER_LOADED:
+        case UPDATE_SUCCESS:
             return {
                 ...state,
                 isAuthenticated: true,

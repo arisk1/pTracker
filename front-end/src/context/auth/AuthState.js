@@ -9,7 +9,8 @@ import {
     AUTH_ERROR,
     LOGIN_SUCCESS,
     LOGOUT,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    UPDATE_SUCCESS
 } from '../types'
 
 const AuthState = (props) => {
@@ -81,6 +82,27 @@ const AuthState = (props) => {
         }
     }
 
+    // update user
+    const update = async (formData) => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            const res = await axios.patch('/users/me', formData, config);
+            dispatch({
+                type: UPDATE_SUCCESS,
+                payload: res.data
+            })
+            // loadUser()
+            return res
+        } catch (err) {
+            return err.response
+        }
+    }
+
     // logout
     const logout = async () => {
         try {
@@ -107,7 +129,8 @@ const AuthState = (props) => {
             signup,
             login,
             logout,
-            clearErrors
+            clearErrors,
+            update
         }}>
             {props.children}
         </AuthContext.Provider>
