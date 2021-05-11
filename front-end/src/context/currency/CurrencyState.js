@@ -16,6 +16,7 @@ const CurrencyState = (props) => {
 
     //GET_CURRENCIES
     const getCurrencies = async () => {
+        localStorage.setItem('currency', 'usd')
         const res = await supportedCurrencies();
         dispatch({
             type : GET_CURRENCIES,
@@ -24,7 +25,7 @@ const CurrencyState = (props) => {
     }
 
     //SET_CURRENCY
-    const setCurrency =async (cur) => {
+    const setCurrency = (cur) => {
         dispatch({type : SET_CURRENCY , payload : cur})
     }
     return (

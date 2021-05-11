@@ -12,7 +12,7 @@ import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import Logout from '../Logout/logOut.js';
 import userIcon from './userIcon.png';
-import React , { useEffect, useState, Fragment, useContext } from 'react';
+import React , { useEffect,Fragment, useContext } from 'react';
 import { Link} from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 import CurrencyContext from '../../context/currency/currencyContext';
@@ -68,16 +68,9 @@ const Header = () => {
         )
     }
    
-    // useEffect(()=>{
-    //     history.push({
-    //         pathname: '/',
-    //         state: { title }
-    //     });
-    // },[history,title])
-
     useEffect(()=>{
         getCurrencies();
-    //eslint-disable-next-line
+        //eslint-disable-next-line
     },[])
 
     return (

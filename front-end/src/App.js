@@ -21,7 +21,7 @@ function App() {
             <Header/>
                 <Container>
                     <Switch >
-                        {/* <Route exact path="/" component={Home}></Route> */}
+                        { <Route exact path="/" component={Home}></Route> }
                     </Switch>
                 </Container>
                 <Footer/>
