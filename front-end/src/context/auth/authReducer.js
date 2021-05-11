@@ -6,7 +6,7 @@ import {
     LOGOUT,
     CLEAR_ERRORS
 } from '../types'
-
+// eslint-disable-next-line
 export default (state, action) => {
     switch(action.type){
         case SIGNUP_SUCCESS:

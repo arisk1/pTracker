@@ -5,10 +5,13 @@ import Home from './components/Home/homepage.js'
 import Profile from './components/Profile/Profile';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
-import AuthState from './context/auth/AuthState'
+import AuthState from './context/auth/AuthState';
+import CurrecnyState from './context/currency/CurrencyState';
+
 
 function App() {
     return (
+        <CurrecnyState>
         <AuthState>
         <Router >
             <div className="App">
@@ -23,6 +26,7 @@ function App() {
             </div>
         </Router>
         </AuthState>
+        </CurrecnyState>
     );
 }
 

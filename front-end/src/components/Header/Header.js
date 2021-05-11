@@ -12,19 +12,18 @@ import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import Logout from '../Logout/logOut.js';
 import userIcon from './userIcon.png';
-import React , { useEffect, useState, Fragment, useContext } from 'react';
-import { Link,useHistory } from 'react-router-dom';
-import { supportedCurrencies } from '@arisk1/cg-functions';
+import React , { useEffect,Fragment, useContext } from 'react';
+import { Link} from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
+import CurrencyContext from '../../context/currency/currencyContext';
 
 
 const Header = () => {
     const authContext = useContext(AuthContext);
-    const { isAuthenticated, loadUser } = authContext
-       
-    let history = useHistory();
-    const [VsCurrencies,setVsCurrencies] = useState([]);
-    const [title,setTitle] = useState("usd");
+    const { isAuthenticated, loadUser } = authContext;
+
+    const currencyContext = useContext(CurrencyContext);
+     const {currency , vsCurrencies , setCurrency , getCurrencies} = currencyContext;    
         const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
             <a
               href="/"
@@ -70,26 +69,15 @@ const Header = () => {
     }
    
     useEffect(()=>{
-        history.push({
-            pathname: '/',
-            state: { title }
-        });
-    },[history,title])
-
-    useEffect(()=>{
-        const fetchVsCurrencies = async() => {
-            const res = await supportedCurrencies();
-            setVsCurrencies(res.data);
-        }
-        
-        fetchVsCurrencies();
+        getCurrencies();
+        //eslint-disable-next-line
     },[])
 
     useEffect(() => {
         // load user where component loads
         
         loadUser();
-        // esling-disable-next-line
+        // eslint-disable-next-line
     }, [])
 
     return (
@@ -108,11 +96,11 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <NavDropdown title={title.toUpperCase()} id="basic-nav-dropdown">
+                        <NavDropdown title={currency.toUpperCase()} id="basic-nav-dropdown">
                             <Dropdown.Header>  Supported Currencies  </Dropdown.Header>
                             <Dropdown.Divider />
-                            {VsCurrencies.map((cur,idx)=>(
-                                <NavDropdown.Item onClick={()=> setTitle(cur)}  key={idx}>
+                            {vsCurrencies.map((cur,idx)=>(
+                                <NavDropdown.Item onClick={()=> setCurrency(cur)}  key={idx}>
                                     {cur.toUpperCase()}
                                 </NavDropdown.Item>
                             ))}
