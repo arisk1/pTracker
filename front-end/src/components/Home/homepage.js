@@ -2,14 +2,17 @@ import axios from 'axios';
 import React, {useEffect, useState, useContext} from 'react';
 import CoinList from '../CoinList/CoinList';
 import {Button,ButtonGroup,ListGroup,Col,Row} from 'react-bootstrap';
-import { useLocation } from 'react-router';
+import CurrencyContext from '../../context/currency/currencyContext';
+
 
 const Home = () => {
-    let location =  useLocation();
-    console.log(location.state)
+    // context
+
+    const currencyContext = useContext(CurrencyContext);
+    const {currency} = currencyContext;  
+   
     const [coins,
         setCoins] = useState([]);
-    const [currency,setCurrency] = useState("usd");
     const [pageIndex,
         setPageIndex] = useState(1);
     
@@ -24,9 +27,7 @@ const Home = () => {
 
     
     useEffect(() => {
-        if(typeof (location.state) !== 'undefined'){
-            setCurrency(location.state.title);
-        }
+        
         const fetchData = async() => {
             const res = await axios.post('/home',{
                 "currency" : currency,
@@ -36,7 +37,7 @@ const Home = () => {
             setCoins(res.data);
         }
         fetchData();
-    },[location.state,currency,pageIndex])
+    },[currency,pageIndex])
     
     return (
         <div>
