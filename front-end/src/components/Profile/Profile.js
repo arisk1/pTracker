@@ -17,7 +17,8 @@ const Profile = () => {
 
     const [errorMsg,
         setErrorMsg] = useState(null);
-
+    const [successMsg,
+        setSuccessMsg] = useState(null);
     const [modalShow,
         setModalShow] = useState(false);
 
@@ -45,25 +46,40 @@ const Profile = () => {
                 paddingBottom: "1vh",
                 fontSize: "14px"
             }}>
-                {errorMsg}W
+                {errorMsg}
+            </Form.Text>
+        );
+    }
+
+    const ShowSuccess = () => {
+        return (
+            <Form.Text
+                style={{
+                color: "green",
+                paddingBottom: "1vh",
+                fontSize: "14px"
+            }}>
+                {successMsg}
             </Form.Text>
         );
     }
 
     const callHandler = async (e) => {
-        // on submit of name or email
         e.preventDefault();
-        const res = await update({
-            name,
-            email
-        })
-        if(res.status == 400){
-            setErrorMsg(res.data.error);
-        }
-        else{
-            setErrorMsg(null);
-            console.log("Success!")
-            // add success snackbar?
+        if(!modalShow){                     // to avoid calling this with password change
+            const res = await update({
+                name,
+                email
+            })
+            if(res.status === 400){
+                setErrorMsg(res.data.error);
+            }
+            else{
+                setErrorMsg(null);
+                console.log("Success!")
+                setSuccessMsg("Success!")
+                setInterval(function(){ setSuccessMsg(null) }, 3000);
+            }
         }
     }
 
@@ -100,6 +116,9 @@ const Profile = () => {
                     </Form.Group>
                     {errorMsg!==null
                         ? <ShowError/>
+                        : null}
+                    {successMsg!==null
+                        ? <ShowSuccess />
                         : null}
                     <div className="info-container">
                         <Button variant="dark" size="lg" type="submit" block>

@@ -110,7 +110,7 @@ const LogAndSignModal = (props) => {
                 email,
                 password
             })
-            if(res.status == 400){
+            if(res.status === 400){
                 setErrorMsg(true);
             }
         } else {
@@ -119,7 +119,7 @@ const LogAndSignModal = (props) => {
                 password,
                 name
             })
-            if(res.status == 400){
+            if(res.status === 400){
                 if(res.data.name==="MongoError"){
                     setErrorValMsg(1);
                 }else if(res.data.name==="ValidationError"){
