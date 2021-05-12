@@ -20,7 +20,7 @@ import CurrencyContext from '../../context/currency/currencyContext';
 
 const Header = () => {
     const authContext = useContext(AuthContext);
-    const { isAuthenticated, loadUser } = authContext;
+    const { isAuthenticated, loadUser, user } = authContext;
 
     const currencyContext = useContext(CurrencyContext);
      const {currency , vsCurrencies , setCurrency , getCurrencies} = currencyContext;    
@@ -48,6 +48,7 @@ const Header = () => {
             <Dropdown >
                 <Dropdown.Toggle as={CustomToggle} className="user-icon-outline border-0 p-1" variant="" id="dropdown-basic" />
                 <Dropdown.Menu>
+                    <Dropdown.Item href="#/action-0">Hello {user && user.name} </Dropdown.Item><hr />
                     <Dropdown.Item as={Link} to={{pathname:'/profile'}}>Profile</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
@@ -74,13 +75,6 @@ const Header = () => {
         loadUser();
         //eslint-disable-next-line
     },[])
-
-    // useEffect(() => {
-       
-        
-       
-    //     // eslint-disable-next-line
-    // }, [])
 
     return (
 

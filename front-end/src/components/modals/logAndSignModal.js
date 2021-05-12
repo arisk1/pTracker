@@ -7,7 +7,7 @@ import AuthContext from '../../context/auth/authContext';
 const LogAndSignModal = (props) => {
     // context
     const authContext = useContext(AuthContext);
-    const { login, signup, error, isAuthenticated, clearErrors } = authContext;
+    const { login, signup, error, isAuthenticated } = authContext;
 
     // states
     const [user, setUser] = useState({

@@ -165,5 +165,12 @@ div.container {
 }
 
 .bordered {
-    border: 1px solid
+    border: 1px solid 
+}
+
+.info-container {
+    width: 60%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px;
 }
