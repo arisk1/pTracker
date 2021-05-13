@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import AuthContext from '../../context/auth/authContext';
+import ShowPass from '../showPass/ShowPass';
 
 const ChangePassModal = (props) => {
     // context
@@ -9,6 +10,7 @@ const ChangePassModal = (props) => {
     const { update } = authContext;
 
     const { show, onHide } = props
+
     // states
     const [formUser, setFormUser] = useState({
         current: '',
@@ -16,6 +18,11 @@ const ChangePassModal = (props) => {
         confirm: ''
     })
     const { current, updated, confirm } = formUser;
+
+    // ref
+    const currRef = useRef('')
+    const upRef = useRef('')
+    const confRef = useRef('')
 
     const [errorMsg,
         setErrorMsg] = useState(null);
@@ -91,39 +98,51 @@ const ChangePassModal = (props) => {
 
                 <Form onSubmit={onSubmit}>
                 <Modal.Body>
-                        <Form.Group controlId="formBasicCurrent">
-                            <Form.Label>Current Password</Form.Label>
+                    <Form.Group controlId="formBasicCurrent">
+                        <Form.Label>Current Password</Form.Label>
+                        <div className="grid-2-pass">
                             <Form.Control
                                 onChange={onChange}
                                 type="password"
                                 name="current"
+                                ref={currRef}
                                 placeholder="Enter your current password"
                                 required
                             />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicUpdated">
-                            <Form.Label>New Password</Form.Label>
+                            <ShowPass passRef={currRef}/>
+                        </div>
+                    </Form.Group>
+                    <Form.Group controlId="formBasicUpdated">
+                        <Form.Label>New Password</Form.Label>
+                        <div className="grid-2-pass">
                             <Form.Control
                                 onChange={onChange}
                                 type="password"
                                 name="updated"
+                                ref={upRef}
                                 placeholder="Enter your new password"
                                 required
                             />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicConfirm">
-                            <Form.Label>Confirm New Password</Form.Label>
+                            <ShowPass passRef={upRef}/>
+                        </div>
+                    </Form.Group>
+                    <Form.Group controlId="formBasicConfirm">
+                        <Form.Label>Confirm New Password</Form.Label>
+                        <div className="grid-2-pass">
                             <Form.Control
                                 onChange={onChange}
                                 type="password"
                                 name="confirm"
+                                ref={confRef}
                                 placeholder="Confirm new password"
                                 required
                             />
-                        </Form.Group>
-                        {errorMsg!==null
-                        ? <ShowError/>
-                        : null}
+                            <ShowPass passRef={confRef}/>
+                        </div>
+                    </Form.Group>
+                    {errorMsg!==null
+                    ? <ShowError/>
+                    : null}
                 </Modal.Body>
 
                 <Modal.Footer>

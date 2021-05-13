@@ -1,8 +1,9 @@
 import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../Header/orbz_moon.png';
 import PropTypes from 'prop-types';
-import React, { useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect, useRef} from 'react';
 import AuthContext from '../../context/auth/authContext';
+import ShowPass from '../showPass/ShowPass';
 
 const LogAndSignModal = (props) => {
     // context
@@ -15,6 +16,7 @@ const LogAndSignModal = (props) => {
         email: '',
         password: ''
     })
+    const passRef = useRef('')
 
     const [errorMsg,
         setErrorMsg] = useState(false);
@@ -181,15 +183,16 @@ const LogAndSignModal = (props) => {
                         : null}
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        {/* <div className="grid-2"> */}
+                        <div className="grid-2-pass">
                             <Form.Control
                             onChange={onChange}
                             type="password"
                             name="password"
+                            ref={passRef}
                             placeholder="Password"
                             required/>
-                            {/* <i className="far fa-eye" onClick={}></i> */}
-                        {/* </div> */}
+                            <ShowPass passRef={passRef}/>
+                        </div>
                     </Form.Group>
                     {(errorValMsg===2)
                         ? <ShowValidationError/>

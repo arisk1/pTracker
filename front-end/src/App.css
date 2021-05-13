@@ -165,7 +165,7 @@ div.container {
 }
 
 .bordered {
-    border: 1px solid 
+    border: 1px solid !important
 }
 
 .info-container {
@@ -173,4 +173,8 @@ div.container {
     margin: auto;
     margin-top: 20px;
     padding: 10px;
+}
+
+.green-color {
+    color: green
 }
