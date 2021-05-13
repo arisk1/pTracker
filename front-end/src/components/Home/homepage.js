@@ -30,15 +30,15 @@ const Home = () => {
         
         const fetchData = async() => {
             const res = await axios.post('/home',{
-                "currency" : currency,
+                "currency" : localStorage.currency,
                 "order" : 'market_cap_desc' ,
                 "pageIndex" : pageIndex
             });
             setCoins(res.data);
         }
         fetchData();
-    },[currency,pageIndex])
-    
+    },[currency, pageIndex])
+     
     return (
         <div>
             <ListGroup variant="flush">
