@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import AuthContext from '../../context/auth/authContext';
 import ShowPass from '../showPass/ShowPass';
+import Alert from '../alert/Alert'
 
 const ChangePassModal = (props) => {
     // context
@@ -30,19 +31,6 @@ const ChangePassModal = (props) => {
         setSubmitted] = useState(false);
 
     // functions
-    const ShowError = () => {
-        return (
-            <Form.Text
-                style={{
-                color: "red",
-                paddingBottom: "1vh",
-                fontSize: "14px"
-            }}>
-                {errorMsg}
-            </Form.Text>
-        );
-    }
-
     const onSubmit = async (e) => {
         // on submit of name or email
         e.preventDefault();
@@ -141,7 +129,7 @@ const ChangePassModal = (props) => {
                         </div>
                     </Form.Group>
                     {errorMsg!==null
-                    ? <ShowError/>
+                    ? <Alert msg={errorMsg} color={"red"} />
                     : null}
                 </Modal.Body>
 

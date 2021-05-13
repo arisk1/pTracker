@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useContext, useEffect, useRef} from 'react';
 import AuthContext from '../../context/auth/authContext';
 import ShowPass from '../showPass/ShowPass';
+import Alert from '../alert/Alert'
 
 const LogAndSignModal = (props) => {
     // context
@@ -21,7 +22,7 @@ const LogAndSignModal = (props) => {
     const [errorMsg,
         setErrorMsg] = useState(false);
     const [errorValMsg,
-        setErrorValMsg] = useState(0);
+        setErrorValMsg] = useState(null);
 
     const { name, email, password } = user;
     const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value })
@@ -41,7 +42,7 @@ const LogAndSignModal = (props) => {
 
     const resetErrorHandlers=()=>{
         setErrorMsg(false);
-        setErrorValMsg(0);
+        setErrorValMsg(null);
     }
 
     const ShowError = () => {
@@ -59,35 +60,6 @@ const LogAndSignModal = (props) => {
                 </Button>
             </Form.Text>
         );
-    }
-
-    const ShowValidationError = () => {
-        if(errorValMsg===1){ //1 email error
-            return (
-                <Form.Text
-                    className=""
-                    style={{
-                    color: "red",
-                    paddingBottom: "1vh",
-                    fontSize: "14px"
-                }}>
-                    Someone has already signed up with this email.
-                </Form.Text>
-            );
-        }else if(errorValMsg===2){ //2 password error
-            return (
-                <Form.Text
-                    className=""
-                    style={{
-                    color: "red",
-                    paddingBottom: "1vh",
-                    fontSize: "14px"
-                }}>
-                    Password must be longer than 6 characters and must not contain the word password
-                </Form.Text>
-            );
-        }
-        
     }
 
     const SignUpText = () => {
@@ -123,9 +95,9 @@ const LogAndSignModal = (props) => {
             })
             if(res.status === 400){
                 if(res.data.name==="MongoError"){
-                    setErrorValMsg(1);
+                    setErrorValMsg("Someone has already signed up with this email.");
                 }else if(res.data.name==="ValidationError"){
-                    setErrorValMsg(2);
+                    setErrorValMsg("Password must be longer than 6 characters and must not contain the word password");
                 }
             }
         }
@@ -178,9 +150,6 @@ const LogAndSignModal = (props) => {
                             placeholder="Enter email"
                             required/>
                     </Form.Group>
-                    {(errorValMsg===1)
-                        ? <ShowValidationError/>
-                        : null}
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
                         <div className="grid-2-pass">
@@ -194,11 +163,11 @@ const LogAndSignModal = (props) => {
                             <ShowPass passRef={passRef}/>
                         </div>
                     </Form.Group>
-                    {(errorValMsg===2)
-                        ? <ShowValidationError/>
+                    {(errorValMsg!==null)
+                        ? <Alert msg={errorValMsg} color={"red"} />
                         : null}
                     {errorMsg
-                        ? <ShowError/>
+                        ? <ShowError />
                         : null}
                     <Button variant="dark" size="lg" type="submit" block>
                         {props.loginVar

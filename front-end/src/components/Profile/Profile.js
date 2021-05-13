@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import AuthContext from '../../context/auth/authContext';
 import ChangePassModal from '../modals/ChangePassModal';
+import Alert from '../alert/Alert'
 
 const Profile = () => {
     // context
@@ -37,33 +38,6 @@ const Profile = () => {
         // eslint-disable-next-line
     }, [user])
 
-    // functions
-    const ShowError = () => {
-        return (
-            <Form.Text
-                style={{
-                color: "red",
-                paddingBottom: "1vh",
-                fontSize: "14px"
-            }}>
-                {errorMsg}
-            </Form.Text>
-        );
-    }
-
-    const ShowSuccess = () => {
-        return (
-            <Form.Text
-                style={{
-                color: "green",
-                paddingBottom: "1vh",
-                fontSize: "14px"
-            }}>
-                {successMsg}
-            </Form.Text>
-        );
-    }
-
     const callHandler = async (e) => {
         e.preventDefault();
         if(!modalShow){                     // to avoid calling this with password change
@@ -73,6 +47,7 @@ const Profile = () => {
             })
             if(res.status === 400){
                 setErrorMsg(res.data.error);
+                setInterval(function(){ setErrorMsg(null) }, 5000);
             }
             else{
                 setErrorMsg(null);
@@ -115,10 +90,10 @@ const Profile = () => {
                             />
                     </Form.Group>
                     {errorMsg!==null
-                        ? <ShowError/>
+                        ? <Alert msg={errorMsg} color={"red"} />
                         : null}
                     {successMsg!==null
-                        ? <ShowSuccess />
+                        ? <Alert msg={successMsg} color={"green"} />
                         : null}
                     <div className="info-container">
                         <Button variant="dark" size="lg" type="submit" block>
