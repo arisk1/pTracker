@@ -7,6 +7,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
 import AuthState from './context/auth/AuthState';
 import CurrecnyState from './context/currency/CurrencyState';
+import PrivateRoute from './components/routing/PrivateRoute';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
                 <Container>
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
-                        <Route exact path="/profile" component={Profile}></Route>
+                        <PrivateRoute exact path="/profile" component={Profile}></PrivateRoute>
                     </Switch>
                 </Container>
                 <Footer/>
