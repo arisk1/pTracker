@@ -10,10 +10,6 @@ app.use(express.json());
 
 const baseURL = process.env.BASE_URL || ''
 
-//home
-const homeRouter = require('./routers/home');
-app.use(`${baseURL}/home`, homeRouter);
-
 //users
 const usersRouter = require('./routers/users');
 app.use(`${baseURL}/users`, usersRouter);
