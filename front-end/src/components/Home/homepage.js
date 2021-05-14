@@ -1,8 +1,9 @@
-import axios from 'axios';
 import React, {useEffect, useState, useContext} from 'react';
 import CoinList from '../CoinList/CoinList';
 import {Button,ButtonGroup,ListGroup,Col,Row} from 'react-bootstrap';
 import CurrencyContext from '../../context/currency/currencyContext';
+import  {coinListMarkets } from '@arisk1/cg-functions';
+
 
 
 const Home = () => {
@@ -29,11 +30,7 @@ const Home = () => {
     useEffect(() => {
         
         const fetchData = async() => {
-            const res = await axios.post('/home',{
-                "currency" : localStorage.currency,
-                "order" : 'market_cap_desc' ,
-                "pageIndex" : pageIndex
-            });
+            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',pageIndex);
             setCoins(res.data);
         }
         fetchData();
