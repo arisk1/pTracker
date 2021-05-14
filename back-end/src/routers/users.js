@@ -82,7 +82,7 @@ router.post('/', async (req, res) => {
             token
         });
     } catch (e) {
-        res.status(400).send({ error: e.errors });
+        res.status(400).send({ error: e });
     }
 
 });

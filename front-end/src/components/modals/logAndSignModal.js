@@ -94,9 +94,9 @@ const LogAndSignModal = (props) => {
                 name
             })
             if(res.status === 400){
-                if(res.data.name==="MongoError"){
+                if(res.data.error.name==="MongoError"){
                     setErrorValMsg("Someone has already signed up with this email.");
-                }else if(res.data.name==="ValidationError"){
+                }else if(res.data.error.name==="ValidationError"){
                     setErrorValMsg("Password must be longer than 6 characters and must not contain the word password");
                 }
             }
