@@ -73,9 +73,6 @@ const CoinList = (props) => {
                             </Col>
                             <Col>{coin.current_price}</Col>
                             <Col> 
-                                {/* <span>
-                                    {coin.price_change_percentage_24h_in_currency.toFixed(2)}
-                                </span> */}
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
                             <Col>
@@ -104,9 +101,6 @@ const CoinList = (props) => {
                             </Col>
                             <Col>{coin.current_price}</Col>
                             <Col> 
-                                {/* <span>
-                                    {coin.price_change_percentage_24h_in_currency.toFixed(2)}
-                                </span> */}
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
                             <Col>
