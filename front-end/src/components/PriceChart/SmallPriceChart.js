@@ -1,20 +1,24 @@
 import React from 'react'
 import mock_data_btc from '../../mock_data/mock_data_btc'
-// import mock_data_matic from '../../mock_data/mock_data_matic'
 import {
     LineChart,
     Line,
     ResponsiveContainer,
-    XAxis, YAxis, CartesianGrid
+    YAxis
   } from "recharts";
 
-const SmallPriceChart = () => {
+const SmallPriceChart = (props) => {
+    const { perc_change, sparkline } = props
+    const color = perc_change >= 0 ? "green" : "red"
+
     // mock_data here represents the sparkline --> this operation must occur when loading data from coingecko
-    const data = [...mock_data_btc.price].map((single_price, index) => {
+    const data = (sparkline!==undefined)
+    ?  [...sparkline.price].map((single_price, index) => {
         return {"name": index, "value":single_price}
     })
-    const day_change = "-24%"
-    const color = parseInt(day_change) > 0 ? "green" : "red"
+    : [...mock_data_btc.price].map((single_price, index) => {
+        return {"name": index, "value":single_price}
+    })
 
     return (
             <div style={{width:150, height:80}}>

@@ -8,7 +8,6 @@ import {Container} from 'react-bootstrap';
 import AuthState from './context/auth/AuthState';
 import CurrencyState from './context/currency/CurrencyState';
 import PrivateRoute from './components/routing/PrivateRoute';
-import SmallPriceChart from './components/PriceChart/SmallPriceChart';
 
 
 function App() {
@@ -21,7 +20,6 @@ function App() {
                 <Container>
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
-                        <Route exact path="/test" component={SmallPriceChart}></Route>
                         <PrivateRoute exact path="/profile" component={Profile}></PrivateRoute>
                     </Switch>
                 </Container>

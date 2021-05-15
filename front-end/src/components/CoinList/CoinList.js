@@ -76,7 +76,10 @@ const CoinList = (props) => {
                             {coin.market_cap}
                             </Col>
                             <Col>
-                                <SmallPriceChart />
+                                <SmallPriceChart 
+                                    perc_change={coin.price_change_percentage_7d_in_currency}
+                                    sparkline={coin.sparkline_in_7d}
+                                />
                             </Col>
                         </Row>
                     </ListGroup.Item>
