@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from './up-arrow.png';
 import downArrow from './down-arrow.png';
+import SmallPriceChart from '../PriceChart/SmallPriceChart';
 
 const CoinList = (props) => {
     const [reverseCoins,setReverseCoins] = useState(false);
@@ -45,12 +46,12 @@ const CoinList = (props) => {
                         <Col as={Button}
                         className='px-15 py-0 hover-mc'
                         variant=""
-                        onClick={()=>setReverseCoins(!reverseCoins)}
-                            style={{
-                            textAlign: 'right'
-                        }}>
+                        onClick={()=>setReverseCoins(!reverseCoins)}>
                             <ArrowToggle/>
                             MarketCap
+                        </Col>
+                        <Col>
+                            Chart
                         </Col>
                     </Row>
                 </ListGroup.Item>
@@ -69,13 +70,13 @@ const CoinList = (props) => {
                                 textAlign: 'left'
                             }}>{coin.market_cap_rank}</Col>
                             <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
-                            <Col>{coin.id}</Col>
+                            <Col>{coin.name}</Col>
                             <Col>{coin.current_price}</Col>
-                            <Col
-                                style={{
-                                textAlign: 'right'
-                            }}>
+                            <Col>
                             {coin.market_cap}
+                            </Col>
+                            <Col>
+                                <SmallPriceChart />
                             </Col>
                         </Row>
                     </ListGroup.Item>
@@ -98,6 +99,9 @@ const CoinList = (props) => {
                                 textAlign: 'right'
                             }}>
                             {coin.market_cap}
+                            </Col>
+                            <Col>
+                                <SmallPriceChart />
                             </Col>
                         </Row>
                     </ListGroup.Item>
