@@ -51,7 +51,7 @@ const CoinList = (props) => {
                             MarketCap
                         </Col>
                         <Col>
-                            Chart
+                            Chart - 7d
                         </Col>
                     </Row>
                 </ListGroup.Item>

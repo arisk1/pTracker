@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@arisk1/cg-functions": "^2.1.0",
     "@sendgrid/mail": "^7.4.2",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
