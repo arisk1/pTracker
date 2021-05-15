@@ -30,7 +30,7 @@ const Home = () => {
     useEffect(() => {
         
         const fetchData = async() => {
-            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',pageIndex);
+            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',pageIndex, true);
             setCoins(res.data);
         }
         fetchData();
@@ -43,7 +43,7 @@ const Home = () => {
                     <Row>
                         <Col style={{textAlign: 'left'}}>  
                             <ButtonGroup >
-                                <Button variant="dark"  >Currency : {(currency).toUpperCase()}</Button>
+                                <Button variant="dark" disabled>Currency : {(currency).toUpperCase()}</Button>
                             </ButtonGroup>
                         </Col>
                         <Col style={{ textAlign: 'right'}}>  

@@ -178,3 +178,7 @@ div.container {
 .green-color {
     color: green
 }
+
+.text-bold {
+    font-weight: 600;
+}

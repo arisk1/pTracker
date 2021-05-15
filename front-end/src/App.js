@@ -6,13 +6,14 @@ import Profile from './components/Profile/Profile';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Container} from 'react-bootstrap';
 import AuthState from './context/auth/AuthState';
-import CurrecnyState from './context/currency/CurrencyState';
+import CurrencyState from './context/currency/CurrencyState';
 import PrivateRoute from './components/routing/PrivateRoute';
+import NotFound from './components/NotFound/NotFound';
 
 
 function App() {
     return (
-        <CurrecnyState>
+        <CurrencyState>
         <AuthState>
         <Router >
             <div className="App">
@@ -21,13 +22,14 @@ function App() {
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
                         <PrivateRoute exact path="/profile" component={Profile}></PrivateRoute>
+                        <Route component={NotFound} />
                     </Switch>
                 </Container>
                 <Footer/>
             </div>
         </Router>
         </AuthState>
-        </CurrecnyState>
+        </CurrencyState>
     );
 }
 

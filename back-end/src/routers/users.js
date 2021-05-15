@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
 
     try {
         await user.save();
-        // sendWelcomeEmail(user.email , user.name);
+        sendWelcomeEmail(user.email , user.name);
         const token = await user.generateAuthToken();
         res.status(201).send({
             user,
@@ -173,7 +173,6 @@ router.patch('/me', auth, async (req, res) => {
         res.status(200).send(req.user);
     } catch (e) {
         //Bad request
-        console.log(e.message)
         res.status(400).send({error:e.message});
     }
 });
