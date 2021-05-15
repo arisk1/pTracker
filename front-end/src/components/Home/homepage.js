@@ -43,7 +43,7 @@ const Home = () => {
                     <Row>
                         <Col style={{textAlign: 'left'}}>  
                             <ButtonGroup >
-                                <Button variant="dark"  >Currency : {(currency).toUpperCase()}</Button>
+                                <Button variant="dark" disabled>Currency : {(currency).toUpperCase()}</Button>
                             </ButtonGroup>
                         </Col>
                         <Col style={{ textAlign: 'right'}}>  

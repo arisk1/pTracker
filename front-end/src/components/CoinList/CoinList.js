@@ -3,8 +3,11 @@ import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from './up-arrow.png';
 import downArrow from './down-arrow.png';
 import SmallPriceChart from '../PriceChart/SmallPriceChart';
+import PercChange from '../PercChange/PercChange';
 
 const CoinList = (props) => {
+    const { coins } = props
+
     const [reverseCoins,setReverseCoins] = useState(false);
     const ArrowToggle = () => {
         if(!reverseCoins){
@@ -29,26 +32,23 @@ const CoinList = (props) => {
         
     }
     const topInfo = () => {
-        if (props.coins.length > 0) {
+        if (coins.length > 0) {
             return (
                 <ListGroup.Item
                     style={{
                     backgroundColor: '#C0C0C0'
                 }}>
-                    <Row >
-                        <Col
-                            style={{
-                            textAlign: 'left'
-                        }}>#</Col>
-                        <Col>Symbol</Col>
-                        <Col>Coin</Col>
-                        <Col>Price</Col>
+                    <Row className="text-bold">
+                        <Col style={{textAlign: 'left'}}> # </Col>
+                        <Col style={{textAlign: 'left'}}> Name </Col>
+                        <Col> Price </Col>
+                        <Col> 24h Change </Col>
                         <Col as={Button}
-                        className='px-15 py-0 hover-mc'
-                        variant=""
-                        onClick={()=>setReverseCoins(!reverseCoins)}>
+                            className='px-15 py-0 hover-mc'
+                            variant=""
+                            onClick={()=>setReverseCoins(!reverseCoins)}>
                             <ArrowToggle/>
-                            MarketCap
+                            <span className="text-bold">MarketCap</span>
                         </Col>
                         <Col>
                             Chart - 7d
@@ -62,18 +62,24 @@ const CoinList = (props) => {
     const coinsMap = () => {
         if(!reverseCoins){
             return(
-                props.coins.map((coin,idx) => (
+                coins.map((coin,idx) => (
                     <ListGroup.Item key={idx} >
                         <Row className="align-items-center">
-                            <Col
-                                style={{
-                                textAlign: 'left'
-                            }}>{coin.market_cap_rank}</Col>
-                            <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
-                            <Col>{coin.name}</Col>
+                            <Col style={{textAlign: 'left'}}>
+                                {coin.market_cap_rank}
+                            </Col>
+                            <Col style={{textAlign: 'left'}}>
+                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                            </Col>
                             <Col>{coin.current_price}</Col>
+                            <Col> 
+                                {/* <span>
+                                    {coin.price_change_percentage_24h_in_currency.toFixed(2)}
+                                </span> */}
+                                <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
+                            </Col>
                             <Col>
-                            {coin.market_cap}
+                                {coin.market_cap.toLocaleString()}
                             </Col>
                             <Col>
                                 <SmallPriceChart 
@@ -87,24 +93,30 @@ const CoinList = (props) => {
             )
         }else{
             return(
-                props.coins.map((coin,idx) => (
+                coins.map((coin,idx) => (
                     <ListGroup.Item key={idx} >
                         <Row className="align-items-center">
-                            <Col
-                                style={{
-                                textAlign: 'left'
-                            }}>{coin.market_cap_rank}</Col>
-                            <Col><img alt={coin.id} className="img" src={coin.image}/></Col>
-                            <Col>{coin.id}</Col>
+                            <Col style={{textAlign: 'left'}}>
+                                {coin.market_cap_rank}
+                            </Col>
+                            <Col style={{textAlign: 'left'}}>
+                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                            </Col>
                             <Col>{coin.current_price}</Col>
-                            <Col
-                                style={{
-                                textAlign: 'right'
-                            }}>
-                            {coin.market_cap}
+                            <Col> 
+                                {/* <span>
+                                    {coin.price_change_percentage_24h_in_currency.toFixed(2)}
+                                </span> */}
+                                <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
                             <Col>
-                                <SmallPriceChart />
+                            {coin.market_cap.toLocaleString()}
+                            </Col>
+                            <Col>
+                                <SmallPriceChart
+                                    perc_change={coin.price_change_percentage_7d_in_currency}
+                                    sparkline={coin.sparkline_in_7d}
+                                />
                             </Col>
                         </Row>
                     </ListGroup.Item>
