@@ -9,7 +9,10 @@ const portfolioSchema = new mongoose.Schema({
     },sumOfPortfolio : {
         type : Number , 
         default : 0
-    },sumPnl : {
+    },sumPosition : {
+        type : Number,
+        default : 0
+    },sumPnL : {
         type : Number,
         default : 0
     },
@@ -25,7 +28,11 @@ const portfolioSchema = new mongoose.Schema({
             type : Number,
             default : 0
         },
-        sumPnlOfCoin : {
+        sumPositionOfCoin : {
+            type : Number,
+            default : 0
+        },
+        sumPnLOfCoin : {
             type : Number,
             default : 0
         },
@@ -49,7 +56,8 @@ const portfolioSchema = new mongoose.Schema({
             },pnl : {
                 type : Number,
                 default : 0
-            },date : {
+            },
+            date : {
                 type : Date,
                 default : Date.now
             }
@@ -81,12 +89,25 @@ portfolioSchema.methods.fetchPortfolio = async function(currency){
             //get currenct price of coin in the selected currency
         let price = await priceOfCoins([portfolio.coins[iterator].coinId],[currency]);
             //and update the holdings of that coin 
-        portfolio.coins[iterator].holdings = portfolio.coins[iterator].quantity * price.data[portfolio.coins[iterator].coinId][currency];
+        portfolio.coins[iterator].holdings = portfolio.coins[iterator].quantity * price.data[portfolio.coins[iterator].coinId][currency]; 
+            //calculate pnl for every coin 
+        portfolio.coins[iterator].sumPnLOfCoin = portfolio.coins[iterator].holdings - portfolio.coins[iterator].sumPositionOfCoin
+            //calculate pnl for every transaction made regarding this coin
+        let historyLen = portfolio.coins[iterator].history.length;
+        let historyIterator = 0;
+        while(historyLen > 0){
+            //we got the current price of the coin in price variable
+            portfolio.coins[iterator].history[historyIterator].pnl = (portfolio.coins[iterator].history[historyIterator].quantity*price) - portfolio.coins[iterator].history[historyIterator].cost;
+            historyIterator+=1;
+            historyLen-=1;
+        }
             //then add to the sum of the portfolio
         portfolio.sumOfPortfolio += portfolio.coins[iterator].holdings;
         iterator+=1;
         len-=1;
     }   
+    //pnl for the portfolio
+    portfolio.sumPnL = portfolio.sumOfPortfolio - portfolio.sumPosition;
     await portfolio.save();
     return portfolio;
 }
@@ -99,6 +120,8 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
         portfolio.coins = portfolio.coins.map((arrayObject)=>{
             if(arrayObject.coinId === coin){
                 arrayObject.quantity += quantity;
+                arrayObject.sumPositionOfCoin += quantity*pricePerCoin; //update position for coin 
+                portfolio.sumPosition += quantity*pricePerCoin; //update global portfolio position
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,
                     price : pricePerCoin,
@@ -114,6 +137,8 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
         portfolio.coins = portfolio.coins.map((arrayObject)=>{
             if(arrayObject.coinId === coin){
                 arrayObject.quantity -= quantity;
+                arrayObject.sumPositionOfCoin -= quantity*pricePerCoin; //update position for coin 
+                portfolio.sumPosition -= quantity*pricePerCoin; //update global portfolio position
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,
                     price : pricePerCoin,
