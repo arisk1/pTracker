@@ -9,6 +9,7 @@ import AuthState from './context/auth/AuthState';
 import CurrencyState from './context/currency/CurrencyState';
 import PrivateRoute from './components/routing/PrivateRoute';
 import NotFound from './components/NotFound/NotFound';
+import Heatmap from './components/Heatmap/Heatmap';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Container>
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
+                        <Route exact path="/heatmap" component={Heatmap}></Route>
                         <PrivateRoute exact path="/profile" component={Profile}></PrivateRoute>
                         <Route component={NotFound} />
                     </Switch>
