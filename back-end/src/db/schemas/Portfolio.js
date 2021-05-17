@@ -97,7 +97,7 @@ portfolioSchema.methods.fetchPortfolio = async function(currency){
         let historyIterator = 0;
         while(historyLen > 0){
             //we got the current price of the coin in price variable
-            portfolio.coins[iterator].history[historyIterator].pnl = (portfolio.coins[iterator].history[historyIterator].quantity*price) - portfolio.coins[iterator].history[historyIterator].cost;
+            portfolio.coins[iterator].history[historyIterator].pnl =  ((portfolio.coins[iterator].history[historyIterator].quantity)* price.data[portfolio.coins[iterator].coinId][currency]) - portfolio.coins[iterator].history[historyIterator].cost;
             historyIterator+=1;
             historyLen-=1;
         }
