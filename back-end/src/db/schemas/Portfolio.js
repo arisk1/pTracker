@@ -15,7 +15,14 @@ const portfolioSchema = new mongoose.Schema({
     },sumPnL : {
         type : Number,
         default : 0
-    },
+    },sumOfPortfolioChange : {
+        type : Number,
+        default : 0
+    },portfolioChange : {
+        type : Number ,
+        default : 0
+    }
+    ,
     coins : [{
         coinId : {
             type : String
@@ -85,9 +92,12 @@ portfolioSchema.methods.fetchPortfolio = async function(currency){
     let len = portfolio.coins.length;
     //first turn sum to 0
     portfolio.sumOfPortfolio = 0;
+    portfolio.sumOfPortfolioChange = 0;
     while(len > 0){
             //get currenct price of coin in the selected currency
         let price = await priceOfCoins([portfolio.coins[iterator].coinId],[currency]);
+        let priceChange = price.data[portfolio.coins[iterator].coinId][(currency + "_24h_change")];
+        let previousPrice = ((price.data[portfolio.coins[iterator].coinId][currency] )*100) / (100 + priceChange);
             //and update the holdings of that coin 
         portfolio.coins[iterator].holdings = portfolio.coins[iterator].quantity * price.data[portfolio.coins[iterator].coinId][currency]; 
             //calculate pnl for every coin 
@@ -103,11 +113,14 @@ portfolioSchema.methods.fetchPortfolio = async function(currency){
         }
             //then add to the sum of the portfolio
         portfolio.sumOfPortfolio += portfolio.coins[iterator].holdings;
+        portfolio.sumOfPortfolioChange += previousPrice * portfolio.coins[iterator].quantity;
         iterator+=1;
         len-=1;
     }   
     //pnl for the portfolio
     portfolio.sumPnL = portfolio.sumOfPortfolio - portfolio.sumPosition;
+    //24hr portfolio change
+    portfolio.portfolioChange = portfolio.sumOfPortfolio - portfolio.sumOfPortfolioChange;
     await portfolio.save();
     return portfolio;
 }
