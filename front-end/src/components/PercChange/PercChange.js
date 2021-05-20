@@ -9,13 +9,13 @@ const PercChange = (props) => {
         <Fragment>
             {perc_change ? (
                 <Fragment>
-                    <i class={cname} style={{color}}></i>
+                    <i className={cname} style={{color}}></i>
                     <span style={{color}}> {Math.abs(perc_change).toFixed(2)}% </span>
                 </Fragment>
             )
             : (
                 <Fragment>
-                    <i class='fas fa-caret-down' style={{color:"red"}}></i>
+                    <i className='fas fa-caret-down' style={{color:"red"}}></i>
                     <span style={{color}}> 0% </span>
                 </Fragment>
             )

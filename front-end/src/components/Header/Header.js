@@ -101,7 +101,9 @@ const Header = () => {
                                 </NavDropdown.Item>
                             ))}
                         </NavDropdown>
+
                         <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
+                        <Nav.Link as={Link} to={{pathname:'/heatmap'}}>Heatmap</Nav.Link>
                     </Nav>
                     <Nav>
                         {isAuthenticated ? <ShowUserIcon/> : <ShowSignUpAndLogIn/>}
