@@ -138,8 +138,6 @@ div.container {
 
 }
 
-
-
 @media only screen and (max-width: 992px) {
     .my-form-inline {
         flex: 100%;
@@ -159,6 +157,12 @@ div.container {
     grid-gap: 1rem;
   }
 
+.grid-2-conv {
+    display: grid;
+    grid-template-columns: 10% auto;
+    grid-gap: 1rem;
+  }
+
 /* extras */
 .fa-eye {
     text-align: center !important;
@@ -168,6 +172,10 @@ div.container {
 
 .bordered {
     border: 1px solid !important
+}
+
+.hidden {
+    visibility: hidden !important;
 }
 
 .info-container {
@@ -180,6 +188,19 @@ div.container {
 .text-bold {
     font-weight: 600;
 }
+
+.converter-container {
+    width: 90%;
+    margin: auto;
+    padding: 5%;
+    height: 550px;
+}
+
+.dropdown-menu {
+    height: 250px;
+    overflow-y: scroll;
+    width: 420px !important;
+  }
 
 /* colors */
 .green-color {
@@ -199,3 +220,10 @@ div.container {
     background-color: #C0C0C0;
     padding: 15px;
 }
+
+/* responsive stuff */
+@media only screen and (max-width: 900px) {
+    .dropdown-menu {
+        width: 200px !important;
+      }
+  }

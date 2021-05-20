@@ -104,6 +104,13 @@ const Header = () => {
 
                         <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
                         <Nav.Link as={Link} to={{pathname:'/heatmap'}}>Heatmap</Nav.Link>
+                        <NavDropdown title="Tools" id="basic-nav-dropdown">
+                            <Dropdown.Header>  Cryptocurrency Tools  </Dropdown.Header>
+                            <Dropdown.Divider />
+                            <NavDropdown.Item as={Link} to={{pathname:'/converter'}}>
+                                Crypto Converter
+                            </NavDropdown.Item>
+                        </NavDropdown>
                     </Nav>
                     <Nav>
                         {isAuthenticated ? <ShowUserIcon/> : <ShowSignUpAndLogIn/>}
