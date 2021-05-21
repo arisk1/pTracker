@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import  { coinList, priceOfCoins, coinListMarkets } from '@arisk1/cg-functions';
 import { InputGroup, Button, Form, FormControl, DropdownButton, Dropdown } from 'react-bootstrap';
+import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
 
 
 const Converter = () => {
@@ -13,8 +14,16 @@ const Converter = () => {
         setConversion] = useState({
             amount: 0,
             coin1: "",
+            price1: 0,
+            coin2: "",
+            price2: 0
+        })
+    const [showCoins,
+        setShowCoins] = useState({
+            coin1: "",
             coin2: ""
         })
+
     const [filtered, setFiltered] = useState({
         from: [],
         to: []
@@ -23,61 +32,86 @@ const Converter = () => {
         from: false,
         to: false
     })
-        
+    const [result,
+        setResult] = useState('')
+
     // effects
     useEffect(async () => {
         const fetchCoinlist = async() => {
-            const res = await coinList();
-            setCoinlist(res.data.map((coin => { return {id:coin.id, name:coin.name} })));
+            // get 1000 top coins by requesting coin/markets
+            let page_index = 1;
+            const last_page = 10
+            let temp_coins = []
+            while(page_index <= last_page){
+                const res = await coinListMarkets('usd','market_cap_desc',page_index, false);
+                temp_coins = [...temp_coins].concat(res.data.map((coin => { 
+                    const { id, name, symbol, image, current_price, market_cap } = coin
+                    return { 
+                        id, 
+                        name,
+                        symbol,
+                        image,
+                        price:current_price,
+                        mcap:market_cap
+                    } 
+                })))
+                if(page_index === 1){
+                    // set initial input values
+                    setConversion({
+                        ...conversion,
+                        coin1: temp_coins[0].name,
+                        price1: temp_coins[0].price,
+                        coin2: temp_coins[1].name,
+                        price2: temp_coins[1].price,
+                    })
+                    setShowCoins({
+                        coin1: temp_coins[0].name,
+                        coin2: temp_coins[1].name,
+                    })
+                }
+
+                page_index += 1;
+            }
+            setCoinlist(temp_coins);
+            setTopCoins(temp_coins.slice(0,20));
         }
         await fetchCoinlist();
         //eslint-disable-next-line
     },[])
 
-    useEffect(async () => {
-        const fetchTopCoins = async() => {
-            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',1, false);
-            setTopCoins(res.data.slice(0,20));
-        }
-        if(coinlist && coinlist.length > 0 && topCoins.length===0){
-            await fetchTopCoins();
-        }
-        //eslint-disable-next-line
-    },[coinlist])
-
-    // refs
-    const coin1_ref = useRef('')
-    const coin2_ref = useRef('')
-    const resultRef = useRef('')
-
     // functions
     const onChange = (e) => {
-        setConversion({...conversion, [e.target.name]: e.target.value })
+        setShowCoins({...conversion, [e.target.name]: e.target.value })
 
         if(e.target.name === "coin1"){
             // coin from
-            if(coin1_ref.current.value !== ''){
-                // filter
+            if(e.target.value !== ''){
                 const res = coinlist.filter((coin) => {
-                    const regex = new RegExp(`^${e.target.value}`, 'i');
-                    const mtch = coin.name.match(regex);
-                    return mtch
+                    try {
+                        const regex = new RegExp(`^${e.target.value}`, 'i');
+                        const mtch = coin.name.match(regex) || coin.symbol.match(regex);
+                        return mtch
+                    } catch (error) {
+                        console.log(error)
+                        return null
+                    }
                 })
-                setFiltered({...filtered, from:res})
-                setClicked({...clicked, from:true})
+                if(res !== null){
+                    setFiltered({...filtered, from:res})
+                    setClicked({...clicked, from:true})
+                }
             }
             else{
                 setFiltered({...filtered, from:[]})
                 setClicked({...clicked, from:false})
             }
         }
-        else{
+        else if(e.target.name === "coin2"){
             // coin to
-            if(coin2_ref.current.value !== ''){
-                // filter
+            if(e.target.value !== ''){
                 const res = coinlist.filter((coin) => {
                     const regex = new RegExp(`^${e.target.value}`, 'i');
-                    const mtch = coin.name.match(regex);
+                    const mtch = coin.name.match(regex) || coin.symbol.match(regex);
                     return mtch
                 })
                 setFiltered({...filtered, to:res})
@@ -88,16 +122,22 @@ const Converter = () => {
                 setClicked({...clicked, to:false})
             }
         }
+        else{
+            // fix amount
+            setConversion({...conversion, [e.target.name]: e.target.value })
+        }
     }
 
-    const onClickCoin1 = (name) => {
-        coin1_ref.current.value = name
-        setConversion({...conversion, coin1:name })
+    const onClickCoin1 = (coin) => {
+        const { name, price } = coin
+        setShowCoins({...showCoins, coin1:name})
+        setConversion({...conversion, coin1:name, price1:price })
     }
 
-    const onClickCoin2 = (name) => {
-        coin2_ref.current.value = name
-        setConversion({...conversion, coin2:name })
+    const onClickCoin2 = (coin) => {
+        const { name, price } = coin
+        setShowCoins({...showCoins, coin2:name})
+        setConversion({...conversion, coin2:name, price2:price })
     }
 
     const onClickButton = (e) => {
@@ -105,11 +145,27 @@ const Converter = () => {
         setClicked({...clicked, [e.target.id]:value})
     }
 
+    const resetShow = (e) => {
+        if(e.target.name === "coin1"){
+            console.log("coin1")
+            setShowCoins({...showCoins, coin1:conversion.coin1})
+        }
+        else if(e.target.name === "coin2"){
+            console.log("coin2")
+            setShowCoins({...showCoins, coin2:conversion.coin2})
+        }
+        // setClicked({...clicked, [e.target.id]:false})
+    }
+
     const onSubmit = async (e) => {
         e.preventDefault()
-        console.log("yeahh")
 
-        // const res = await priceOfCoins([conversion.coin1, conversion.coin2], ['usd'])
+        console.log(conversion)
+        const { amount, price1, price2 } = conversion
+
+        const result = (amount * price1) / price2
+        console.log(result)
+        setResult(result.toString())
     }
 
     return (
@@ -118,6 +174,7 @@ const Converter = () => {
             <Form onSubmit={onSubmit}>
             <div className="grid-2">
                 <Form.Control
+                    autoComplete="off"
                     type="number"
                     name="amount"
                     placeholder="Amount to convert"
@@ -130,13 +187,14 @@ const Converter = () => {
                     aria-describedby="basic-addon"
                 />
 
-                <InputGroup>
+                <InputGroup onBlur={resetShow}>
                     <Form.Control
+                        autoComplete="off"
                         type="text"
                         name="coin1"
                         placeholder="From"
+                        value={showCoins.coin1}
                         onChange={onChange}
-                        ref={coin1_ref}
                         required
                     />
 
@@ -154,31 +212,33 @@ const Converter = () => {
                         {filtered.from.length===0 
                         ? topCoins.map(
                             (coin) => {
-                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin1(coin.name)}> 
-                                            {coin.name} 
+                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin1(coin)}> 
+                                            <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
                                         </Dropdown.Item>
                             }
                         )
                         : filtered.from.map(
                             (coin) => {
-                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin1(coin.name)}> 
-                                            {coin.name} 
+                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin1(coin)}> 
+                                            <img alt={coin.id} className="img" src={coin.image}/>{coin.name} 
                                         </Dropdown.Item>
                             }
                         )}
                     </DropdownButton>
                 </InputGroup>
-                <InputGroup>
+                <InputGroup onBlur={resetShow}>
                     <Form.Control
+                        autoComplete="off"
                         type="text"
                         name="coin2"
                         placeholder="To"  
+                        value={showCoins.coin2}
                         onChange={onChange}
-                        ref={coin2_ref}
                         required
                     />
 
                     <DropdownButton
+                        menuAlign="right"
                         as={InputGroup.Append}
                         variant="outline-secondary"
                         id="to"
@@ -191,15 +251,15 @@ const Converter = () => {
                         {filtered.to.length===0 
                         ? topCoins.map(
                             (coin) => {
-                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin2(coin.name)}> 
-                                            {coin.name} 
+                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin2(coin)}> 
+                                            <img alt={coin.id} className="img" src={coin.image}/>{coin.name} 
                                         </Dropdown.Item>
                             }
                         )
                         : filtered.to.map(
                             (coin) => {
-                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin2(coin.name)}> 
-                                            {coin.name} 
+                                return <Dropdown.Item key={coin.id} onClick={() => onClickCoin2(coin)}> 
+                                            <img alt={coin.id} className="img" src={coin.image}/>{coin.name} 
                                         </Dropdown.Item>
                             }
                         )}
@@ -207,10 +267,10 @@ const Converter = () => {
                 </InputGroup>
             </div><br />
             <Button variant="dark" type="submit">Convert!</Button>
+            </Form><br />
             <p>
-                Result: <span ref={resultRef}></span>
+                Result: <span className="converter-result"> {result} </span>
             </p>
-            </Form>
         </div>
     )
 }

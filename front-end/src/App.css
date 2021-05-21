@@ -196,7 +196,11 @@ div.container {
     height: 550px;
 }
 
-.dropdown-menu {
+.converter-result {
+    font-weight: bold;
+}
+
+.dropdown-menu-right {
     height: 250px;
     overflow-y: scroll;
     width: 420px !important;
