@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import  { coinList, priceOfCoins, coinListMarkets } from '@arisk1/cg-functions';
-import { InputGroup, Button, Form, FormControl, DropdownButton, Dropdown } from 'react-bootstrap';
-import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
-
+import  { coinListMarkets } from '@arisk1/cg-functions';
+import { InputGroup, Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import Spinner from '../Spinner/Spinner'
 
 const Converter = () => {
     // states
@@ -20,6 +19,7 @@ const Converter = () => {
         })
     const [showCoins,
         setShowCoins] = useState({
+            amount:0,
             coin1: "",
             coin2: ""
         })
@@ -58,13 +58,15 @@ const Converter = () => {
                 if(page_index === 1){
                     // set initial input values
                     setConversion({
-                        ...conversion,
+                        // ...conversion,
+                        amount:1,
                         coin1: temp_coins[0].name,
                         price1: temp_coins[0].price,
                         coin2: temp_coins[1].name,
                         price2: temp_coins[1].price,
                     })
                     setShowCoins({
+                        amount: 1,
                         coin1: temp_coins[0].name,
                         coin2: temp_coins[1].name,
                     })
@@ -78,6 +80,12 @@ const Converter = () => {
         await fetchCoinlist();
         //eslint-disable-next-line
     },[])
+
+    useEffect(() => {
+        if(conversion.price2 > 0){
+            calculateResult()
+        }
+    }, [conversion.amount, conversion.coin1, conversion.coin2])
 
     // functions
     const onChange = (e) => {
@@ -147,20 +155,14 @@ const Converter = () => {
 
     const resetShow = (e) => {
         if(e.target.name === "coin1"){
-            console.log("coin1")
             setShowCoins({...showCoins, coin1:conversion.coin1})
         }
         else if(e.target.name === "coin2"){
-            console.log("coin2")
             setShowCoins({...showCoins, coin2:conversion.coin2})
         }
-        // setClicked({...clicked, [e.target.id]:false})
     }
 
-    const onSubmit = async (e) => {
-        e.preventDefault()
-
-        console.log(conversion)
+    const calculateResult = async (e) => {
         const { amount, price1, price2 } = conversion
 
         const result = (amount * price1) / price2
@@ -170,13 +172,15 @@ const Converter = () => {
 
     return (
         <div className="converter-container">
-            <h2>Cryptocurrency Converter Calculator</h2> <br/><br/>
-            <Form onSubmit={onSubmit}>
+            <h2>Cryptocurrency Converter Calculator</h2>
+            {coinlist.length===0 ? <Spinner /> : null}<br/><br/>
+            <Form>
             <div className="grid-2">
                 <Form.Control
                     autoComplete="off"
                     type="number"
                     name="amount"
+                    value={showCoins.amount}
                     placeholder="Amount to convert"
                     onChange={onChange}
                     required
@@ -266,11 +270,14 @@ const Converter = () => {
                     </DropdownButton>
                 </InputGroup>
             </div><br />
-            <Button variant="dark" type="submit">Convert!</Button>
             </Form><br />
-            <p>
-                Result: <span className="converter-result"> {result} </span>
-            </p>
+            {conversion.amount ? 
+                <p>
+                    {conversion.amount} {conversion.coin1} = 
+                    <span className="converter-result"> {result}{" "}</span>{conversion.coin2}
+                </p> :
+                null
+            }
         </div>
     )
 }
