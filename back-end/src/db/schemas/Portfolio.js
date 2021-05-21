@@ -150,8 +150,8 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
         portfolio.coins = portfolio.coins.map((arrayObject)=>{
             if(arrayObject.coinId === coin){
                 arrayObject.quantity -= quantity;
-                arrayObject.sumPositionOfCoin -= quantity*pricePerCoin; //update position for coin 
-                portfolio.sumPosition -= quantity*pricePerCoin; //update global portfolio position
+                // arrayObject.sumPositionOfCoin -= quantity*pricePerCoin; //update position for coin 
+                // portfolio.sumPosition -= quantity*pricePerCoin; //update global portfolio position
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,
                     price : pricePerCoin,
