@@ -149,9 +149,11 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
     }else if(typeOfTransaction === "sell"){
         portfolio.coins = portfolio.coins.map((arrayObject)=>{
             if(arrayObject.coinId === coin){
+                //do not allow user to sell more than he owns!
+                if(quantity > arrayObject.quantity){
+                    throw new Error('Insufficient Funds!');
+                }
                 arrayObject.quantity -= quantity;
-                // arrayObject.sumPositionOfCoin -= quantity*pricePerCoin; //update position for coin 
-                // portfolio.sumPosition -= quantity*pricePerCoin; //update global portfolio position
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,
                     price : pricePerCoin,
@@ -184,6 +186,10 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
         }else { //transfer out
             portfolio.coins = portfolio.coins.map((arrayObject)=>{
                 if(arrayObject.coinId === coin){
+                //do not allow user to sell more than he owns!
+                if(quantity > arrayObject.quantity){
+                    throw new Error('Insufficient Funds!');
+                }
                 arrayObject.quantity -= quantity;
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,

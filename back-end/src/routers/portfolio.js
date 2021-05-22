@@ -160,7 +160,7 @@ router.patch('/:id/transaction',auth , async (req,res)=> {
 
      } catch(e) {
          //Bad request
-         res.status(400).send(e);
+         res.status(400).send({ error: e.message });
      }
  });
 
