@@ -30,7 +30,7 @@ const Home = () => {
     useEffect(() => {
         
         const fetchData = async() => {
-            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',pageIndex, true);
+            const res = await coinListMarkets(localStorage.currency,'market_cap_desc',pageIndex, true,100);
             setCoins(res.data);
         }
         fetchData();
