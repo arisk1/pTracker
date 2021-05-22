@@ -135,6 +135,11 @@ test('Should fetch portfolios for user', async () => {
     //check the the portfolios match
     const portfolio = await Portfolio.findById(response.body._id);
     expect(portfolio._id).toStrictEqual(portfolio1._id);
+    if(portfolio.coins[0].history.length > 0){ //if a transcaction has occured
+        //should calculate sum of portfolio
+        expect(portfolio.sumOfPortfolio).not.toBe(0);
+    }
+    
 });
 
 test('Should not fetch portfolios for user if not authenticated', async () => {
@@ -157,13 +162,13 @@ test('Should be able to add coin to his own portfolio' , async()=>{
         .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(200);
         //check if the coins array is empty
         expect(response.body).toHaveLength(2);
         //also check if the correct coinName was added
-        expect(response.body[1].coinId).toStrictEqual("btc");
+        expect(response.body[1].coinId).toStrictEqual("bitcoin");
 
 });
 
@@ -172,7 +177,7 @@ test('Should not be able to add coin to other users portfolio' , async()=>{
         .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(404);
 });
@@ -181,7 +186,7 @@ test('Should not be able to add coin if not authenticated' , async()=>{
     const response = await request(app)
         .patch(`${baseURL}/portfolios/${portfolio1._id}/add`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(401);
 });
@@ -191,7 +196,7 @@ test('Should be able to remove coin from his own portfolio' , async()=>{
         .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .set('Authorization', `Bearer ${user1.tokens[0].token}`)
         .send({
-            "coinName" : "eth"
+            "coinName" : "ethereum"
         }) 
         .expect(200);
         //check if the coins array is empty
@@ -202,7 +207,7 @@ test('Should not be able to remove coin if not authenticated' , async()=>{
     const response = await request(app)
         .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(401);
 });
@@ -212,7 +217,7 @@ test('Should not be able to remove coin to other users portfolio' , async()=>{
         .patch(`${baseURL}/portfolios/${portfolio1._id}/remove`)
         .set('Authorization', `Bearer ${user2.tokens[0].token}`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(404);
 });
@@ -239,12 +244,245 @@ test('Should not be able to remove all coin if not authenticated' , async()=>{
     const response = await request(app)
         .patch(`${baseURL}/portfolios/${portfolio1._id}/removeAll`)
         .send({
-            "coinName" : "btc"
+            "coinName" : "bitcoin"
         }) 
         .expect(401);
 });
 
+test('Should be able to do a buy order' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "buy",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(200);
+    //check history , should be of length 2 
+    expect(response.body.coins[0].history).toHaveLength(2);
+    //check if the last transcation was buy 
+    expect(response.body.coins[0].history[1].transaction).toBe('buy');
+})
 
+test('Should not be able to do a buy order in onothers users portfolio' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user2.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "buy",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(404);
+})
+
+test('Should not be able to do a buy order if not authenticated' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .send({
+            "typeOfTransaction" : "buy",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(401);
+})
+
+test('Should be able to do a sell order' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "sell",
+            "coin" : "ethereum",
+            "quantity" : 1,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(200);
+    //check history , should be of length 2 
+    expect(response.body.coins[0].history).toHaveLength(2);
+    //check if the last transcation was sell 
+    expect(response.body.coins[0].history[1].transaction).toBe('sell');
+})
+
+test('Should not be able to do a sell order in onothers users portfolio' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user2.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "sell",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(404);
+})
+
+test('Should not be able to do a sell order if not authenticated' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .send({
+            "typeOfTransaction" : "sell",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(401);
+})
+
+test('Should be able to do a transferin order' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "transferin",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(200);
+    //check history , should be of length 2 
+    expect(response.body.coins[0].history).toHaveLength(2);
+    //check if the last transcation was transferin 
+    expect(response.body.coins[0].history[1].transaction).toBe('transferin');
+})
+
+test('Should not be able to do a transferin order in onothers users portfolio' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user2.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "transferin",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(404);
+})
+
+test('Should not be able to do a tranferin order if not authenticated' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .send({
+            "typeOfTransaction" : "transferin",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(401);
+})
+
+test('Should be able to do a transferout order' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "transferout",
+            "coin" : "ethereum",
+            "quantity" : 1,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(200);
+    //check history , should be of length 2 
+    expect(response.body.coins[0].history).toHaveLength(2);
+    //check if the last transcation was transferout 
+    expect(response.body.coins[0].history[1].transaction).toBe('transferout');
+})
+
+test('Should not be able to do a transferout order in onothers users portfolio' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user2.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "transferout",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(404);
+})
+
+test('Should not be able to do a transferout order if not authenticated' , async()=>{
+    // add buy transaction
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .send({
+            "typeOfTransaction" : "transferout",
+            "coin" : "ethereum",
+            "quantity" : 2,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(401);
+})
+
+test('Should not be able to sent orders other than buy,sell,transferin,transferout', async()=>{
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "randomwords",
+            "coin" : "ethereum",
+            "quantity" : 1,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(400);
+})
+
+
+test('User should not be able to sell more than he owns', async()=>{
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "sell",
+            "coin" : "ethereum",
+            "quantity" : 10,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(400);
+})
+
+test('User should not be able to transfer out  more than he owns', async()=>{
+    const response = await request(app)
+    .patch(`${baseURL}/portfolios/${portfolio1._id}/transaction`)
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send({
+            "typeOfTransaction" : "transferout",
+            "coin" : "ethereum",
+            "quantity" : 10,
+            "pricePerCoin" : "3000",
+            "date" : "2021-05-16T09:26:06.824Z"
+    }) 
+    .expect(400);
+})
 
 
 

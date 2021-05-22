@@ -60,7 +60,10 @@ router.get('/:id', auth ,async (req, res) => {
         if (!portfolio) {
             return res.status(404).send();
         }
-        res.status(200).send(portfolio);
+        //every time you fetch a portfolio calculate the holdings with the currenct price of the coin
+        //and the sum of the holdings of the users portfolio
+        const portfolioUpdated = await portfolio.fetchPortfolio("usd");
+        res.status(200).send(portfolioUpdated);
     }catch(e){
         if (req.params.id && !mongoose.Types.ObjectId.isValid(req.params.id)) {
             //handle the invalid IDs
@@ -133,6 +136,33 @@ router.patch('/:id/add',auth , async (req,res)=> {
         res.status(400).send(e);
     }
 });
+
+// @route   PATCH p-tracker-api/portfolios/:id/transaction
+// @desc    Add transactins to user's portfolio regarding specific coins
+// @access  Private
+
+router.patch('/:id/transaction',auth , async (req,res)=> {
+    //types of trasnsactions : buy , sell , transfer 
+    const allowedTypesOfTransactions = ['buy' , 'sell', 'transferin', 'transferout'];
+    //only allow these 4 types
+    if(!allowedTypesOfTransactions.includes(req.body.typeOfTransaction)){
+     return res.status(400).send({error : 'Invalid type of trasaction!'});
+    }
+ 
+     try {
+        const portfolio = await Portfolio.findOne({_id : req.params.id , owner : req.user._id});
+       
+        if (!portfolio) {
+            return res.status(404).send();
+        }
+         const updatedPortfolio = await portfolio.transaction(req.body.typeOfTransaction,req.body.coin,req.body.quantity,req.body.pricePerCoin,req.body.date);
+         res.status(200).send(updatedPortfolio);
+
+     } catch(e) {
+         //Bad request
+         res.status(400).send({ error: e.message });
+     }
+ });
 
 // @route   PATCH p-tracker-api/portfolios/:id/remove
 // @desc    Remove coins from user's portfolio

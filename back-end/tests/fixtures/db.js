@@ -31,20 +31,43 @@ const user2 = {
 
 const portfolio1 = {
     _id : new mongoose.Types.ObjectId(),
+    sumOfPortfolio: 2618.22,
+    sumPosition: 4000,
+    sumPnL: -1381.7800000000002,
+    sumOfPortfolioChange: 2912.077422941303,
+    portfolioChange: -293.8574229413034,
     name: 'First p',
     owner : user1Id,
-    coins : [{
-        coinId : "eth",
-        holdings : 0,
-        pnl : 0 
-    }]
+    coins: [
+        {
+            quantity: 1,
+            holdings: 2618.22,
+            sumPositionOfCoin: 4000,
+            sumPnLOfCoin: -1381.7800000000002,
+            _id: "60a28ee3da5a3c488beba239",
+            coinId: "ethereum",
+            history: [
+                {
+                    fees: 0,
+                    cost: 4000,
+                    proceeds: 0,
+                    pnl: -1381.7800000000002,
+                    _id: "60a28ef5da5a3c488beba23a",
+                    transaction: "buy",
+                    price: 4000,
+                    quantity: 1,
+                    date: "2021-05-16T09:26:06.824Z"
+                }
+            ]
+        }
+    ]
 }
 const portfolio2 = {
     _id : new mongoose.Types.ObjectId(),
     name: 'Second p',
     owner : user1Id,
     coins : [{
-        coinId : "eth",
+        coinId : "ethereum",
         holdings : 0,
         pnl : 0 
     }]
@@ -55,7 +78,7 @@ const portfolio3 = {
     name: 'Third p',
     owner : user2Id,
     coins : [{
-        coinId : "eth",
+        coinId : "ethereum",
         holdings : 0,
         pnl : 0 
     }]
