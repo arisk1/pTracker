@@ -157,9 +157,9 @@ div.container {
     grid-gap: 1rem;
   }
 
-.grid-2-conv {
+.grid-3-conv {
     display: grid;
-    grid-template-columns: 10% auto;
+    grid-template-columns: 46% auto 46%;
     grid-gap: 1rem;
   }
 

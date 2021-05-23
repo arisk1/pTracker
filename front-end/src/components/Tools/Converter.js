@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import  { coinListMarkets } from '@arisk1/cg-functions';
-import { InputGroup, Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { InputGroup, Form, DropdownButton, Dropdown, Button } from 'react-bootstrap';
 import Spinner from '../Spinner/Spinner'
 
 const Converter = () => {
@@ -38,12 +38,13 @@ const Converter = () => {
     // effects
     useEffect(async () => {
         const fetchCoinlist = async() => {
-            // get 1000 top coins by requesting coin/markets
+            // get 1500 top coins by requesting coin/markets
             let page_index = 1;
             const last_page = 10
             let temp_coins = []
             while(page_index <= last_page){
-                const res = await coinListMarkets('usd','market_cap_desc',page_index, false);
+                const res = await coinListMarkets('usd','market_cap_desc',page_index, false, 250);
+                console.log(page_index)
                 temp_coins = [...temp_coins].concat(res.data.map((coin => { 
                     const { id, name, symbol, image, current_price, market_cap } = coin
                     return { 
@@ -56,9 +57,8 @@ const Converter = () => {
                     } 
                 })))
                 if(page_index === 1){
-                    // set initial input values
+                    // set initial input values (the top 2 cryptos)
                     setConversion({
-                        // ...conversion,
                         amount:1,
                         coin1: temp_coins[0].name,
                         price1: temp_coins[0].price,
@@ -91,6 +91,7 @@ const Converter = () => {
     const onChange = (e) => {
         setShowCoins({...conversion, [e.target.name]: e.target.value })
 
+        // filter results
         if(e.target.name === "coin1"){
             // coin from
             if(e.target.value !== ''){
@@ -131,7 +132,7 @@ const Converter = () => {
             }
         }
         else{
-            // fix amount
+            // amount
             setConversion({...conversion, [e.target.name]: e.target.value })
         }
     }
@@ -154,6 +155,7 @@ const Converter = () => {
     }
 
     const resetShow = (e) => {
+        // reset input value to previous correct, so that only coins from the list are selected
         if(e.target.name === "coin1"){
             setShowCoins({...showCoins, coin1:conversion.coin1})
         }
@@ -162,11 +164,27 @@ const Converter = () => {
         }
     }
 
+    const exchangeCoins = () => {
+        // change coins with one another
+        
+        // // swap conversion
+        let temp_coin = conversion.coin1
+        let temp_price = conversion.price1
+        setConversion({...conversion, coin1:conversion.coin2, coin2:temp_coin, price1:conversion.price2, price2:temp_price})
+
+        // //swap showCoins
+        temp_coin = showCoins.coin1
+        setShowCoins({...showCoins, coin1:conversion.coin2, coin2:temp_coin})
+
+        // //result filtered, clicked
+        setFiltered({...filtered, from:[], to:[]})
+        setClicked({...clicked, from:false, to:false})
+    }
+
     const calculateResult = async (e) => {
         const { amount, price1, price2 } = conversion
 
         const result = (amount * price1) / price2
-        console.log(result)
         setResult(result.toString())
     }
 
@@ -175,7 +193,7 @@ const Converter = () => {
             <h2>Cryptocurrency Converter Calculator</h2>
             {coinlist.length===0 ? <Spinner /> : null}<br/><br/>
             <Form>
-            <div className="grid-2">
+            <div className="grid-3-conv">
                 <Form.Control
                     autoComplete="off"
                     type="number"
@@ -187,10 +205,17 @@ const Converter = () => {
                 />
                 <Form.Control className="hidden"
                     placeholder="Amount to convert"
-                    aria-label="amount_convert"
+                    aria-label="hidden1"
                     aria-describedby="basic-addon"
                 />
+                <Form.Control className="hidden"
+                    placeholder="Amount to convert"
+                    aria-label="hidden-2"
+                    aria-describedby="basic-addon"
+                />
+            </div><br />
 
+            <div className="grid-3-conv">
                 <InputGroup onBlur={resetShow}>
                     <Form.Control
                         autoComplete="off"
@@ -230,6 +255,11 @@ const Converter = () => {
                         )}
                     </DropdownButton>
                 </InputGroup>
+            
+                <Button variant="dark" onClick={exchangeCoins}> 
+                    <i className="fas fa-exchange-alt" />
+                </Button>
+
                 <InputGroup onBlur={resetShow}>
                     <Form.Control
                         autoComplete="off"
