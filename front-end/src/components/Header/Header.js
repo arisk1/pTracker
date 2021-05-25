@@ -108,7 +108,10 @@ const Header = () => {
                             <Dropdown.Header>  Cryptocurrency Tools  </Dropdown.Header>
                             <Dropdown.Divider />
                             <NavDropdown.Item as={Link} to={{pathname:'/converter'}}>
-                                Crypto Converter
+                                Converter
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={{pathname:'/price-calculator'}}>
+                                Price Calculator
                             </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>

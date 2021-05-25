@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import  { coinListMarkets } from '@arisk1/cg-functions';
 import { InputGroup, Form, DropdownButton, Dropdown, Button } from 'react-bootstrap';
 import Spinner from '../Spinner/Spinner'
 
-const Converter = () => {
+const PriceCalculator = () => {
+
     // states
     const [coinlist,
         setCoinlist] = useState([]);
@@ -11,15 +12,15 @@ const Converter = () => {
         setTopCoins] = useState([]);
     const [conversion,
         setConversion] = useState({
-            amount: 0,
             coin1: "",
-            price1: 0,
+            csupply1: 0,
+            mcap1:0,
             coin2: "",
-            price2: 0
+            csupply2: 0,
+            mcap2: 0
         })
     const [showCoins,
         setShowCoins] = useState({
-            amount:0,
             coin1: "",
             coin2: ""
         })
@@ -46,30 +47,33 @@ const Converter = () => {
                 const res = await coinListMarkets('usd','market_cap_desc',page_index, false, 250);
                 console.log(page_index)
                 temp_coins = [...temp_coins].concat(res.data.map((coin => { 
-                    const { id, name, symbol, image, current_price, market_cap } = coin
+                    const { id, name, symbol, image, circulating_supply, market_cap } = coin
                     return { 
                         id, 
                         name,
                         symbol,
                         image,
-                        price:current_price,
+                        csupply: circulating_supply,
                         mcap:market_cap
                     } 
                 })))
                 if(page_index === 1){
                     // set initial input values (the top 2 cryptos)
                     setConversion({
-                        amount:1,
-                        coin1: temp_coins[0].name,
-                        price1: temp_coins[0].price,
-                        coin2: temp_coins[1].name,
-                        price2: temp_coins[1].price,
+                        coin1: temp_coins[1].name,
+                        csupply1: temp_coins[1].csupply,
+                        mcap1: temp_coins[1].mcap,
+
+                        coin2: temp_coins[0].name,
+                        csupply2: temp_coins[0].csupply,
+                        mcap2: temp_coins[0].mcap
                     })
                     setShowCoins({
-                        amount: 1,
-                        coin1: temp_coins[0].name,
-                        coin2: temp_coins[1].name,
+                        coin1: temp_coins[1].name,
+                        coin2: temp_coins[0].name,
                     })
+                    coin1_photo_ref.current.src = temp_coins[1].image
+                    coin2_photo_ref.current.src = temp_coins[0].image
                 }
 
                 page_index += 1;
@@ -82,10 +86,14 @@ const Converter = () => {
     },[])
 
     useEffect(() => {
-        if(conversion.price2 > 0){
+        if(conversion.csupply1 > 0){
             calculateResult()
         }
-    }, [conversion.amount, conversion.coin1, conversion.coin2])
+    }, [conversion.coin1, conversion.coin2])
+
+    // refs
+    const coin1_photo_ref = useRef('')
+    const coin2_photo_ref = useRef('')
 
     // functions
     const onChange = (e) => {
@@ -138,15 +146,17 @@ const Converter = () => {
     }
 
     const onClickCoin1 = (coin) => {
-        const { name, price } = coin
+        const { name, csupply, mcap, image } = coin
         setShowCoins({...showCoins, coin1:name})
-        setConversion({...conversion, coin1:name, price1:price })
+        setConversion({...conversion, coin1:name, csupply1:csupply, mcap1:mcap })
+        coin1_photo_ref.current.src = image
     }
 
     const onClickCoin2 = (coin) => {
-        const { name, price } = coin
+        const { name, csupply, mcap,image } = coin
         setShowCoins({...showCoins, coin2:name})
-        setConversion({...conversion, coin2:name, price2:price })
+        setConversion({...conversion, coin2:name, csupply2:csupply, mcap2:mcap })
+        coin2_photo_ref.current.src = image
     }
 
     const onClickButton = (e) => {
@@ -164,62 +174,29 @@ const Converter = () => {
         }
     }
 
-    const exchangeCoins = () => {
-        // change coins with one another
-        
-        // // swap conversion
-        let temp_coin = conversion.coin1
-        let temp_price = conversion.price1
-        setConversion({...conversion, coin1:conversion.coin2, coin2:temp_coin, price1:conversion.price2, price2:temp_price})
-
-        // //swap showCoins
-        temp_coin = showCoins.coin1
-        setShowCoins({...showCoins, coin1:conversion.coin2, coin2:temp_coin})
-
-        // //result filtered, clicked
-        setFiltered({...filtered, from:[], to:[]})
-        setClicked({...clicked, from:false, to:false})
-    }
-
-    const calculateResult = async (e) => {
-        const { amount, price1, price2 } = conversion
-
-        const result = (amount * price1) / price2
-        setResult(result.toString())
+    const calculateResult = async () => {
+        const { csupply1, mcap2 } = conversion
+        const value = mcap2 / csupply1
+        setResult(value.toFixed(3))
     }
 
     return (
-        <div className="converter-container">
-            <h2>Cryptocurrency Converter Calculator</h2>
+        <div className="price-calculator-container">
+            <h2>Cryptocurrency Price Calculator</h2>
+            <p>Calculate a coin's price if it had the other coin's market capitalization</p>
             {coinlist.length===0 ? <Spinner /> : null}<br/><br/>
-            <Form>
-            <div className="grid-3-conv">
-                <Form.Control
-                    autoComplete="off"
-                    type="number"
-                    name="amount"
-                    value={showCoins.amount}
-                    placeholder="Amount to convert"
-                    onChange={onChange}
-                    required
-                />
-                <Form.Control className="hidden"
-                    placeholder="Amount to convert"
-                    aria-label="hidden1"
-                    aria-describedby="basic-addon"
-                />
-                <Form.Control className="hidden"
-                    placeholder="Amount to convert"
-                    aria-label="hidden-2"
-                    aria-describedby="basic-addon"
-                />
-            </div><br />
 
-            <div className="grid-3-conv">
+            <div className="price-calculator-row">
                 <InputGroup onBlur={resetShow}>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="inputGroup-sizing-sm">
+                            <img ref={coin1_photo_ref} className="input-img" alt="photo" src="smth"/>
+                        </InputGroup.Text>
+                    </InputGroup.Prepend>
                     <Form.Control
                         autoComplete="off"
                         type="text"
+                        id="coin1"
                         name="coin1"
                         placeholder="From"
                         value={showCoins.coin1}
@@ -255,15 +232,24 @@ const Converter = () => {
                         )}
                     </DropdownButton>
                 </InputGroup>
-            
-                <Button variant="dark" onClick={exchangeCoins}> 
-                    <i className="fas fa-exchange-alt" />
-                </Button>
 
+                <div className="coin-info">
+                    <p className="coin-info-header"> Coin "From" Info </p>
+                    <p>Circulating Supply : {conversion.csupply1.toLocaleString()}</p>
+                </div>
+            </div>
+
+            <br /><div className="price-calculator-row">
                 <InputGroup onBlur={resetShow}>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="inputGroup-sizing-sm">
+                            <img ref={coin2_photo_ref} className="input-img" alt="photo" src="smth"/>
+                        </InputGroup.Text>
+                    </InputGroup.Prepend>
                     <Form.Control
                         autoComplete="off"
                         type="text"
+                        id="coin2"
                         name="coin2"
                         placeholder="To"  
                         value={showCoins.coin2}
@@ -299,12 +285,16 @@ const Converter = () => {
                         )}
                     </DropdownButton>
                 </InputGroup>
-            </div><br />
-            </Form><br />
-            {conversion.amount ? 
+                <div className="coin-info">
+                    <p className="coin-info-header"> Coin "To" Info </p>
+                    <p>Market Cap : {conversion.mcap2.toLocaleString()}</p>
+                </div>
+            </div><br /><br />
+
+            {(conversion.coin1 && conversion.coin2) ? 
                 <p>
-                    {conversion.amount} {conversion.coin1} = 
-                    <span className="converter-result"> {result}{" "}</span>{conversion.coin2}
+                    {conversion.coin1}'s projected price = 
+                    <span className="converter-result"> {result}{" $"}</span>
                 </p> :
                 null
             }
@@ -312,4 +302,4 @@ const Converter = () => {
     )
 }
 
-export default Converter
+export default PriceCalculator

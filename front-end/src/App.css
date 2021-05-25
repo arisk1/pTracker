@@ -96,6 +96,11 @@ body .bg-dark {
     margin: 10px;
 }
 
+.input-img {
+    width: auto;
+    height: 24px;
+}
+
 /* .form-outline {
     outline: none; 
     box-shadow: none !important;
@@ -205,6 +210,28 @@ div.container {
     overflow-y: scroll;
     width: 420px !important;
   }
+
+.price-calculator-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px 10px;
+    height: 600px;
+}
+
+.price-calculator-row {
+    width: 80%;
+    margin: auto;
+}
+
+.coin-info {
+    font-size: 90%;
+}
+
+.coin-info-header {
+    font-weight: bold;
+    margin-bottom:1px;
+    margin-top:5px;
+}
 
 /* colors */
 .green-color {
