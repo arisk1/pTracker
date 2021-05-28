@@ -10,6 +10,7 @@ import CurrencyState from './context/currency/CurrencyState';
 import PrivateRoute from './components/routing/PrivateRoute';
 import NotFound from './components/NotFound/NotFound';
 import Heatmap from './components/Heatmap/Heatmap';
+import Portfolio from './components/Portfolio/Portfolio'
 import Converter from './components/Tools/Converter';
 import PriceCalculator from './components/Tools/PriceCalculator';
 
@@ -24,6 +25,7 @@ function App() {
                 <Container>
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
+                        <Route exact path="/portfolio" component={Portfolio}></Route>
                         <Route exact path="/heatmap" component={Heatmap}></Route>
                         <Route exact path="/converter" component={Converter}></Route>
                         <Route exact path="/price-calculator" component={PriceCalculator}></Route>

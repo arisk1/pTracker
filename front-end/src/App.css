@@ -258,3 +258,17 @@ div.container {
         width: 200px !important;
       }
   }
+
+.row-top {
+    padding-top: 25px;
+}
+
+inside-row-top-header {
+    padding-top: 25px ;
+    padding-bottom: 10px;
+}
+
+.row-button {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}

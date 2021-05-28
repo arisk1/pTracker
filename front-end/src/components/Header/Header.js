@@ -103,6 +103,7 @@ const Header = () => {
                         </NavDropdown>
 
                         <Nav.Link as={Link} to={{pathname:'/'}}>Home</Nav.Link>
+                        <Nav.Link as={Link} to={{pathname:'/portfolio'}}>Portfolio</Nav.Link>
                         <Nav.Link as={Link} to={{pathname:'/heatmap'}}>Heatmap</Nav.Link>
                         <NavDropdown title="Tools" id="basic-nav-dropdown">
                             <Dropdown.Header>  Cryptocurrency Tools  </Dropdown.Header>
@@ -113,6 +114,7 @@ const Header = () => {
                             <NavDropdown.Item as={Link} to={{pathname:'/price-calculator'}}>
                                 Price Calculator
                             </NavDropdown.Item>
+                            
                         </NavDropdown>
                     </Nav>
                     <Nav>
