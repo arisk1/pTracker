@@ -17,9 +17,9 @@ const LogIn = (props) => {
     return ( 
         <Fragment> 
             <Button
-            variant="outline-light"
+            variant={props.variant}
             onClick={() => btnClick()}
-            className="mr-sm-2 button-outline">Log In</Button> 
+            className={props.class}>Log In</Button> 
             < LogAndSignModal 
                 loginVar={loginVar}
                 rotate={()=>setLoginVar(!loginVar)}

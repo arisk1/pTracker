@@ -17,7 +17,6 @@ const Portfolio = (props) => {
     const {currency} = currencyContext;  
 
     const [portfolioName , setPortfolioName] = useState("temp");
-
     const loadPortfolio = async() => {
         if(isAuthenticated){
             //users details is in user
@@ -35,27 +34,37 @@ const Portfolio = (props) => {
 
     const NotAuthenticated = () => {
         return(
-            <Row className='row-top' >
-                <Col style={{backgroundColor: "lightblue"}}>
-                    <Row className='inside-row-top-header' >
+            <Container>
+            <Row className='row-top mr-0 ml-0'  >
+                <Col style={{backgroundColor: "lightblue", textAlign : 'left'}}>
+                    <Row className='inside-row-top-header mr-0 ml-0' >
                         <Col>
-                        <h1>Ptracker's Portfolio</h1>
-                            if you want to see your portfolio
+                            <p style={{padding : '25px',marginBottom : '0px'}} >
+                            <h1 className='mb-0' style={{fontWeight : 'bold'}}>Personalized Portfolio</h1>
+                            Keep track of your expenses,profit and loss during different time frames.
+                            </p>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row className='mr-0 ml-0 pb-0'>
                     <Col className='row-button'>
-                            <LogIn />
+                        <p style={{paddingLeft : '25px',marginBottom : '0px',fontWeight : 'bold'}} >
+                        <SignUp/>
+                        to create your personalized portfolio
+                        </p>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row className='mr-0 ml-0'>
                         <Col>
-                             if you are not a member of your community yet
+                       
                         </Col>
                     </Row>
-                    <Row>
-                        <Col className='row-button'>
-                            <SignUp/>
+                    <Row className='mr-0 ml-0'>
+                        <Col >
+                        <p style={{paddingLeft : '25px',fontSize : '13px'}} >
+                        If you are already a member of our community
+                        <LogIn variant="link" class="mr-sm-2"/>
+                       
+                        </p>
                         </Col>
                     </Row>
                 </Col>
@@ -63,6 +72,8 @@ const Portfolio = (props) => {
                     some intresting text 
                 </Col>
             </Row>
+            </Container>
+        
         )
     }
 
@@ -71,9 +82,9 @@ const Portfolio = (props) => {
     },[isAuthenticated])
 
     return ( 
-        <Container> 
+        <Fragment> 
             {isAuthenticated ? <h1>i am authenticated , portfolio name : {portfolioName}</h1> : <NotAuthenticated/> }
-        </Container>)
+        </Fragment>)
 
 }
 

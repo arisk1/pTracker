@@ -63,7 +63,7 @@ const Header = () => {
     const ShowSignUpAndLogIn = () => {
         return (
             <Fragment>
-                <LogIn />
+                <LogIn variant={"outline-light"} class={"mr-sm-2 button-outline"} />
                 < SignUp />
             </Fragment>
         )
