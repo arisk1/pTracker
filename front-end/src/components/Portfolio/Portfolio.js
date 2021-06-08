@@ -2,9 +2,10 @@ import React , { useEffect,Fragment, useContext, useState } from 'react';
 import CurrencyContext from '../../context/currency/currencyContext';
 import AuthContext from '../../context/auth/authContext';
 import axios from 'axios';
-import {Container,Row,Col} from 'react-bootstrap';
+import {Container,Row,Col,ListGroup,ListGroupItem,Button} from 'react-bootstrap';
 import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
+import rightArrow from './right.png';
 
 
 const Portfolio = (props) => {
@@ -16,7 +17,7 @@ const Portfolio = (props) => {
     const currencyContext = useContext(CurrencyContext);
     const {currency} = currencyContext;  
 
-    const [portfolioName , setPortfolioName] = useState("temp");
+    const [portfolios , setPortfolios] = useState([]);
     const loadPortfolio = async() => {
         if(isAuthenticated){
             //users details is in user
@@ -25,11 +26,15 @@ const Portfolio = (props) => {
             try{
                 const res = await axios.get('/portfolios');
                 console.log(res.data);
-                setPortfolioName(res.data[0].name)
+                setPortfolios(res.data)
             }catch(e){
                 console.log(e);
             }
         }
+    }
+
+    const addPortfolio = () => {
+        console.log("Add a new portfolio");
     }
 
     const NotAuthenticated = () => {
@@ -77,13 +82,50 @@ const Portfolio = (props) => {
         )
     }
 
+    const Authenticated = () => {
+        return(
+            <Container>
+                <Row className='row-top mr-0 ml-0' >
+                    <Col>
+                        <h1 >List of my Portfolios</h1>
+                        <ListGroup variant='flush'>
+                        <ListGroup.Item>
+                            <Button onClick={()=> addPortfolio()} className="btn-circle" title="Add a new Portfolio to your list" variant="primary" size="lg" >+</Button>
+                        </ListGroup.Item>
+                        {
+                        
+                        portfolios.map((portfolio,idx) => (
+                            <ListGroup.Item key={idx} >
+                                <Row className="align-items-center" style={{fontSize : '27px'}} >
+                                    <Col>
+                                        <img
+                                        alt="rightArrow-logo"
+                                        src={rightArrow}
+                                        width="20"
+                                        height="20"
+                                        className="d-inline-block align-middle"/>
+                                        {portfolio.name}
+                                    </Col> 
+                                </Row>
+                            </ListGroup.Item>
+                        ))
+                        
+                        
+                        
+                        }</ListGroup>
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
+
     useEffect(() => {
         loadPortfolio();
     },[isAuthenticated])
 
     return ( 
         <Fragment> 
-            {isAuthenticated ? <h1>i am authenticated , portfolio name : {portfolioName}</h1> : <NotAuthenticated/> }
+            {isAuthenticated ? <Authenticated/> : <NotAuthenticated/> }
         </Fragment>)
 
 }
