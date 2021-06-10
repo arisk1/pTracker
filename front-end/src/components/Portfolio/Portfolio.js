@@ -2,10 +2,13 @@ import React , { useEffect,Fragment, useContext, useState } from 'react';
 import CurrencyContext from '../../context/currency/currencyContext';
 import AuthContext from '../../context/auth/authContext';
 import axios from 'axios';
-import {Container,Row,Col,ListGroup,ListGroupItem,Button} from 'react-bootstrap';
+import {Container,Row,Col,ListGroup,ListGroupItem,Button,Modal} from 'react-bootstrap';
 import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import rightArrow from './right.png';
+import PortfolioModal from '../modals/portfolioModal.js';
+
+
 
 
 const Portfolio = (props) => {
@@ -18,6 +21,8 @@ const Portfolio = (props) => {
     const {currency} = currencyContext;  
 
     const [portfolios , setPortfolios] = useState([]);
+    
+
     const loadPortfolio = async() => {
         if(isAuthenticated){
             //users details is in user
@@ -33,9 +38,7 @@ const Portfolio = (props) => {
         }
     }
 
-    const addPortfolio = () => {
-        console.log("Add a new portfolio");
-    }
+    
 
     const NotAuthenticated = () => {
         return(
@@ -90,13 +93,21 @@ const Portfolio = (props) => {
                         <h1 >List of my Portfolios</h1>
                         <ListGroup variant='flush'>
                         <ListGroup.Item>
-                            <Button onClick={()=> addPortfolio()} className="btn-circle" title="Add a new Portfolio to your list" variant="primary" size="lg" >+</Button>
+                            <PortfolioModal updatePortfolio={loadPortfolio}  />
+                        </ListGroup.Item>
+                        
+                        <ListGroup.Item>
+                            
+                        <Row>
+                            <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Portfolio Name</Col>
+                            <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Value Of Portfolio</Col>
+                            <Col></Col>
+                        </Row>
                         </ListGroup.Item>
                         {
-                        
                         portfolios.map((portfolio,idx) => (
                             <ListGroup.Item key={idx} >
-                                <Row className="align-items-center" style={{fontSize : '27px'}} >
+                                <Row className="align-items-center" style={{fontSize : '20px'}} >
                                     <Col>
                                         <img
                                         alt="rightArrow-logo"
@@ -106,12 +117,11 @@ const Portfolio = (props) => {
                                         className="d-inline-block align-middle"/>
                                         {portfolio.name}
                                     </Col> 
+                                    <Col >{portfolio.sumOfPortfolio}</Col>
+                                    <Col ><Button variant='outline-danger' size='sm' >Delete</Button></Col>
                                 </Row>
                             </ListGroup.Item>
                         ))
-                        
-                        
-                        
                         }</ListGroup>
                     </Col>
                 </Row>
@@ -121,7 +131,8 @@ const Portfolio = (props) => {
 
     useEffect(() => {
         loadPortfolio();
-    },[isAuthenticated])
+        // eslint-disable-next-line    
+        },[isAuthenticated])
 
     return ( 
         <Fragment> 
