@@ -7,9 +7,7 @@ import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import rightArrow from './right.png';
 import PortfolioModal from '../modals/portfolioModal.js';
-
-
-
+import WarningModal from '../modals/warningModal';
 
 const Portfolio = (props) => {
 
@@ -27,11 +25,29 @@ const Portfolio = (props) => {
         if(isAuthenticated){
             //users details is in user
             loadUser();
-            //we user loadUser to set the new AuthToken
             try{
                 const res = await axios.get('/portfolios');
                 console.log(res.data);
                 setPortfolios(res.data)
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+
+    
+
+    const deletePortfolio = async(portfolioId) => {
+        if(isAuthenticated){
+            //users details is in user
+            loadUser();
+            try{
+                const res = await axios.delete(('/portfolios/' + portfolioId));
+                if(res.status === 200){
+                    setPortfolios(portfolios.filter(portfolio => {return portfolio._id != portfolioId}))
+                    //loadPortfolio();
+                    //withtout useing loadPortfolio it becomes faster by not needing to get information from the databse.
+                }
             }catch(e){
                 console.log(e);
             }
@@ -90,19 +106,32 @@ const Portfolio = (props) => {
             <Container>
                 <Row className='row-top mr-0 ml-0' >
                     <Col>
-                        <h1 >List of my Portfolios</h1>
+                        <h1 style={{fontWeight : 'bold'}} >List of my Portfolios</h1>
                         <ListGroup variant='flush'>
                         <ListGroup.Item>
                             <PortfolioModal updatePortfolio={loadPortfolio}  />
                         </ListGroup.Item>
                         
                         <ListGroup.Item>
-                            
-                        <Row>
+                        {portfolios.length > 0 ? <Row>
                             <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Portfolio Name</Col>
                             <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Value Of Portfolio</Col>
                             <Col></Col>
+                        </Row> : 
+                        <Fragment>
+                        <Row>
+                            <Col>
+                                <h3>It appears you have not created a portfolio yet.</h3>
+                            </Col>
                         </Row>
+                        <Row>
+                            <Col>
+                                <h3>What are you waiting for?Get started right now by clicking the plus button above!</h3>
+                            </Col>
+                        </Row>  
+                        </Fragment>
+                        }
+                        
                         </ListGroup.Item>
                         {
                         portfolios.map((portfolio,idx) => (
@@ -118,7 +147,7 @@ const Portfolio = (props) => {
                                         {portfolio.name}
                                     </Col> 
                                     <Col >{portfolio.sumOfPortfolio}</Col>
-                                    <Col ><Button variant='outline-danger' size='sm' >Delete</Button></Col>
+                                    <Col ><WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} /></Col>
                                 </Row>
                             </ListGroup.Item>
                         ))
