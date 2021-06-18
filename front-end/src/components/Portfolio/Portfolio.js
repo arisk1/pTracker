@@ -6,8 +6,12 @@ import {Container,Row,Col,ListGroup,ListGroupItem,Button,Modal} from 'react-boot
 import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import rightArrow from './right.png';
-import PortfolioModal from '../modals/portfolioModal.js';
+import PortfolioModal from '../modals/addPortfolio.js';
 import WarningModal from '../modals/warningModal';
+import RenameModal from '../modals/renameModal';
+import { Link} from 'react-router-dom';
+
+
 
 const Portfolio = (props) => {
 
@@ -20,6 +24,19 @@ const Portfolio = (props) => {
 
     const [portfolios , setPortfolios] = useState([]);
     
+    const updateItem =(index,newvalue)=> {
+        let g = portfolios[index]
+        g.name = newvalue
+        if (index === -1){
+          // handle error
+          console.log('no match')
+        }
+        else
+        setPortfolios([
+            ...portfolios.slice(0,index),g,...portfolios.slice(index+1)]
+        );
+      }
+
 
     const loadPortfolio = async() => {
         if(isAuthenticated){
@@ -27,15 +44,13 @@ const Portfolio = (props) => {
             loadUser();
             try{
                 const res = await axios.get('/portfolios');
-                console.log(res.data);
+                // console.log(res.data);
                 setPortfolios(res.data)
             }catch(e){
                 console.log(e);
             }
         }
     }
-
-    
 
     const deletePortfolio = async(portfolioId) => {
         if(isAuthenticated){
@@ -47,6 +62,23 @@ const Portfolio = (props) => {
                     setPortfolios(portfolios.filter(portfolio => {return portfolio._id != portfolioId}))
                     //loadPortfolio();
                     //withtout useing loadPortfolio it becomes faster by not needing to get information from the databse.
+                }
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+
+    const renamePortfolio = async(portfolioId,newName,idx) => {
+        if(isAuthenticated){
+            //users details is in user
+            loadUser();
+            try{
+                const res = await axios.patch(('/portfolios/' + portfolioId + '/rename'), {
+                    name : newName
+                });
+                if(res.status === 200){
+                    updateItem(idx,newName);                    
                 }
             }catch(e){
                 console.log(e);
@@ -147,7 +179,11 @@ const Portfolio = (props) => {
                                         {portfolio.name}
                                     </Col> 
                                     <Col >{portfolio.sumOfPortfolio}</Col>
-                                    <Col ><WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} /></Col>
+                                    <Col >
+                                        <Button as={Link} to={{pathname:`/portfolio/${portfolio.name}` , state: { portfolioDetails: portfolio}}} variant="outline-primary" > View Details </Button>{' '}
+                                        <WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} />{' '}
+                                        <RenameModal renamePortfolio={renamePortfolio} pid={portfolio._id} pidx={idx} />  
+                                    </Col>
                                 </Row>
                             </ListGroup.Item>
                         ))

@@ -107,6 +107,12 @@ body .bg-dark {
      border: 1px solid #D0D0D0 !important; 
 } */
 
+ .gear-outline {
+    outline: none; 
+    box-shadow: none !important;
+    
+} 
+
 .user-icon-outline {
     outline: none;
     box-shadow: none !important;
