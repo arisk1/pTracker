@@ -6,9 +6,9 @@ import {Container,Row,Col,ListGroup,ListGroupItem,Button,Modal} from 'react-boot
 import LogIn from '../LogIn/logIn.js';
 import SignUp from '../SignUp/signUp.js';
 import rightArrow from './right.png';
-import PortfolioModal from '../modals/addPortfolio.js';
-import WarningModal from '../modals/warningModal';
-import RenameModal from '../modals/renameModal';
+import PortfolioModal from '../modals/portfolioModals/addPortfolio.js';
+import WarningModal from '../modals/portfolioModals/warningModal';
+import RenameModal from '../modals/portfolioModals/renameModal';
 import { Link} from 'react-router-dom';
 
 
@@ -180,7 +180,7 @@ const Portfolio = (props) => {
                                     </Col> 
                                     <Col >{portfolio.sumOfPortfolio}</Col>
                                     <Col >
-                                        <Button as={Link} to={{pathname:`/portfolio/${portfolio.name}` , state: { portfolioDetails: portfolio}}} variant="outline-primary" > View Details </Button>{' '}
+                                        <Button as={Link} to={{pathname:`/portfolio/${portfolio._id}`}} variant="outline-primary" > View Details </Button>{' '}
                                         <WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} />{' '}
                                         <RenameModal renamePortfolio={renamePortfolio} pid={portfolio._id} pidx={idx} />  
                                     </Col>

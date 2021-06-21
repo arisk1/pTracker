@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef} from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import gear from '../Portfolio/gear.png';
+import gear from '../../Portfolio/gear.png';
 
 
 const RenameModal = (props) => {
