@@ -59,7 +59,7 @@ const PortfolioForm = (props) => {
   
     return (
       <>
-        <Button onClick={() => setModalShow(true)} className="btn-circle" title="Add a new Portfolio to your list" variant="primary" size="lg" >+</Button>
+        <Button onClick={() => setModalShow(true)} className="btn-circle" title="Add a new Coin to your portfolio" variant="primary" size="lg" >+</Button>
   
         <PortfolioForm
           show={modalShow}
