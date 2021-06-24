@@ -9,7 +9,8 @@ const RenameModal = (props) => {
   
     const handleClose = () => setShow(false);
 
-    const closeAndRename = () => {
+    const closeAndRename = (e) => {
+        e.preventDefault();
         props.renamePortfolio(props.pid , newPortfolioName,props.pidx)
         setShow(false)
     }
@@ -32,7 +33,7 @@ const RenameModal = (props) => {
             <Modal.Title>Rename your portfolio</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{fontSize : '22px'}}>
-                <Form>
+                <Form onSubmit={closeAndRename}>
                     <Form.Group controlId="formBasicPortfolioName">
                         <Form.Label>Portfolio's name</Form.Label>
                         <Form.Control
@@ -42,10 +43,11 @@ const RenameModal = (props) => {
                             placeholder="Enter your portfolio's new name..."
                             required/>
                     </Form.Group>
-                </Form>
-                <Button variant='dark' size="lg" onClick={closeAndRename} block>
+                    <Button variant='dark' size="lg" type='submit' block>
                     Submit   
                 </Button>
+                </Form>
+                
             </Modal.Body>
         </Modal>
       </>
