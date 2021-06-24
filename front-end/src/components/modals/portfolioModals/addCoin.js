@@ -8,7 +8,8 @@ const AddCoinModal = (props) => {
   
     const handleClose = () => setShow(false);
 
-    const closeAndAdd = () => {
+    const closeAndAdd = (e) => {
+        e.preventDefault();
         props.addCoin(newCoin,props.pid)
         setShow(false)
     }
@@ -26,7 +27,7 @@ const AddCoinModal = (props) => {
             <Modal.Title>Add new coin</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{fontSize : '22px'}}>
-                <Form>
+                <Form onSubmit={closeAndAdd}>
                     <Form.Group controlId="formBasicPortfolioName">
                         <Form.Control
                             onChange={(e)=>setNewCoin(e.target.value)}
@@ -35,10 +36,11 @@ const AddCoinModal = (props) => {
                             placeholder="Enter coin's name..."
                             required/>
                     </Form.Group>
-                </Form>
-                <Button variant='dark' size="lg" onClick={closeAndAdd} block>
+                    <Button variant='dark' type="submit" size="lg" block>
                     Add   
                 </Button>
+                </Form>
+               
             </Modal.Body>
         </Modal>
         </Fragment>

@@ -3,17 +3,38 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 const RemoveCoinModal = (props) => {
 
+    const { coins } = props
     const [show, setShow] = useState(false);
-    const [newCoin,setNewCoin] = useState("");
+    const [rCoin,setrCoin] = useState("");
+    const [error,setError] = useState(false);
+
+    const ShowError = () => {
+        return(
+            <Fragment>
+            <span style={{
+                color: "red",
+                paddingBottom: "1vh",
+                fontSize: "14px"
+            }}>
+                the coin you are trying to remove is not part of your portfolio
+            </span>
+            </Fragment>
+        )
+    }
   
     const handleClose = () => setShow(false);
 
-    const closeAndRemove = () => {
-        props.removeCoin(newCoin,props.pid)
+    const closeAndRemove = (e) => {
+        e.preventDefault();
+        props.removeCoin(rCoin,props.pid)
         setShow(false)
+        
     }
     
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true)
+        setError(false)
+    };
 
 
 
@@ -26,19 +47,21 @@ const RemoveCoinModal = (props) => {
             <Modal.Title>Remove a coin from your portfolio</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{fontSize : '22px'}}>
-                <Form>
+                <Form onSubmit={closeAndRemove}>
                     <Form.Group controlId="formBasicPortfolioName">
                         <Form.Control
-                            onChange={(e)=>setNewCoin(e.target.value)}
+                            onChange={(e)=>setrCoin(e.target.value)}
                             type="text"
                             name="name"
                             placeholder="Enter coin's name..."
                             required/>
                     </Form.Group>
-                </Form>
-                <Button variant='dark' size="lg" onClick={closeAndRemove} block>
-                    Remove coin   
+                    {error ? <ShowError/> : null}
+                    <Button variant='dark' type="submit" size="lg" block>
+                    Remove Coin   
                 </Button>
+                </Form>
+                
             </Modal.Body>
         </Modal>
         </Fragment>

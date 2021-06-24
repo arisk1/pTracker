@@ -9,8 +9,8 @@ import AuthContext from '../../context/auth/authContext';
 import NotFound from '../NotFound/NotFound';
 import Spinner from '../Spinner/Spinner';
 import { Fragment } from 'react';
-import CoinList from '../CoinList/CoinList';
 import  {coinListMarkets } from '@arisk1/cg-functions';
+import PortfolioCoinList from './PortfolioCoinList'
 
 
 
@@ -83,8 +83,12 @@ const PortfolioDetails = () => {
     }
 
     const CoinList2 = () => {
-        if(coins.length > 0 ){
-            return(<CoinList  coins={coins}/> )
+        if(portfolio.coins.length > 0 ){
+            return(
+                <Fragment>
+                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} />   }
+                </Fragment>
+            )
         }else{
             return (<Fragment  >You have not added coins to your portoflio yet <br/>
                                 Start now by clicking the Add Coin button.
@@ -96,12 +100,7 @@ const PortfolioDetails = () => {
         loadUsersPortfolio();
         // eslint-disable-next-line    
         },[isAuthenticated])
-
-
-   
-   
-
-   
+        
     return(
         <Fragment>
         {notfound ? <NotFound /> : <Container>
@@ -114,13 +113,13 @@ const PortfolioDetails = () => {
                         </Col>
                         <Col style={{textAlign : 'right'}}>
                             <AddCoinModal addCoin={addCoin} pid={portfolio._id} />
-                            <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} />
+                            <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} coins={coins} />
                             
                         </Col>
                         </Row>
-                        <Row>
-                            <Col style={{paddingTop : '50px'}} >
-                                <CoinList2   />
+                        <Row style={{paddingTop : '50px'}}>
+                            <Col >
+                                <CoinList2 />
                             </Col>
                         </Row>
                         
