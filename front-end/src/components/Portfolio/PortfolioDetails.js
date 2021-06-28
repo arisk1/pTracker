@@ -86,7 +86,7 @@ const PortfolioDetails = () => {
         if(portfolio.coins.length > 0 ){
             return(
                 <Fragment>
-                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} />   }
+                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} currency={currency} portfolio={portfolio} />   }
                 </Fragment>
             )
         }else{
@@ -96,10 +96,12 @@ const PortfolioDetails = () => {
         }
     }
 
+    
+
     useEffect(() => {
         loadUsersPortfolio();
         // eslint-disable-next-line    
-        },[isAuthenticated])
+        },[isAuthenticated,currency])
         
     return(
         <Fragment>

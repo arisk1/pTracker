@@ -44,7 +44,7 @@ const PriceCalculator = () => {
             const last_page = 10
             let temp_coins = []
             while(page_index <= last_page){
-                const res = await coinListMarkets('usd','market_cap_desc',page_index, false, 250);
+                const res = await coinListMarkets('usd',[],'market_cap_desc',page_index, false, 250);
                 console.log(page_index)
                 temp_coins = [...temp_coins].concat(res.data.map((coin => { 
                     const { id, name, symbol, image, circulating_supply, market_cap } = coin

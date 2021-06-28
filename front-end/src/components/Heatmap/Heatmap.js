@@ -12,7 +12,7 @@ const Heatmap = () => {
     useEffect(() => {
         // fetching only top 100 coins
         const fetchData = async() => {
-            const res = await coinListMarkets('usd','market_cap_desc', 1, false,100);
+            const res = await coinListMarkets('usd',[],'market_cap_desc', 1, false,100);
             setData(
                 [{ 
                     name:"coins", 

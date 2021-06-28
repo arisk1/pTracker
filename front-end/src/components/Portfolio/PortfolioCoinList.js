@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {Fragment, useState } from 'react';
 import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from '../CoinList/up-arrow.png';
 import downArrow from '../CoinList/down-arrow.png';
@@ -6,16 +6,26 @@ import SmallPriceChart from '../PriceChart/SmallPriceChart';
 import PercChange from '../PercChange/PercChange';
 
 const PortfolioCoinList = (props) => {
-    const { coins , portfolioCoins } = props
+    const { coins , portfolioCoins ,currency,portfolio } = props
 
     //merge arrays and sort them according to holdings
     
     const array = coins.map((value,index)=>{
         return ( {...value,...portfolioCoins[index]} );       
     });
-    array.sort((a, b) => (a.holdings > b.holdings) ? -1 : 1)
+    array.sort((a, b) => (a.holdings > b.holdings) ? -1 : 1)//desc
 
     const [reverseCoins,setReverseCoins] = useState(false);
+
+    const percChangeCalc = (pnl , position ) => {
+        if(pnl < 0){
+            let x = (100*(-1*pnl)) / position;
+            return (-1*x) 
+        }else{
+            let x = (100*pnl)/position;
+            return x
+        }
+    }
     const ArrowToggle = () => {
         if(!reverseCoins){
             return(
@@ -37,6 +47,63 @@ const PortfolioCoinList = (props) => {
             )
         }
         
+    }
+
+    const portfolioDetails = () => {
+        return (
+            <ListGroup.Item>
+            <Row className=''>
+            <Col   className='p-details'>
+                <Row>
+                    <Col className="text-bold">
+                        Total Balance:
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                       {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}
+                    </Col>
+                </Row>
+            </Col>
+            <Col  className='p-details'>
+                <Row>
+                    <Col className="text-bold">
+                    24hr Portfolio Change:<br/><PercChange perc_change={percChangeCalc(portfolio.portfolioChange,portfolio.sumPosition)} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col >
+                    {(portfolio.portfolioChange).toLocaleString()}{' '}{currency.toUpperCase()}
+                    </Col>
+                </Row>
+            </Col>
+            <Col  className='p-details'>
+                <Row>
+                    <Col >
+                    Total Profit Loss:<br/><PercChange perc_change={percChangeCalc(portfolio.sumPnL,portfolio.sumPosition)} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                    {(portfolio.sumPnL).toLocaleString()}{' '}{currency.toUpperCase()}
+                    </Col>
+                </Row>
+            </Col>
+            <Col   className='p-details'>
+                <Row>
+                    <Col className="text-bold">
+                        Number of coins in your portfolio:
+                    </Col>
+                </Row>
+                <Row>
+                    <Col >
+                       {(portfolio.coins).length}
+                    </Col>
+                </Row>
+            </Col>
+        </Row>
+            </ListGroup.Item>
+        )
     }
     const topInfo = () => {
         if (array.length > 0) {
@@ -90,7 +157,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
                             </Col>
-                            <Col>{coin.current_price}</Col>
+                            <Col>{(coin.current_price).toLocaleString()}</Col>
                             <Col> 
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
@@ -104,10 +171,28 @@ const PortfolioCoinList = (props) => {
                                 />
                             </Col>
                             <Col >
-                                {coin.holdings}
+                                <Row>
+                                    <Col>
+                                        {coin.quantity}{' '}{(coin.symbol).toUpperCase()}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {(coin.holdings).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                    </Col>
+                                </Row>
                             </Col>
                             <Col >
-                                {coin.sumPnLOfCoin}
+                            <Row>
+                                    <Col>
+                                        {(coin.sumPnLOfCoin).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                    </Col>
+                                </Row><Row>
+                                    <Col>
+                                        <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
+                                    </Col>
+                                </Row>
+                               
                             </Col>
                             
                         </Row>
@@ -139,10 +224,28 @@ const PortfolioCoinList = (props) => {
                                 />
                             </Col>
                             <Col >
-                                {coin.holdings}
+                                <Row>
+                                    <Col>
+                                        {coin.quantity}{' '}{(coin.symbol).toUpperCase()}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {coin.holdings}{' '}{(currency).toUpperCase()}
+                                    </Col>
+                                </Row>
                             </Col>
                             <Col >
-                                {coin.sumPnLOfCoin}
+                            <Row>
+                                    <Col>
+                                        {coin.sumPnLOfCoin}{' '}{(currency).toUpperCase()}
+                                    </Col>
+                                </Row><Row>
+                                    <Col>
+                                        <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
+                                    </Col>
+                                </Row>
+                               
                             </Col>
                             
                         </Row>
@@ -155,11 +258,14 @@ const PortfolioCoinList = (props) => {
 
 
     return (
-
+        <Fragment> 
+        
         <ListGroup variant="flush">
+            {portfolioDetails()}
             {topInfo()}
             {coinsMap()}
         </ListGroup>
+        </Fragment>
     )
 }
 

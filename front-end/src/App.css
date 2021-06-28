@@ -297,3 +297,10 @@ inside-row-top-header {
     line-height: 1.33;
     border-radius: 25px;
   }
+
+  .p-details {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      margin-right: 5px;
+      background-color: grey;
+  }

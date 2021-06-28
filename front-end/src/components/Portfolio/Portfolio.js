@@ -178,7 +178,7 @@ const Portfolio = (props) => {
                                         className="d-inline-block align-middle"/>
                                         {portfolio.name}
                                     </Col> 
-                                    <Col >{portfolio.sumOfPortfolio}</Col>
+                                    <Col >{(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}</Col>
                                     <Col >
                                         <Button as={Link} to={{pathname:`/portfolio/${portfolio._id}`}} variant="outline-primary" > View Details </Button>{' '}
                                         <WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} />{' '}
