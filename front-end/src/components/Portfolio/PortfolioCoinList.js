@@ -4,6 +4,7 @@ import upArrow from '../CoinList/up-arrow.png';
 import downArrow from '../CoinList/down-arrow.png';
 import SmallPriceChart from '../PriceChart/SmallPriceChart';
 import PercChange from '../PercChange/PercChange';
+import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
 
 const PortfolioCoinList = (props) => {
     const { coins , portfolioCoins ,currency,portfolio } = props
@@ -49,62 +50,7 @@ const PortfolioCoinList = (props) => {
         
     }
 
-    const portfolioDetails = () => {
-        return (
-            <ListGroup.Item>
-            <Row className=''>
-            <Col   className='p-details'>
-                <Row>
-                    <Col className="text-bold">
-                        Total Balance:
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                       {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}
-                    </Col>
-                </Row>
-            </Col>
-            <Col  className='p-details'>
-                <Row>
-                    <Col className="text-bold">
-                    24hr Portfolio Change:<br/><PercChange perc_change={percChangeCalc(portfolio.portfolioChange,portfolio.sumPosition)} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col >
-                    {(portfolio.portfolioChange).toLocaleString()}{' '}{currency.toUpperCase()}
-                    </Col>
-                </Row>
-            </Col>
-            <Col  className='p-details'>
-                <Row>
-                    <Col >
-                    Total Profit Loss:<br/><PercChange perc_change={percChangeCalc(portfolio.sumPnL,portfolio.sumPosition)} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                    {(portfolio.sumPnL).toLocaleString()}{' '}{currency.toUpperCase()}
-                    </Col>
-                </Row>
-            </Col>
-            <Col   className='p-details'>
-                <Row>
-                    <Col className="text-bold">
-                        Number of coins in your portfolio:
-                    </Col>
-                </Row>
-                <Row>
-                    <Col >
-                       {(portfolio.coins).length}
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
-            </ListGroup.Item>
-        )
-    }
+    
     const topInfo = () => {
         if (array.length > 0) {
             return (
@@ -258,14 +204,11 @@ const PortfolioCoinList = (props) => {
 
 
     return (
-        <Fragment> 
-        
         <ListGroup variant="flush">
-            {portfolioDetails()}
+            <PortfolioSpecs portfolio={portfolio} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={(portfolio.coins).length}/>
             {topInfo()}
             {coinsMap()}
         </ListGroup>
-        </Fragment>
     )
 }
 

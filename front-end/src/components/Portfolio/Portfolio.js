@@ -10,6 +10,9 @@ import PortfolioModal from '../modals/portfolioModals/addPortfolio.js';
 import WarningModal from '../modals/portfolioModals/warningModal';
 import RenameModal from '../modals/portfolioModals/renameModal';
 import { Link} from 'react-router-dom';
+import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
+import Spinner from '../Spinner/Spinner';
+
 
 
 
@@ -23,8 +26,54 @@ const Portfolio = (props) => {
     const {currency} = currencyContext;  
 
     const [portfolios , setPortfolios] = useState([]);
+    const [sumPortfolios,setSumPortfolios] = useState({});
+
+    const calculatePortfolioSums = (portfs) => {
+        //if portfolio is an array of portfolios 
+        //calculate the sum of them
+        // sum of portfolios ,sum position, sumofPortfolioschange , sumofpnl , sum of coins
+        let sumofp = 0;let sumofpc = 0;let sumofpnl = 0;let sumofc = 0;let sumofpos = 0;
+        portfs.forEach((portf)=>{
+            sumofp +=  portf.sumOfPortfolio;
+            sumofpos +=  portf.sumPosition;
+            sumofpc += portf.portfolioChange;
+            sumofpnl +=  portf.sumPnL
+            sumofc +=  (portf.coins).length
+        })
+        setSumPortfolios({
+            sumPosition : sumofpos,
+            sumOfPortfolio : sumofp,
+            portfolioChange : sumofpc,
+            sumPnL : sumofpnl,
+            numOfCoins : sumofc
+        })        
+    }
+
+    const percChangeCalc = (pnl , position ) => {
+        if(pnl < 0){
+            let x = (100*(-1*pnl)) / position;
+            return (-1*x) 
+        }else{
+            let x = (100*pnl)/position;
+            return x
+        }
+    }
+
+    const AllPortfolios = () => {
+        if(portfolios.length > 0 ){
+            if(Object.keys(sumPortfolios).length === 0){
+                return (<Spinner/>)
+            }else{
+                return (<PortfolioSpecs portfolio={sumPortfolios} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={sumPortfolios.numOfCoins}/>)  
+            }  
+        }else{
+            return(<Fragment/>)
+        }
+    }
     
     const updateItem =(index,newvalue)=> {
+        //we use this to add the new portfolio to the list 
+        //so we dont need to load it from the database
         let g = portfolios[index]
         g.name = newvalue
         if (index === -1){
@@ -45,7 +94,8 @@ const Portfolio = (props) => {
             try{
                 const res = await axios.get('/portfolios');
                 // console.log(res.data);
-                setPortfolios(res.data)
+                setPortfolios(res.data);
+                calculatePortfolioSums(res.data);
             }catch(e){
                 console.log(e);
             }
@@ -59,9 +109,8 @@ const Portfolio = (props) => {
             try{
                 const res = await axios.delete(('/portfolios/' + portfolioId));
                 if(res.status === 200){
-                    setPortfolios(portfolios.filter(portfolio => {return portfolio._id != portfolioId}))
-                    //loadPortfolio();
-                    //withtout useing loadPortfolio it becomes faster by not needing to get information from the databse.
+                    //setPortfolios(portfolios.filter(portfolio => {return portfolio._id != portfolioId}))
+                    loadPortfolio();
                 }
             }catch(e){
                 console.log(e);
@@ -143,8 +192,8 @@ const Portfolio = (props) => {
                         <ListGroup.Item>
                             <PortfolioModal updatePortfolio={loadPortfolio}  />
                         </ListGroup.Item>
-                        
-                        <ListGroup.Item>
+                        <AllPortfolios />
+                        <ListGroup.Item> 
                         {portfolios.length > 0 ? <Row>
                             <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Portfolio Name</Col>
                             <Col style={{fontWeight : 'bold', textDecoration : 'underline',fontSize : '25px'}}>Value Of Portfolio</Col>

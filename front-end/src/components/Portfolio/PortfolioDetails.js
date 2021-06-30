@@ -36,15 +36,16 @@ const PortfolioDetails = () => {
             try{
                 const res = await axios.get(('/portfolios/'+pname));
                 setPortfolio(res.data);
-                if(res.data.coins.length > 0 ){
-                    const resCoins = await coinListMarkets(localStorage.currency,res.data.coins.map((coin)=>(coin.coinId)),'market_cap_desc',1, true,100);
+                console.log(res.data)
+                if(((res.data).coins).length > 0 ){
+                    const resCoins = await coinListMarkets(localStorage.currency,((res.data).coins).map((coin)=>(coin.coinId)),'market_cap_desc',1, true,100);
                     setCoins(resCoins.data);
                 }
             }catch(e){
                 console.log(e)
-                if(e.response.status === 404){
-                    setNotFound(true)
-                }
+                // if(e.response.status === 404){
+                //     setNotFound(true)
+                // }
             }
         }
     }
@@ -69,17 +70,14 @@ const PortfolioDetails = () => {
                 coinName : coinName
             });
             if(res.status === 200){
-               loadUsersPortfolio();         
+                console.log(coins)
+                loadUsersPortfolio();   
+                setCoins(coins.filter(coin => {return coin.id !== coinName}))
+      
             }
         }catch(e){
             console.log(e);
         }
-    }
-
-    const fetchData = async() => {
-        // make an array with coins of the portfolio
-        const res = await coinListMarkets(localStorage.currency,portfolio.coins.map((coin)=>(coin.coinId)),'market_cap_desc',1, true,100);
-        setCoins(res.data);
     }
 
     const CoinList2 = () => {
