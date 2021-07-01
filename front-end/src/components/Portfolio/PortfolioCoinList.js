@@ -5,6 +5,8 @@ import downArrow from '../CoinList/down-arrow.png';
 import SmallPriceChart from '../PriceChart/SmallPriceChart';
 import PercChange from '../PercChange/PercChange';
 import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
+import AddTransaction from '../modals/portfolioModals/addTransaction';
+import context from 'react-bootstrap/esm/AccordionContext';
 
 const PortfolioCoinList = (props) => {
     const { coins , portfolioCoins ,currency,portfolio } = props
@@ -84,6 +86,9 @@ const PortfolioCoinList = (props) => {
                         <Col>
                                 Pnl
                         </Col>
+                        <Col>
+                                Actions
+                        </Col>
                        
                     </Row>
                 </ListGroup.Item>
@@ -129,13 +134,27 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                             </Col>
                             <Col >
-                            <Row>
+                                <Row>
                                     <Col>
                                         {(coin.sumPnLOfCoin).toLocaleString()}{' '}{(currency).toUpperCase()}
                                     </Col>
-                                </Row><Row>
+                                </Row>
+                                <Row>
                                     <Col>
                                         <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
+                                    </Col>
+                                </Row>
+                               
+                            </Col>
+                            <Col >
+                                <Row>
+                                    <Col>
+                                        <AddTransaction coin={coin} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        View History
                                     </Col>
                                 </Row>
                                
@@ -189,6 +208,19 @@ const PortfolioCoinList = (props) => {
                                 </Row><Row>
                                     <Col>
                                         <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
+                                    </Col>
+                                </Row>
+                               
+                            </Col>
+                            <Col >
+                                <Row>
+                                    <Col>
+                                    <AddTransaction coin={coin} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        View History
                                     </Col>
                                 </Row>
                                

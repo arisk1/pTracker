@@ -96,6 +96,12 @@ body .bg-dark {
     margin: 10px;
 }
 
+.img-form {
+    width: 35px;
+    height: auto;
+    margin: 10px;
+}
+
 .input-img {
     width: auto;
     height: 24px;

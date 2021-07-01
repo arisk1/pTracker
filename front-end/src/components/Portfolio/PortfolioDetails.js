@@ -36,7 +36,6 @@ const PortfolioDetails = () => {
             try{
                 const res = await axios.get(('/portfolios/'+pname));
                 setPortfolio(res.data);
-                console.log(res.data)
                 if(((res.data).coins).length > 0 ){
                     const resCoins = await coinListMarkets(localStorage.currency,((res.data).coins).map((coin)=>(coin.coinId)),'market_cap_desc',1, true,100);
                     setCoins(resCoins.data);
