@@ -4,11 +4,11 @@ import Calendar from 'react-calendar'
 
 const AddTransaction = (props) => {
 
-    const {coin} = props
+    const {coin , addTransaction} = props
 
     const [show, setShow] = useState(false);
     const [typeOfTransaction,setTypeOfTransaction] = useState("buy");
-    const [pricePerCoin,setPricePerCoin] = useState(coin.current_price); //remember to strignify this
+    const [pricePerCoin,setPricePerCoin] = useState(coin.current_price);
     const [quantity,setQuantity] = useState(1);
     const [dateValue, setDateValue] = useState(new Date());
    
@@ -20,6 +20,7 @@ const AddTransaction = (props) => {
         console.log(quantity)
         console.log(typeOfTransaction)
         console.log(dateValue)
+        addTransaction(typeOfTransaction,coin.id,quantity,pricePerCoin,dateValue);
         setShow(false)
     }
     

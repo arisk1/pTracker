@@ -83,7 +83,7 @@ const PortfolioDetails = () => {
         if(portfolio.coins.length > 0 ){
             return(
                 <Fragment>
-                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} currency={currency} portfolio={portfolio} />   }
+                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} currency={currency} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
                 </Fragment>
             )
         }else{

@@ -7,9 +7,10 @@ import PercChange from '../PercChange/PercChange';
 import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
 import AddTransaction from '../modals/portfolioModals/addTransaction';
 import context from 'react-bootstrap/esm/AccordionContext';
+import axios from 'axios';
 
 const PortfolioCoinList = (props) => {
-    const { coins , portfolioCoins ,currency,portfolio } = props
+    const { coins , portfolioCoins ,currency,portfolio,loadPortfolio } = props
 
     //merge arrays and sort them according to holdings
     
@@ -19,6 +20,24 @@ const PortfolioCoinList = (props) => {
     array.sort((a, b) => (a.holdings > b.holdings) ? -1 : 1)//desc
 
     const [reverseCoins,setReverseCoins] = useState(false);
+
+    const addTransactionFunction = async (typeOfTransaction , coin , quantity , pricePerCoin , date) => {
+        try{
+            const res = await axios.patch(('/portfolios/' + portfolio._id + '/transaction'), {
+                typeOfTransaction : typeOfTransaction, 
+                coin : coin,
+                quantity : quantity,
+                pricePerCoin : pricePerCoin,
+                date : date
+            });
+            if(res.status === 200){
+                loadPortfolio();
+            }
+        }catch(e){
+            console.log(e);
+        }
+    }
+
 
     const percChangeCalc = (pnl , position ) => {
         if(pnl < 0){
@@ -149,7 +168,7 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                        <AddTransaction coin={coin} />
+                                        <AddTransaction coin={coin} addTransaction={addTransactionFunction} />
                                     </Col>
                                 </Row>
                                 <Row>
