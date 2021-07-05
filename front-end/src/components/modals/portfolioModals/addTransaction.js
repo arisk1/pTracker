@@ -1,6 +1,5 @@
 import React, { Fragment,useEffect,useState} from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Calendar from 'react-calendar'
 
 const AddTransaction = (props) => {
 
@@ -16,10 +15,6 @@ const AddTransaction = (props) => {
 
     const closeAndAddTransaction = (e) => {
         e.preventDefault();
-        console.log(pricePerCoin)
-        console.log(quantity)
-        console.log(typeOfTransaction)
-        console.log(dateValue)
         addTransaction(typeOfTransaction,coin.id,quantity,pricePerCoin,dateValue);
         setShow(false)
     }

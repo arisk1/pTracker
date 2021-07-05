@@ -192,6 +192,7 @@ const Portfolio = (props) => {
                         <ListGroup.Item>
                             <PortfolioModal updatePortfolio={loadPortfolio}  />
                         </ListGroup.Item>
+                        <h3 style={{fontWeight : 'bold',textDecoration : 'underline'}} >Summary of my portfolios</h3>
                         <AllPortfolios />
                         <ListGroup.Item> 
                         {portfolios.length > 0 ? <Row>

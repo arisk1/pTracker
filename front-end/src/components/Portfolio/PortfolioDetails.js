@@ -11,6 +11,9 @@ import Spinner from '../Spinner/Spinner';
 import { Fragment } from 'react';
 import  {coinListMarkets } from '@arisk1/cg-functions';
 import PortfolioCoinList from './PortfolioCoinList'
+import { Link} from 'react-router-dom';
+import GoBack from '../goBack/GoBack';
+
 
 
 
@@ -103,18 +106,19 @@ const PortfolioDetails = () => {
     return(
         <Fragment>
         {notfound ? <NotFound /> : <Container>
+            
             {Object.entries(portfolio).length === 0 ? <Spinner /> : 
                 <Row className='row-top mr-0 ml-0' >
                     <Col>
+                        <GoBack buttonText={"Back to Portfolios' Dashboard "} pathTo={"/portfolio"} />
                         <Row>
-                        <Col style={{textAlign : 'left'}}>
-                            <h3> {portfolio.name} </h3>
-                        </Col>
-                        <Col style={{textAlign : 'right'}}>
-                            <AddCoinModal addCoin={addCoin} pid={portfolio._id} />
-                            <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} coins={coins} />
-                            
-                        </Col>
+                            <Col style={{textAlign : 'left'}}>
+                               <h3> {portfolio.name} </h3>
+                            </Col>
+                            <Col style={{textAlign : 'right'}}>
+                               <AddCoinModal addCoin={addCoin} pid={portfolio._id} />
+                               <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} coins={coins} />  
+                            </Col>
                         </Row>
                         <Row style={{paddingTop : '50px'}}>
                             <Col >

@@ -1,4 +1,4 @@
-import {Fragment, useState } from 'react';
+import { useState } from 'react';
 import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from '../CoinList/up-arrow.png';
 import downArrow from '../CoinList/down-arrow.png';
@@ -8,6 +8,7 @@ import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
 import AddTransaction from '../modals/portfolioModals/addTransaction';
 import context from 'react-bootstrap/esm/AccordionContext';
 import axios from 'axios';
+import TransactionHistory from '../TransactionHistory/TransactionHistory';
 
 const PortfolioCoinList = (props) => {
     const { coins , portfolioCoins ,currency,portfolio,loadPortfolio } = props
@@ -173,7 +174,7 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        View History
+                                        <TransactionHistory />
                                     </Col>
                                 </Row>
                                
@@ -238,8 +239,8 @@ const PortfolioCoinList = (props) => {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
-                                        View History
+                                <Col>
+                                        <TransactionHistory />
                                     </Col>
                                 </Row>
                                
