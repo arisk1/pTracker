@@ -9,6 +9,8 @@ import AddTransaction from '../modals/portfolioModals/addTransaction';
 import context from 'react-bootstrap/esm/AccordionContext';
 import axios from 'axios';
 import TransactionHistory from '../TransactionHistory/TransactionHistory';
+import { Link } from "react-router-dom"; 
+
 
 const PortfolioCoinList = (props) => {
     const { coins , portfolioCoins ,currency,portfolio,loadPortfolio } = props
@@ -174,7 +176,7 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <TransactionHistory />
+                                        <Button as={Link} to={{pathname:`/portfolio/${portfolio._id}/history/${coin.id}`}} variant="link" style={{fontSize : '12px'}}>View History</Button>
                                     </Col>
                                 </Row>
                                

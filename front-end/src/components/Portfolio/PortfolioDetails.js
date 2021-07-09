@@ -20,7 +20,7 @@ import GoBack from '../goBack/GoBack';
 const PortfolioDetails = () => {
 
     let { pname } = useParams();
-   
+       
     //auth context
     const authContext = useContext(AuthContext);
     const { isAuthenticated, loadUser, user } = authContext;

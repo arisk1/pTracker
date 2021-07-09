@@ -14,6 +14,7 @@ import Portfolio from './components/Portfolio/Portfolio'
 import PortfolioDetails from './components/Portfolio/PortfolioDetails'
 import Converter from './components/Tools/Converter';
 import PriceCalculator from './components/Tools/PriceCalculator';
+import TransactionHistory from './components/TransactionHistory/TransactionHistory';
 
 
 function App() {
@@ -27,7 +28,8 @@ function App() {
                     <Switch >
                         <Route exact path="/" component={Home}></Route>
                         <Route exact path="/portfolio" component={Portfolio}></Route>
-                        <PrivateRoute path="/portfolio/:pname" component={PortfolioDetails}></PrivateRoute>
+                        <PrivateRoute exact path="/portfolio/:pname" component={PortfolioDetails}></PrivateRoute>
+                        <PrivateRoute exact path="/portfolio/:pname/history/:coinid" component={TransactionHistory}></PrivateRoute>
                         <Route exact path="/heatmap" component={Heatmap}></Route>
                         <Route exact path="/converter" component={Converter}></Route>
                         <Route exact path="/price-calculator" component={PriceCalculator}></Route>
