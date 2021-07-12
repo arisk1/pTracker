@@ -2,9 +2,9 @@ import React from 'react';
 import { ListGroup,Row, Col} from 'react-bootstrap';
 import PercChange from '../PercChange/PercChange';
 
-const PortfolioSpecs = (props) => {
+const TransactionSpecs = (props) => {
 
-    const {portfolio,currency,percChangeCalc,numOfCoins} = props
+    // const {portfolio,currency,percChangeCalc,numOfCoins} = props
 
 
     return (
@@ -18,43 +18,44 @@ const PortfolioSpecs = (props) => {
             </Row>
             <Row>
                 <Col>
-                   {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}
+                   {/* {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()} */}
+                   123
                 </Col>
             </Row>
         </Col>
         <Col  className='p-details'>
             <Row>
                 <Col className="text-bold">
-                24hr Portfolio Change:<br/><PercChange perc_change={percChangeCalc(portfolio.portfolioChange,portfolio.sumPosition)} />
+                Quantity:
                 </Col>
             </Row>
             <Row>
                 <Col >
-                {(portfolio.portfolioChange).toLocaleString()}{' '}{currency.toUpperCase()}
+                123
                 </Col>
             </Row>
         </Col>
         <Col  className='p-details'>
             <Row>
                 <Col className="text-bold" >
-                Total Profit Loss:<br/><PercChange perc_change={percChangeCalc(portfolio.sumPnL,portfolio.sumPosition)} />
+                Total Profit Loss:<br/>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                {(portfolio.sumPnL).toLocaleString()}{' '}{currency.toUpperCase()}
+                {123}
                 </Col>
             </Row>
         </Col>
         <Col   className='p-details'>
             <Row>
                 <Col className="text-bold">
-                    Number of coins:
+                    Number of transactions:
                 </Col>
             </Row>
             <Row>
                 <Col >
-                   {numOfCoins}
+                   {123}
                 </Col>
             </Row>
         </Col>
@@ -63,4 +64,4 @@ const PortfolioSpecs = (props) => {
     )
 }
 
-export default PortfolioSpecs
+export default TransactionSpecs

@@ -197,7 +197,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
                             </Col>
-                            <Col>{coin.current_price}</Col>
+                            <Col>{(coin.current_price).toLocaleString()}</Col>
                             <Col> 
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
@@ -218,18 +218,18 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        {coin.holdings}{' '}{(currency).toUpperCase()}
+                                    {(coin.holdings).toLocaleString()}{' '}{(currency).toUpperCase()}
                                     </Col>
                                 </Row>
                             </Col>
                             <Col >
                             <Row>
                                     <Col>
-                                        {coin.sumPnLOfCoin}{' '}{(currency).toUpperCase()}
+                                        {(coin.sumPnLOfCoin).toLocaleString()}{' '}{(currency).toUpperCase()}
                                     </Col>
                                 </Row><Row>
                                     <Col>
-                                        <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
+                                    <PercChange perc_change={percChangeCalc(coin.sumPnLOfCoin,coin.sumPositionOfCoin)} />
                                     </Col>
                                 </Row>
                                
@@ -237,12 +237,12 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                    <AddTransaction coin={coin} />
+                                       <AddTransaction coin={coin} addTransaction={addTransactionFunction} />
                                     </Col>
                                 </Row>
                                 <Row>
                                 <Col>
-                                        <TransactionHistory />
+                                <Button as={Link} to={{pathname:`/portfolio/${portfolio._id}/history/${coin.id}`}} variant="link" style={{fontSize : '12px'}}>View History</Button>
                                     </Col>
                                 </Row>
                                

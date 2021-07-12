@@ -6,6 +6,8 @@ import CurrencyContext from '../../context/currency/currencyContext';
 import AuthContext from '../../context/auth/authContext';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
+import {coinInfo}  from '@arisk1/cg-functions';
+import TransactionSpecs from './TransactionSpecs';
 
 
 
@@ -16,6 +18,7 @@ const TransactionHistory = () => {
 
     const [portfolio, setPortfolio] = useState({});
     const [history , setHistory] = useState([]);
+    const [coinInformation, setCoinInformation] = useState({});
 
     //auth context
     const authContext = useContext(AuthContext);
@@ -43,12 +46,18 @@ const TransactionHistory = () => {
         }
     }
 
+    const fetchData = async() => {
+        const resdata = await coinInfo(coinid);
+        console.log(resdata.data)
+        setCoinInformation(resdata.data);
+    }
+
     const colorResults = (transaction,result) => {
-        if(transaction === 'buy'){
+        if(transaction === 'buy' || transaction === 'transferin'){
             return (<Col style={{color : 'green'}} >
             {"+" + result}
         </Col>)
-        }else if(transaction === 'sell'){
+        }else if(transaction === 'sell'|| transaction === 'transferout'){
             return (<Col style={{color : 'red'}} >
             {"-" + result}
         </Col>)
@@ -60,6 +69,14 @@ const TransactionHistory = () => {
         }else if(result === 'sell'){
             return (<Col style={{color : 'red'}} >
             {result}
+        </Col>)
+        }else if(result === 'transferin'){
+            return (<Col style={{color : 'green'}} >
+            {"Transfer In"}
+        </Col>)
+        }else if(result === 'transferout'){
+            return (<Col style={{color : 'red'}} >
+            {"Transfer Out"}
         </Col>)
         }
         if(result < 0) {
@@ -96,7 +113,7 @@ const TransactionHistory = () => {
                                 Quantity
                         </Col>
                         <Col>
-                                Date
+                                Date(yyyy/mm/dd)
                         </Col>
                         <Col>
                                 Cost
@@ -123,6 +140,12 @@ const TransactionHistory = () => {
         
     }
 
+    const parseISODate = (dateIso) => {
+        console.log(dateIso)
+        const x = new Date(dateIso)
+        return x.getFullYear()+ ' / ' + (x.getMonth()+1) + ' / '+x.getDate() + ' - ' + x.toLocaleTimeString() ;
+    }
+
     const HistoryList = () => {
         return (
             <ListGroup variant="flush" > 
@@ -130,6 +153,7 @@ const TransactionHistory = () => {
                 <Fragment>
                 {checkHistory() ? 
                     <Fragment>
+                        <TransactionSpecs/>
                         {topInfo()}
                         {history.map((his,idx) => (
                             <ListGroup.Item key={idx}>
@@ -140,7 +164,7 @@ const TransactionHistory = () => {
                                 </Col> 
                                 {colorResults(his.transaction,his.quantity)} 
                                 <Col style={{fontSize : '12px'}}>
-                                    {Date(his.date)}
+                                    {parseISODate(his.date)}
                                 </Col> <Col>
                                     {his.cost}
                                 </Col> <Col>
@@ -165,10 +189,13 @@ const TransactionHistory = () => {
 
     useEffect(() => {
         loadUsersPortfolio();
+        fetchData();
         // eslint-disable-next-line    
         },[isAuthenticated,currency])
     
     return(
+
+        
         <Row className='row-top mr-0 ml-0' >
         <Col>
             <GoBack buttonText={"Back to my portfolio "} pathTo={`/portfolio/${pname}`} />
@@ -178,13 +205,18 @@ const TransactionHistory = () => {
                 </Col>
             </Row>
             <Row>
+            
+            {Object.entries(coinInformation).length === 0 ? <Spinner /> :  
                 <Col style={{textAlign : 'left'}}>
-                   <h3> <span style={{color : 'grey'}}>Crypto:</span> {coinid} </h3>
+                   <h3> <span style={{color : 'grey'}}>Crypto:</span> {coinInformation.name}<img alt={coinid} className='img-history' src={coinInformation.image.small}/>  </h3>
+                   
                 </Col>
+            }
             </Row>
             
             <Row style={{paddingTop : '50px'}}>
                 <Col >
+                    
                     <HistoryList />
                    {console.log(history)}
                    {console.log(portfolio)}

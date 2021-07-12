@@ -96,6 +96,12 @@ body .bg-dark {
     margin: 10px;
 }
 
+.img-history {
+    width: 30px;
+    height: auto;
+    margin: 10px;
+}
+
 .img-form {
     width: 35px;
     height: auto;
