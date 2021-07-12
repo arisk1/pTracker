@@ -171,7 +171,7 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
         if(typeOfTransaction === "transferin"){ //transfer in
             portfolio.coins = portfolio.coins.map((arrayObject)=>{
                 if(arrayObject.coinId === coin){
-                    arrayObject.quantity += quantity;
+                    arrayObject.quantity = Number(arrayObject.quantity) + Number(quantity);
                     arrayObject.history = arrayObject.history.concat({
                         transaction : typeOfTransaction,
                         price : pricePerCoin,
@@ -190,7 +190,7 @@ portfolioSchema.methods.transaction = async function(typeOfTransaction,coin,quan
                 if(quantity > arrayObject.quantity){
                     throw new Error('Insufficient Funds!');
                 }
-                arrayObject.quantity -= quantity;
+                arrayObject.quantity = Number(arrayObject.quantity) - Number(quantity);
                 arrayObject.history = arrayObject.history.concat({
                     transaction : typeOfTransaction,
                     price : pricePerCoin,
