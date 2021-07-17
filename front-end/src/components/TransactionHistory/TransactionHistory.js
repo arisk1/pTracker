@@ -19,6 +19,7 @@ const TransactionHistory = () => {
     const [portfolio, setPortfolio] = useState({});
     const [history , setHistory] = useState([]);
     const [coinInformation, setCoinInformation] = useState({});
+    const [coinObject,setCoinObject] = useState({});
 
     //auth context
     const authContext = useContext(AuthContext);
@@ -37,6 +38,7 @@ const TransactionHistory = () => {
                 (res.data.coins).forEach(coinHistory => {
                     if(coinHistory.coinId === coinid){
                         setHistory(coinHistory.history);
+                        setCoinObject(coinHistory)
                     }
                 } 
                 )
@@ -153,8 +155,9 @@ const TransactionHistory = () => {
                 <Fragment>
                 {checkHistory() ? 
                     <Fragment>
-                        <TransactionSpecs/>
+                        {Object.entries(coinObject).length === 0 ? <Spinner /> : <TransactionSpecs history={history} balance={coinObject.holdings} coinPnl={coinObject.sumPnLOfCoin} quantity={coinObject.quantity} currency={currency}/>  }
                         {topInfo()}
+                        {console.log(coinObject)}
                         {history.map((his,idx) => (
                             <ListGroup.Item key={idx}>
                             <Row className='align-items-center' >
@@ -219,6 +222,7 @@ const TransactionHistory = () => {
                     
                     <HistoryList />
                    {console.log(history)}
+                   {console.log(coinObject)}
                    {console.log(portfolio)}
                 </Col>
             </Row>

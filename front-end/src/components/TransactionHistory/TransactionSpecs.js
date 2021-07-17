@@ -4,8 +4,15 @@ import PercChange from '../PercChange/PercChange';
 
 const TransactionSpecs = (props) => {
 
-    // const {portfolio,currency,percChangeCalc,numOfCoins} = props
+     const {history,balance,quantity,currency,coinPnl} = props
 
+     const colorNumbers = (res) => {
+         if(res < 0 ){
+             return <Col ><span style={{color : 'red'}}>{res}</span>{' '}{currency.toUpperCase()} </Col>
+         }else{
+            return <Col><span style={{color : 'green'}}>{"+" + res}</span>{' '}{currency.toUpperCase()} </Col>
+         }
+     }
 
     return (
         <ListGroup.Item>
@@ -17,9 +24,9 @@ const TransactionSpecs = (props) => {
                 </Col>
             </Row>
             <Row>
+                
                 <Col>
-                   {/* {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()} */}
-                   123
+                   {(balance).toLocaleString()}{' '}{currency.toUpperCase()}
                 </Col>
             </Row>
         </Col>
@@ -31,7 +38,7 @@ const TransactionSpecs = (props) => {
             </Row>
             <Row>
                 <Col >
-                123
+                    {quantity}
                 </Col>
             </Row>
         </Col>
@@ -42,9 +49,10 @@ const TransactionSpecs = (props) => {
                 </Col>
             </Row>
             <Row>
-                <Col>
-                {123}
-                </Col>
+                
+                {(colorNumbers(coinPnl))}
+
+               
             </Row>
         </Col>
         <Col   className='p-details'>
@@ -55,7 +63,7 @@ const TransactionSpecs = (props) => {
             </Row>
             <Row>
                 <Col >
-                   {123}
+                   {history.length}
                 </Col>
             </Row>
         </Col>

@@ -127,7 +127,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left'}}>
                                 {coin.market_cap_rank}
                             </Col>
-                            <Col style={{textAlign: 'left'}}>
+                            <Col style={{textAlign: 'left',fontSize : '12px'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
                             </Col>
                             <Col>{(coin.current_price).toLocaleString()}</Col>
@@ -141,6 +141,7 @@ const PortfolioCoinList = (props) => {
                                 <SmallPriceChart 
                                     perc_change={coin.price_change_percentage_7d_in_currency}
                                     sparkline={coin.sparkline_in_7d}
+                                    width={100}
                                 />
                             </Col>
                             <Col >

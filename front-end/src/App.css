@@ -93,7 +93,13 @@ body .bg-dark {
 .img {
     width: 25px;
     height: auto;
-    margin: 10px;
+    margin-right: 10px;
+}
+
+.img-coinlist {
+    width: 18px;
+    height: auto;
+    margin: 5px;
 }
 
 .img-history {

@@ -7,7 +7,7 @@ import {
   } from "recharts";
 
 const SmallPriceChart = (props) => {
-    const { perc_change, sparkline } = props
+    const { perc_change, sparkline,width } = props
     const color = (perc_change && perc_change >= 0) ? "green" : "red"
 
     const data = (sparkline!==undefined)
@@ -17,7 +17,7 @@ const SmallPriceChart = (props) => {
     : null
 
     return (
-            <div style={{width:150, height:80}}>
+            <div style={{width:width, height:80}}>
             <ResponsiveContainer width="100%">
                 <LineChart
                     margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
