@@ -4,7 +4,7 @@ import PercChange from '../PercChange/PercChange';
 
 const PortfolioSpecs = (props) => {
 
-    const {portfolio,currency,percChangeCalc,numOfCoins} = props
+    const {portfolio,currency,percChangeCalc,numOfCoins,calculateCurrency} = props
 
 
     return (
@@ -18,7 +18,7 @@ const PortfolioSpecs = (props) => {
             </Row>
             <Row>
                 <Col>
-                   {(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}
+                   {calculateCurrency(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency}
                 </Col>
             </Row>
         </Col>
@@ -30,7 +30,7 @@ const PortfolioSpecs = (props) => {
             </Row>
             <Row>
                 <Col >
-                {(portfolio.portfolioChange).toLocaleString()}{' '}{currency.toUpperCase()}
+                {calculateCurrency(portfolio.portfolioChange).toLocaleString()}{' '}{currency}
                 </Col>
             </Row>
         </Col>
@@ -42,7 +42,7 @@ const PortfolioSpecs = (props) => {
             </Row>
             <Row>
                 <Col>
-                {(portfolio.sumPnL).toLocaleString()}{' '}{currency.toUpperCase()}
+                {calculateCurrency(portfolio.sumPnL).toLocaleString()}{' '}{currency}
                 </Col>
             </Row>
         </Col>

@@ -8,6 +8,7 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import {coinInfo}  from '@arisk1/cg-functions';
 import TransactionSpecs from './TransactionSpecs';
+import {exchangeRates} from '@arisk1/cg-functions';
 
 
 
@@ -20,6 +21,8 @@ const TransactionHistory = () => {
     const [history , setHistory] = useState([]);
     const [coinInformation, setCoinInformation] = useState({});
     const [coinObject,setCoinObject] = useState({});
+    const [btcExRateArray , setBtcExRateArray] = useState({});
+
 
     //auth context
     const authContext = useContext(AuthContext);
@@ -57,7 +60,7 @@ const TransactionHistory = () => {
     const colorResults = (transaction,result) => {
         if(transaction === 'buy' || transaction === 'transferin'){
             return (<Col style={{color : 'green'}} >
-            {"+" + result}
+            {"+" + result }
         </Col>)
         }else if(transaction === 'sell'|| transaction === 'transferout'){
             return (<Col style={{color : 'red'}} >
@@ -83,11 +86,11 @@ const TransactionHistory = () => {
         }
         if(result < 0) {
             return (<Col style={{color : 'red'}} >
-                {result}
+                {result} <span style={{color : 'black'}}> {btcExRateArray[currency].unit} </span>
             </Col>)
         }else if(result > 0){
             return (<Col style={{color : 'green'}} >
-                {result}
+                {result} <span style={{color : 'black'}}> {btcExRateArray[currency].unit} </span>
             </Col>)
         }else{
             return (<Col>
@@ -155,7 +158,7 @@ const TransactionHistory = () => {
                 <Fragment>
                 {checkHistory() ? 
                     <Fragment>
-                        {Object.entries(coinObject).length === 0 ? <Spinner /> : <TransactionSpecs history={history} balance={coinObject.holdings} coinPnl={coinObject.sumPnLOfCoin} quantity={coinObject.quantity} currency={currency}/>  }
+                        {Object.entries(coinObject).length === 0 ? <Spinner /> : <TransactionSpecs history={history} balance={coinObject.holdings} coinPnl={coinObject.sumPnLOfCoin} quantity={coinObject.quantity} calculateCurrency={calculateCurrency} currency={btcExRateArray[currency].unit}/>  }
                         {topInfo()}
                         {console.log(coinObject)}
                         {history.map((his,idx) => (
@@ -163,17 +166,17 @@ const TransactionHistory = () => {
                             <Row className='align-items-center' >
                                 {colorResults(" ",his.transaction)}
                                 <Col>
-                                    {his.price}
+                                    {(calculateCurrency(his.price)).toFixed(4)}{' '}{btcExRateArray[currency].unit}
                                 </Col> 
                                 {colorResults(his.transaction,his.quantity)} 
                                 <Col style={{fontSize : '12px'}}>
                                     {parseISODate(his.date)}
                                 </Col> <Col>
-                                    {his.cost}
+                                    {(calculateCurrency(his.cost)).toFixed(4)}{' '}{btcExRateArray[currency].unit}
                                 </Col> <Col>
-                                    {his.proceeds}
+                                    {(calculateCurrency(his.proceeds)).toFixed(4)}{' '}{btcExRateArray[currency].unit}
                                 </Col>
-                                {colorResults(" ",(his.pnl).toFixed(5))} 
+                                {colorResults(" ",(calculateCurrency(his.pnl)).toFixed(5))}
                             </Row>
                             </ListGroup.Item>
                             )
@@ -186,8 +189,34 @@ const TransactionHistory = () => {
         )
     }
 
+    const calculateCurrency = (portfoliosum) => {
+        if(currency === 'usd'){
+            //do nothing
+            return portfoliosum;
+        //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = portfoliosum / btcExRateArray['usd'].value;
+            if(currency === 'btc'){
+                return res;
+            }else{
+                //then to the desired currency
+                const res2 = (btcExRateArray[currency].value)*res;
+                return res2;
+            } 
+        }
+    }
+
+    const fetchExchangeRateData =async () => {
+        const res = await exchangeRates();
+        setBtcExRateArray(res.data.rates);
+    }
+
     
 
+    useEffect(()=>{
+        fetchExchangeRateData();
+    },[])
 
 
     useEffect(() => {

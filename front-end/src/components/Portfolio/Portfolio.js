@@ -12,6 +12,7 @@ import RenameModal from '../modals/portfolioModals/renameModal';
 import { Link} from 'react-router-dom';
 import PortfolioSpecs from '../PortfolioSpecs/PortfolioSpecs';
 import Spinner from '../Spinner/Spinner';
+import {exchangeRates} from '@arisk1/cg-functions';
 
 
 
@@ -27,6 +28,7 @@ const Portfolio = (props) => {
 
     const [portfolios , setPortfolios] = useState([]);
     const [sumPortfolios,setSumPortfolios] = useState({});
+    const [btcExRateArray , setBtcExRateArray] = useState({});
 
     const calculatePortfolioSums = (portfs) => {
         //if portfolio is an array of portfolios 
@@ -64,7 +66,7 @@ const Portfolio = (props) => {
             if(Object.keys(sumPortfolios).length === 0){
                 return (<Spinner/>)
             }else{
-                return (<PortfolioSpecs portfolio={sumPortfolios} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={sumPortfolios.numOfCoins}/>)  
+                return (<PortfolioSpecs portfolio={sumPortfolios} calculateCurrency={calculateCurrency} currency={btcExRateArray[currency].unit} percChangeCalc={percChangeCalc} numOfCoins={sumPortfolios.numOfCoins}/>)  
             }  
         }else{
             return(<Fragment/>)
@@ -185,6 +187,7 @@ const Portfolio = (props) => {
     const Authenticated = () => {
         return(
             <Container>
+                {Object.entries(btcExRateArray).length === 0 ? <Spinner /> : 
                 <Row className='row-top mr-0 ml-0' >
                     <Col>
                         <h1 style={{fontWeight : 'bold'}} >List of my Portfolios</h1>
@@ -228,7 +231,7 @@ const Portfolio = (props) => {
                                         className="d-inline-block align-middle"/>
                                         {portfolio.name}
                                     </Col> 
-                                    <Col >{(portfolio.sumOfPortfolio).toLocaleString()}{' '}{currency.toUpperCase()}</Col>
+                                    <Col >{calculateCurrency(portfolio.sumOfPortfolio).toLocaleString()}{' '}{btcExRateArray[currency].unit}</Col>
                                     <Col >
                                         <Button as={Link} to={{pathname:`/portfolio/${portfolio._id}`}} variant="outline-primary" > View Details </Button>{' '}
                                         <WarningModal name={portfolio.name} deletePortfolio={deletePortfolio} pid={portfolio._id} />{' '}
@@ -240,12 +243,39 @@ const Portfolio = (props) => {
                         }</ListGroup>
                     </Col>
                 </Row>
+                }
             </Container>
+            
         );
     }
 
+    const calculateCurrency = (portfoliosum) => {
+        if(currency === 'usd'){
+            //do nothing
+            return portfoliosum;
+        //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = portfoliosum / btcExRateArray['usd'].value;
+            if(currency === 'btc'){
+                return res;
+            }else{
+                //then to the desired currency
+                const res2 = (btcExRateArray[currency].value)*res;
+                return res2;
+            } 
+        }
+    }
+
+    const fetchExchangeRateData =async () => {
+        const res = await exchangeRates();
+        setBtcExRateArray(res.data.rates);
+    }
+
+
     useEffect(() => {
         loadPortfolio();
+        fetchExchangeRateData(); 
         // eslint-disable-next-line    
         },[isAuthenticated])
 

@@ -9,7 +9,7 @@ import AuthContext from '../../context/auth/authContext';
 import NotFound from '../NotFound/NotFound';
 import Spinner from '../Spinner/Spinner';
 import { Fragment } from 'react';
-import  {coinListMarkets } from '@arisk1/cg-functions';
+import  {coinListMarkets,exchangeRates} from '@arisk1/cg-functions';
 import PortfolioCoinList from './PortfolioCoinList'
 import { Link} from 'react-router-dom';
 import GoBack from '../goBack/GoBack';
@@ -31,7 +31,9 @@ const PortfolioDetails = () => {
     const [portfolio, setPortfolio] = useState({});
     const [notfound , setNotFound] = useState(false);
     const [coins , setCoins] = useState([]);
-    
+    const [btcExRateArray , setBtcExRateArray] = useState({});
+
+
     const loadUsersPortfolio = async() => {
         if(isAuthenticated){
             //users details is in user
@@ -86,7 +88,7 @@ const PortfolioDetails = () => {
         if(portfolio.coins.length > 0 ){
             return(
                 <Fragment>
-                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} portfolioCoins={portfolio.coins} currency={currency} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
+                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} calculateCurrency={calculateCurrency} portfolioCoins={portfolio.coins} currency={btcExRateArray[currency].unit} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
                 </Fragment>
             )
         }else{
@@ -96,6 +98,32 @@ const PortfolioDetails = () => {
         }
     }
 
+    const fetchExchangeRateData =async () => {
+        const res = await exchangeRates();
+        setBtcExRateArray(res.data.rates);
+    }
+
+    const calculateCurrency = (portfoliosum) => {
+        if(currency === 'usd'){
+            //do nothing
+            return portfoliosum;
+        //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = portfoliosum / btcExRateArray['usd'].value;
+            if(currency === 'btc'){
+                return res;
+            }else{
+                //then to the desired currency
+                const res2 = (btcExRateArray[currency].value)*res;
+                return res2;
+            } 
+        }
+    }
+
+    useEffect(()=>{
+        fetchExchangeRateData();
+    },[])
     
 
     useEffect(() => {

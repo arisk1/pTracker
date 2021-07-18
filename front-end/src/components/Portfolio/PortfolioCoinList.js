@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { ListGroup,Row, Col,Button} from 'react-bootstrap';
 import upArrow from '../CoinList/up-arrow.png';
 import downArrow from '../CoinList/down-arrow.png';
@@ -10,10 +10,13 @@ import context from 'react-bootstrap/esm/AccordionContext';
 import axios from 'axios';
 import TransactionHistory from '../TransactionHistory/TransactionHistory';
 import { Link } from "react-router-dom"; 
+import  {exchangeRates} from '@arisk1/cg-functions';
+import Spinner from '../Spinner/Spinner';
+import { Fragment } from 'react';
 
 
 const PortfolioCoinList = (props) => {
-    const { coins , portfolioCoins ,currency,portfolio,loadPortfolio } = props
+    const { coins , portfolioCoins ,currency,portfolio,loadPortfolio,calculateCurrency } = props
 
     //merge arrays and sort them according to holdings
     
@@ -22,7 +25,7 @@ const PortfolioCoinList = (props) => {
     });
     array.sort((a, b) => (a.holdings > b.holdings) ? -1 : 1)//desc
 
-    const [reverseCoins,setReverseCoins] = useState(false);
+    const [reverseCoins,setReverseCoins] = useState(false);    
 
     const addTransactionFunction = async (typeOfTransaction , coin , quantity , pricePerCoin , date) => {
         try{
@@ -152,14 +155,14 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        {(coin.holdings).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                        {calculateCurrency(coin.holdings).toLocaleString()}{' '}{currency}
                                     </Col>
                                 </Row>
                             </Col>
                             <Col >
                                 <Row>
                                     <Col>
-                                        {(coin.sumPnLOfCoin).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                        {calculateCurrency(coin.sumPnLOfCoin).toLocaleString()}{' '}{currency}
                                     </Col>
                                 </Row>
                                 <Row>
@@ -195,7 +198,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left'}}>
                                 {coin.market_cap_rank}
                             </Col>
-                            <Col style={{textAlign: 'left'}}>
+                            <Col style={{textAlign: 'left',fontSize : '12px'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
                             </Col>
                             <Col>{(coin.current_price).toLocaleString()}</Col>
@@ -219,14 +222,14 @@ const PortfolioCoinList = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                    {(coin.holdings).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                    {calculateCurrency(coin.holdings).toLocaleString()}{' '}{currency}
                                     </Col>
                                 </Row>
                             </Col>
                             <Col >
                             <Row>
                                     <Col>
-                                        {(coin.sumPnLOfCoin).toLocaleString()}{' '}{(currency).toUpperCase()}
+                                        {calculateCurrency(coin.sumPnLOfCoin).toLocaleString()}{' '}{currency}
                                     </Col>
                                 </Row><Row>
                                     <Col>
@@ -259,10 +262,10 @@ const PortfolioCoinList = (props) => {
 
 
     return (
-        <ListGroup variant="flush">
-            <PortfolioSpecs portfolio={portfolio} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={(portfolio.coins).length}/>
+        <ListGroup variant="flush">    
+            <PortfolioSpecs portfolio={portfolio} calculateCurrency={calculateCurrency} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={(portfolio.coins).length}/>
             {topInfo()}
-            {coinsMap()}
+            {coinsMap()} 
         </ListGroup>
     )
 }

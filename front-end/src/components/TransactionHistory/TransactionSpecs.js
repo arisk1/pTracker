@@ -4,13 +4,13 @@ import PercChange from '../PercChange/PercChange';
 
 const TransactionSpecs = (props) => {
 
-     const {history,balance,quantity,currency,coinPnl} = props
+     const {history,balance,quantity,currency,coinPnl,calculateCurrency} = props
 
      const colorNumbers = (res) => {
          if(res < 0 ){
-             return <Col ><span style={{color : 'red'}}>{res}</span>{' '}{currency.toUpperCase()} </Col>
+             return <Col ><span style={{color : 'red'}}>{res}</span>{' '}{currency} </Col>
          }else{
-            return <Col><span style={{color : 'green'}}>{"+" + res}</span>{' '}{currency.toUpperCase()} </Col>
+            return <Col><span style={{color : 'green'}}>{"+" + res}</span>{' '}{currency} </Col>
          }
      }
 
@@ -26,7 +26,7 @@ const TransactionSpecs = (props) => {
             <Row>
                 
                 <Col>
-                   {(balance).toLocaleString()}{' '}{currency.toUpperCase()}
+                   {calculateCurrency(balance).toLocaleString()}{' '}{currency}
                 </Col>
             </Row>
         </Col>
@@ -50,7 +50,7 @@ const TransactionSpecs = (props) => {
             </Row>
             <Row>
                 
-                {(colorNumbers(coinPnl))}
+                {(colorNumbers(calculateCurrency(coinPnl)))}
 
                
             </Row>
