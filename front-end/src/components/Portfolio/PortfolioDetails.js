@@ -11,9 +11,8 @@ import Spinner from '../Spinner/Spinner';
 import { Fragment } from 'react';
 import  {coinListMarkets,exchangeRates} from '@arisk1/cg-functions';
 import PortfolioCoinList from './PortfolioCoinList'
-import { Link} from 'react-router-dom';
 import GoBack from '../goBack/GoBack';
-
+import PieChart from '../PieChart/PieChart';
 
 
 
@@ -32,6 +31,7 @@ const PortfolioDetails = () => {
     const [notfound , setNotFound] = useState(false);
     const [coins , setCoins] = useState([]);
     const [btcExRateArray , setBtcExRateArray] = useState({});
+    const [loadingSpinner , setLoadingSpinner] = useState(true);
 
 
     const loadUsersPortfolio = async() => {
@@ -44,12 +44,13 @@ const PortfolioDetails = () => {
                 if(((res.data).coins).length > 0 ){
                     const resCoins = await coinListMarkets(localStorage.currency,((res.data).coins).map((coin)=>(coin.coinId)),'market_cap_desc',1, true,100);
                     setCoins(resCoins.data);
+                    setLoadingSpinner(false);
                 }
             }catch(e){
                 console.log(e)
-                // if(e.response.status === 404){
-                //     setNotFound(true)
-                // }
+                if(e.response.status === 404){
+                    setNotFound(true)
+                }
             }
         }
     }
@@ -88,7 +89,7 @@ const PortfolioDetails = () => {
         if(portfolio.coins.length > 0 ){
             return(
                 <Fragment>
-                    { coins.length === 0 ? <Spinner/> : <PortfolioCoinList coins={coins} calculateCurrency={calculateCurrency} portfolioCoins={portfolio.coins} currency={btcExRateArray[currency].unit} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
+                    { loadingSpinner ? <Spinner/> : <PortfolioCoinList coins={coins} calculateCurrency={calculateCurrency} portfolioCoins={portfolio.coins} currency={btcExRateArray[currency].unit} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
                 </Fragment>
             )
         }else{
@@ -148,7 +149,14 @@ const PortfolioDetails = () => {
                                <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} coins={coins} />  
                             </Col>
                         </Row>
-                        <Row style={{paddingTop : '50px'}}>
+                        <Row >
+                            <Col></Col>
+                            <Col>
+                                <PieChart coins={coins} portfolioCoins={portfolio.coins} calculateCurrency={calculateCurrency} />
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                        <Row>
                             <Col >
                                 <CoinList2 />
                             </Col>

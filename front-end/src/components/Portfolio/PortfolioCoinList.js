@@ -21,7 +21,15 @@ const PortfolioCoinList = (props) => {
     //merge arrays and sort them according to holdings
     
     const array = coins.map((value,index)=>{
-        return ( {...value,...portfolioCoins[index]} );       
+        //match the id of coins array with the coinId of portfolioCoins
+        let myindex=0;
+        portfolioCoins.forEach((c,idx) => {
+            if(value.id === c.coinId){
+                console.log(idx)
+                myindex=idx;
+            }
+        });
+        return({...value,...portfolioCoins[myindex]})
     });
     array.sort((a, b) => (a.holdings > b.holdings) ? -1 : 1)//desc
 
@@ -42,6 +50,11 @@ const PortfolioCoinList = (props) => {
         }catch(e){
             console.log(e);
         }
+    }
+
+    const percentage = (sum,holdings) => {
+        const perc = (100*holdings) / sum;
+        return (perc.toFixed(3) +"%");
     }
 
 
@@ -124,6 +137,7 @@ const PortfolioCoinList = (props) => {
     const coinsMap = () => {
         if(!reverseCoins){
             return(
+                
                 array.map((coin,idx) => (
                     <ListGroup.Item key={idx} >
                         <Row className="align-items-center">
@@ -156,6 +170,11 @@ const PortfolioCoinList = (props) => {
                                 <Row>
                                     <Col>
                                         {calculateCurrency(coin.holdings).toLocaleString()}{' '}{currency}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {percentage(portfolio.sumOfPortfolio,coin.holdings)}
                                     </Col>
                                 </Row>
                             </Col>
@@ -262,7 +281,9 @@ const PortfolioCoinList = (props) => {
 
 
     return (
-        <ListGroup variant="flush">    
+        <ListGroup variant="flush"> 
+            {console.log(array)}
+   
             <PortfolioSpecs portfolio={portfolio} calculateCurrency={calculateCurrency} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={(portfolio.coins).length}/>
             {topInfo()}
             {coinsMap()} 

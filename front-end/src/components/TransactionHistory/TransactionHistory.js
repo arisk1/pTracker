@@ -22,6 +22,7 @@ const TransactionHistory = () => {
     const [coinInformation, setCoinInformation] = useState({});
     const [coinObject,setCoinObject] = useState({});
     const [btcExRateArray , setBtcExRateArray] = useState({});
+    const [loading,setLoading] = useState(true);
 
 
     //auth context
@@ -154,7 +155,7 @@ const TransactionHistory = () => {
     const HistoryList = () => {
         return (
             <ListGroup variant="flush" > 
-            {Object.entries(portfolio).length === 0 ? <Spinner /> :  
+            {Object.entries(portfolio).length === 0 || loading ? <Spinner /> :  
                 <Fragment>
                 {checkHistory() ? 
                     <Fragment>
@@ -210,6 +211,7 @@ const TransactionHistory = () => {
     const fetchExchangeRateData =async () => {
         const res = await exchangeRates();
         setBtcExRateArray(res.data.rates);
+        setLoading(false);
     }
 
     
