@@ -13,6 +13,7 @@ import  {coinListMarkets,exchangeRates} from '@arisk1/cg-functions';
 import PortfolioCoinList from './PortfolioCoinList'
 import GoBack from '../goBack/GoBack';
 import PieChart from '../PieChart/PieChart';
+import chart from './chart.png';
 
 
 
@@ -32,6 +33,7 @@ const PortfolioDetails = () => {
     const [coins , setCoins] = useState([]);
     const [btcExRateArray , setBtcExRateArray] = useState({});
     const [loadingSpinner , setLoadingSpinner] = useState(true);
+    const [show, setShow] = useState(false);
 
 
     const loadUsersPortfolio = async() => {
@@ -122,6 +124,14 @@ const PortfolioDetails = () => {
         }
     }
 
+    const ShowPie = () => {
+        if(show === true){
+            return (<PieChart coins={coins} portfolioCoins={portfolio.coins} calculateCurrency={calculateCurrency} /> );
+        }else{
+            return (null);
+        }
+    }
+
     useEffect(()=>{
         fetchExchangeRateData();
     },[])
@@ -142,7 +152,7 @@ const PortfolioDetails = () => {
                         <GoBack buttonText={"Back to Portfolios' Dashboard "} pathTo={"/portfolio"} />
                         <Row>
                             <Col style={{textAlign : 'left'}}>
-                               <h3> {portfolio.name} </h3>
+                                <h3> <span style={{color : 'grey'}}>Portfolio's name:</span> {portfolio.name} </h3>
                             </Col>
                             <Col style={{textAlign : 'right'}}>
                                <AddCoinModal addCoin={addCoin} pid={portfolio._id} />
@@ -150,9 +160,18 @@ const PortfolioDetails = () => {
                             </Col>
                         </Row>
                         <Row >
-                            <Col></Col>
+                            <Col style={{textAlign : 'left'}}>
+                                <Button variant='outline-primary'  onClick={()=>setShow(!show)} type="button">
+                                <img
+                                    alt="chart-logo"
+                                    src={chart}
+                                    width="20"
+                                    height="20"
+                                    className="img"/>Show Pie Chart
+                                </Button>
+                            </Col>
                             <Col>
-                                <PieChart coins={coins} portfolioCoins={portfolio.coins} calculateCurrency={calculateCurrency} />
+                                <ShowPie />
                             </Col>
                             <Col></Col>
                         </Row>

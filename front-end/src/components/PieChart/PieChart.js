@@ -19,8 +19,6 @@ const PieChart = (props) => {
     });
 
     return(
-    <Fragment>
-        {console.log(array)}
     <Chart
         width={'500px'}
         height={'300px'}
@@ -36,7 +34,7 @@ const PieChart = (props) => {
           is3D: true,
         }}
         rootProps={{ 'data-testid': '2' }}
-      /></Fragment>)
+      />)
 }
 
 export default PieChart
