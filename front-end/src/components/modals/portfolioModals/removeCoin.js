@@ -36,10 +36,16 @@ const RemoveCoinModal = (props) => {
         setError(false)
     };
 
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+      ]
 
 
     return(
         <Fragment>
+            {console.log(coins)}
             <Button variant="outline-danger" onClick={handleShow}>Remove Coin</Button>{' '}
 
             <Modal show={show} onHide={handleClose}>
@@ -48,13 +54,26 @@ const RemoveCoinModal = (props) => {
             </Modal.Header>
             <Modal.Body style={{fontSize : '22px'}}>
                 <Form onSubmit={closeAndRemove}>
-                    <Form.Group controlId="formBasicPortfolioName">
+                    <Form.Group  controlId="formBasicPortfolioName">
+                       <Form.Label style={{color: 'grey',fontSize : '14px'}}>Choose the coin from your portfolio you want to remove</Form.Label>
                         <Form.Control
+                            as="select"
                             onChange={(e)=>setrCoin(e.target.value)}
                             type="text"
                             name="name"
                             placeholder="Enter coin's name..."
-                            required/>
+                            required
+                            options={options}>
+                                {coins.map((coin)=>{
+                                    return (
+                                        <option key={coin.id} value={coin.id}>
+                                           {coin.name}
+                                        </option>
+                                    )
+                                })}
+                        </Form.Control>
+                        
+                       
                     </Form.Group>
                     {error ? <ShowError/> : null}
                     <Button variant='dark' type="submit" size="lg" block>

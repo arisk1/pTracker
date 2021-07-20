@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 const AddTransaction = (props) => {
 
-    const {coin , addTransaction} = props
+    const {coin , addTransaction ,currency} = props
 
     const [show, setShow] = useState(false);
     const [typeOfTransaction,setTypeOfTransaction] = useState("buy");
@@ -60,7 +60,7 @@ const AddTransaction = (props) => {
                         onChange={(e)=>setPricePerCoin(e.target.value)}
                         type="text"
                         name="name"
-                        placeholder={coin.current_price}
+                        placeholder={coin.current_price + " " + currency}
                         required/>
                 </Form.Group>
                 <Form.Group controlId="formBasicQuantity">
@@ -77,7 +77,7 @@ const AddTransaction = (props) => {
                     <Form.Control
                         type="text"
                         name="name"
-                        placeholder={pricePerCoin*quantity}
+                        placeholder={pricePerCoin*quantity + " " + currency}
                         disabled />
                 </Form.Group> : null }
                 <Form.Group controlId="formBasicQuantity">

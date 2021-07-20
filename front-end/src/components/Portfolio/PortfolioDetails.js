@@ -155,7 +155,7 @@ const PortfolioDetails = () => {
                                 <h3> <span style={{color : 'grey'}}>Portfolio's name:</span> {portfolio.name} </h3>
                             </Col>
                             <Col style={{textAlign : 'right'}}>
-                               <AddCoinModal addCoin={addCoin} pid={portfolio._id} />
+                               <AddCoinModal addCoin={addCoin} pid={portfolio._id} coins={coins} />
                                <RemoveCoinModal removeCoin={removeCoin} pid={portfolio._id} coins={coins} />  
                             </Col>
                         </Row>

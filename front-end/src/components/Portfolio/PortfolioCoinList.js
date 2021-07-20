@@ -41,6 +41,7 @@ const PortfolioCoinList = (props) => {
                 typeOfTransaction : typeOfTransaction, 
                 coin : coin,
                 quantity : quantity,
+                //whatever the currency is we need to convert it to usd before storing it to the database
                 pricePerCoin : pricePerCoin,
                 date : date
             });
@@ -194,7 +195,7 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                        <AddTransaction coin={coin} addTransaction={addTransactionFunction} />
+                                        <AddTransaction coin={coin} addTransaction={addTransactionFunction} currency={currency} />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -260,7 +261,7 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                       <AddTransaction coin={coin} addTransaction={addTransactionFunction} />
+                                       <AddTransaction coin={coin} addTransaction={addTransactionFunction} currency={currency} />
                                     </Col>
                                 </Row>
                                 <Row>
