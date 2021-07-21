@@ -16,7 +16,7 @@ import { Fragment } from 'react';
 
 
 const PortfolioCoinList = (props) => {
-    const { coins , portfolioCoins ,currency,portfolio,loadPortfolio,calculateCurrency } = props
+    const { coins , portfolioCoins ,currency,portfolio,loadPortfolio,calculateCurrency,convertToUsd,currencyR,btcExRate,vsCurrencies } = props
 
     //merge arrays and sort them according to holdings
     
@@ -25,7 +25,6 @@ const PortfolioCoinList = (props) => {
         let myindex=0;
         portfolioCoins.forEach((c,idx) => {
             if(value.id === c.coinId){
-                console.log(idx)
                 myindex=idx;
             }
         });
@@ -42,7 +41,7 @@ const PortfolioCoinList = (props) => {
                 coin : coin,
                 quantity : quantity,
                 //whatever the currency is we need to convert it to usd before storing it to the database
-                pricePerCoin : pricePerCoin,
+                pricePerCoin : convertToUsd(pricePerCoin),
                 date : date
             });
             if(res.status === 200){
@@ -54,8 +53,13 @@ const PortfolioCoinList = (props) => {
     }
 
     const percentage = (sum,holdings) => {
-        const perc = (100*holdings) / sum;
-        return (perc.toFixed(3) +"%");
+        if(holdings === 0 && sum === 0){
+            return ("0%") 
+        }else{
+            const perc = (100*holdings) / sum;
+            return (perc.toFixed(3) +"%");
+        }
+       
     }
 
 
@@ -195,7 +199,7 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                        <AddTransaction coin={coin} addTransaction={addTransactionFunction} currency={currency} />
+                                        <AddTransaction vsCurrencies={vsCurrencies} currencyR={currencyR} btcExRate={btcExRate} coin={coin} addTransaction={addTransactionFunction} currency={currency} />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -261,7 +265,7 @@ const PortfolioCoinList = (props) => {
                             <Col >
                                 <Row>
                                     <Col>
-                                       <AddTransaction coin={coin} addTransaction={addTransactionFunction} currency={currency} />
+                                       <AddTransaction vsCurrencies={vsCurrencies} currencyR={currencyR} btcExRate={btcExRate} coin={coin} addTransaction={addTransactionFunction} currency={currency} />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -283,8 +287,6 @@ const PortfolioCoinList = (props) => {
 
     return (
         <ListGroup variant="flush"> 
-            {console.log(array)}
-   
             <PortfolioSpecs portfolio={portfolio} calculateCurrency={calculateCurrency} currency={currency} percChangeCalc={percChangeCalc} numOfCoins={(portfolio.coins).length}/>
             {topInfo()}
             {coinsMap()} 

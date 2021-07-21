@@ -26,7 +26,7 @@ const PortfolioDetails = () => {
     const { isAuthenticated, loadUser, user } = authContext;
     //currency context
     const currencyContext = useContext(CurrencyContext);
-    const {currency} = currencyContext; 
+    const {currency,vsCurrencies} = currencyContext; 
 
     const [portfolio, setPortfolio] = useState({});
     const [notfound , setNotFound] = useState(false);
@@ -34,7 +34,7 @@ const PortfolioDetails = () => {
     const [btcExRateArray , setBtcExRateArray] = useState({});
     const [loadingSpinner , setLoadingSpinner] = useState(true);
     const [show, setShow] = useState(false);
-
+    const [clicked,setClicked] = useState(false);
 
     const loadUsersPortfolio = async() => {
         if(isAuthenticated){
@@ -77,7 +77,6 @@ const PortfolioDetails = () => {
                 coinName : coinName
             });
             if(res.status === 200){
-                console.log(coins)
                 loadUsersPortfolio();   
                 setCoins(coins.filter(coin => {return coin.id !== coinName}))
       
@@ -91,7 +90,7 @@ const PortfolioDetails = () => {
         if(portfolio.coins.length > 0 ){
             return(
                 <Fragment>
-                    { loadingSpinner ? <Spinner/> : <PortfolioCoinList coins={coins} calculateCurrency={calculateCurrency} portfolioCoins={portfolio.coins} currency={btcExRateArray[currency].unit} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
+                    { loadingSpinner ? <Spinner/> : <PortfolioCoinList vsCurrencies={vsCurrencies} coins={coins} calculateCurrency={calculateCurrency} btcExRate={btcExRateArray}  portfolioCoins={portfolio.coins} convertToUsd={convertToUsd} currency={btcExRateArray[currency].unit} currencyR={currency} portfolio={portfolio} loadPortfolio={loadUsersPortfolio} />   }
                 </Fragment>
             )
         }else{
@@ -124,12 +123,36 @@ const PortfolioDetails = () => {
         }
     }
 
+    const convertToUsd = (price) => {
+        if(currency === 'usd'){
+            //do nothing
+            return price;
+            //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = price / btcExRateArray[currency].value;                                                                                                                                                                                                                                                                                                                                                        
+            //then to the desired currency which is usd in our case
+            const res2 = (btcExRateArray['usd'].value)*res;
+            return res2;
+        }
+    }
+
     const ShowPie = () => {
-        if(show === true){
-            return (<PieChart coins={coins} portfolioCoins={portfolio.coins} calculateCurrency={calculateCurrency} /> );
+        if(show === true ){
+            if(portfolio.sumOfPortfolio > 0){
+                return (<PieChart coins={coins} portfolioCoins={portfolio.coins} calculateCurrency={calculateCurrency} /> );
+            }
+            else{
+                return(<h3>Before you can see the pie chart you need to add at least one transaction!</h3>);
+            }
         }else{
             return (null);
         }
+    }
+
+    const setShowAndClick = () => {
+        setShow(!show);
+        setClicked(!clicked);
     }
 
     useEffect(()=>{
@@ -160,8 +183,9 @@ const PortfolioDetails = () => {
                             </Col>
                         </Row>
                         <Row >
-                            <Col style={{textAlign : 'left'}}>
-                                <Button variant='outline-primary'  onClick={()=>setShow(!show)} type="button">
+                            {
+                                coins.length > 0 ? <Col style={{textAlign : 'left'}}>
+                                <Button variant='outline-primary'  onClick={()=>setShowAndClick()} type="button" className={clicked ? 'active' : ''}>
                                 <img
                                     alt="chart-logo"
                                     src={chart}
@@ -169,7 +193,9 @@ const PortfolioDetails = () => {
                                     height="20"
                                     className="img"/>Show Pie Chart
                                 </Button>
-                            </Col>
+                            </Col> : null
+                            }
+                            
                             <Col>
                                 <ShowPie />
                             </Col>

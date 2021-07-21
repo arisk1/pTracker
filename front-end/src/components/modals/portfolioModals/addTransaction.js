@@ -1,16 +1,37 @@
 import React, { Fragment,useEffect,useState} from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form,Dropdown,InputGroup,DropdownButton } from 'react-bootstrap';
+import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 const AddTransaction = (props) => {
 
-    const {coin , addTransaction ,currency} = props
+    const {coin , addTransaction ,currency,currencyR,btcExRate,vsCurrencies} = props
 
     const [show, setShow] = useState(false);
     const [typeOfTransaction,setTypeOfTransaction] = useState("buy");
-    const [pricePerCoin,setPricePerCoin] = useState(coin.current_price);
     const [quantity,setQuantity] = useState(1);
+    const [pricePerCoin,setPricePerCoin] = useState(0);
     const [dateValue, setDateValue] = useState(new Date());
+    const [transactionCuurency, setTransactionCurrency] = useState(currencyR);
    
+    const calculateCurrencyModal = (price) => {
+        if(transactionCuurency === currencyR){
+            //do nothing
+            return price;
+        //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = price / btcExRate[currencyR].value;
+            if(transactionCuurency === 'btc'){
+                return res.toFixed(2);
+            }else{
+                //then to the desired currency
+                const res2 = (btcExRate[transactionCuurency].value)*res;
+                return res2.toFixed(2);
+            } 
+        }   
+    }
+
+
     const handleClose = () => setShow(false);
 
     const closeAndAddTransaction = (e) => {
@@ -24,8 +45,9 @@ const AddTransaction = (props) => {
     };
 
     const resetValues = () => {
-        setPricePerCoin(coin.current_price);
-        setQuantity(1)
+        setPricePerCoin(0);
+        setQuantity(1);
+        setTransactionCurrency(currencyR);
     }
 
     return(
@@ -54,15 +76,35 @@ const AddTransaction = (props) => {
                       <option value="transferout">Transfer out</option>
                     </Form.Control>
                 </Form.Group>
+                
                 <Form.Group controlId="formPricePerCoin">
-                    <Form.Label style={{fontSize : '18px'}}>Price Per Coin <span style={{fontSize : '17px',color : 'grey'}}>({(coin.symbol).toUpperCase()})</span></Form.Label>
+                    <Form.Label style={{fontSize : '18px'}}>Price Per Coin</Form.Label>
+                    <InputGroup >
+                    <DropdownButton
+                        menuAlign="left"
+                        as={InputGroup.Append}
+                        variant="outline-secondary"
+                        id="from"
+                        title={"Currency : " + transactionCuurency.toUpperCase()}
+                    >
+                        <Dropdown.Header>Choose desired currency</Dropdown.Header>
+                        <Dropdown.Divider />
+                        {vsCurrencies.map((ccurrency)=>{
+                            return <DropdownItem onClick={()=> setTransactionCurrency(ccurrency)}>{ccurrency}</DropdownItem>
+                        })}
+                    </DropdownButton>
                     <Form.Control
-                        onChange={(e)=>setPricePerCoin(e.target.value)}
+                        autoComplete="off"
+                        required
                         type="text"
                         name="name"
-                        placeholder={coin.current_price + " " + currency}
-                        required/>
+                        placeholder={"1 " + coin.symbol.toUpperCase() + " = " + calculateCurrencyModal(coin.current_price) + " " + btcExRate[transactionCuurency].unit}
+                        onChange={(e)=>setPricePerCoin(e.target.value)}
+                    />
+                    
+                </InputGroup>
                 </Form.Group>
+
                 <Form.Group controlId="formBasicQuantity">
                     <Form.Label style={{fontSize : '18px'}}>Quantity</Form.Label>
                     <Form.Control
@@ -77,7 +119,7 @@ const AddTransaction = (props) => {
                     <Form.Control
                         type="text"
                         name="name"
-                        placeholder={pricePerCoin*quantity + " " + currency}
+                        placeholder={pricePerCoin*quantity + " " + btcExRate[transactionCuurency].unit}
                         disabled />
                 </Form.Group> : null }
                 <Form.Group controlId="formBasicQuantity">

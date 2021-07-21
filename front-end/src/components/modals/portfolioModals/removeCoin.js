@@ -5,7 +5,7 @@ const RemoveCoinModal = (props) => {
 
     const { coins } = props
     const [show, setShow] = useState(false);
-    const [rCoin,setrCoin] = useState("");
+    const [rCoin,setCoin] = useState(" ");
     const [error,setError] = useState(false);
 
     const ShowError = () => {
@@ -26,9 +26,13 @@ const RemoveCoinModal = (props) => {
 
     const closeAndRemove = (e) => {
         e.preventDefault();
-        props.removeCoin(rCoin,props.pid)
-        setShow(false)
-        
+        if(rCoin === " " && coins.length > 0){
+            props.removeCoin(coins[0].id,props.pid)
+        }else{
+            props.removeCoin(rCoin,props.pid)
+        }
+        setShow(false);
+        setCoin(" ")
     }
     
     const handleShow = () => {
@@ -36,16 +40,9 @@ const RemoveCoinModal = (props) => {
         setError(false)
     };
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
-
 
     return(
         <Fragment>
-            {console.log(coins)}
             <Button variant="outline-danger" onClick={handleShow}>Remove Coin</Button>{' '}
 
             <Modal show={show} onHide={handleClose}>
@@ -58,15 +55,16 @@ const RemoveCoinModal = (props) => {
                        <Form.Label style={{color: 'grey',fontSize : '14px'}}>Choose the coin from your portfolio you want to remove</Form.Label>
                         <Form.Control
                             as="select"
-                            onChange={(e)=>setrCoin(e.target.value)}
+                            onChange={(e)=>setCoin(e.target.value)}
+                            onShow={()=>console.log(coins)}
                             type="text"
                             name="name"
                             placeholder="Enter coin's name..."
                             required
-                            options={options}>
+                            >
                                 {coins.map((coin)=>{
                                     return (
-                                        <option key={coin.id} value={coin.id}>
+                                        <option  key={coin.id} value={coin.id}>
                                            {coin.name}
                                         </option>
                                     )
