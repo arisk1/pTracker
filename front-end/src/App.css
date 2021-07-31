@@ -192,6 +192,11 @@ div.container {
     grid-gap: 1rem;
   }
 
+  .grid-3-conv-modal {
+    grid-template-columns: 46% auto 46%;
+    grid-gap: 1rem;
+  }
+
 /* extras */
 .fa-eye {
     text-align: center !important;

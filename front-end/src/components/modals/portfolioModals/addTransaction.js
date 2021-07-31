@@ -89,8 +89,8 @@ const AddTransaction = (props) => {
                     >
                         <Dropdown.Header>Choose desired currency</Dropdown.Header>
                         <Dropdown.Divider />
-                        {vsCurrencies.map((ccurrency)=>{
-                            return <DropdownItem onClick={()=> setTransactionCurrency(ccurrency)}>{ccurrency}</DropdownItem>
+                        {vsCurrencies.map((ccurrency,idx)=>{
+                            return <DropdownItem key={idx} onClick={()=> setTransactionCurrency(ccurrency)}>{ccurrency}</DropdownItem>
                         })}
                     </DropdownButton>
                     <Form.Control
