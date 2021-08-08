@@ -25,7 +25,7 @@ const PortfolioSpecs = (props) => {
         <Col  className='p-details'>
             <Row>
                 <Col className="text-bold">
-                24hr Portfolio Change:<br/><PercChange perc_change={percChangeCalc(portfolio.portfolioChange,portfolio.sumPosition)} />
+                24hr Portfolio Change:<br/><PercChange perc_change={percChangeCalc(portfolio.portfolioChange,portfolio.sumOfPortfolio)} />
                 </Col>
             </Row>
             <Row>
