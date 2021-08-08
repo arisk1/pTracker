@@ -292,6 +292,10 @@ div.container {
     padding-top: 25px;
 }
 
+.row-bottom {
+    padding-bottom: 25px;
+}
+
 inside-row-top-header {
     padding-top: 25px ;
     padding-bottom: 10px;

@@ -52,6 +52,7 @@ const Portfolio = (props) => {
     }
 
     const percChangeCalc = (pnl , position ) => {
+        console.log(position)
         if(pnl < 0){
             let x = (100*(-1*pnl)) / position;
             return (-1*x) 
@@ -142,8 +143,8 @@ const Portfolio = (props) => {
     const NotAuthenticated = () => {
         return(
             <Container>
-            <Row className='row-top mr-0 ml-0'  >
-                <Col style={{backgroundColor: "lightblue", textAlign : 'left'}}>
+            <Row className='row-top mr-0 ml-0' >
+                <Col style={{backgroundColor: "lightblue", textAlign : 'left',borderRadius: '50px 50px 0 0'}}>
                     <Row className='inside-row-top-header mr-0 ml-0' >
                         <Col>
                             <p style={{padding : '25px',marginBottom : '0px'}} >
@@ -160,11 +161,7 @@ const Portfolio = (props) => {
                         </p>
                         </Col>
                     </Row>
-                    <Row className='mr-0 ml-0'>
-                        <Col>
-                       
-                        </Col>
-                    </Row>
+                   
                     <Row className='mr-0 ml-0'>
                         <Col >
                         <p style={{paddingLeft : '25px',fontSize : '13px'}} >
@@ -175,8 +172,26 @@ const Portfolio = (props) => {
                         </Col>
                     </Row>
                 </Col>
-                <Col style={{backgroundColor: "grey"}}>
-                    some intresting text 
+                </Row>
+                <Row  className='row-bottom mr-0 ml-0'>
+                <Col style={{backgroundColor: "#497586" , borderRadius: '0 0 50px 50px', textAlign : 'right'}}>
+                    <Row style={{paddingTop : '10px'}}>
+                    <Col>
+                            <p style={{padding : '25px',marginBottom : '0px'}} >
+                            <h5 className='mb-0' style={{fontWeight : 'bold',paddingRight : '20px',paddingLeft : '20px'}}>Advantages of having a Personalized Portfolio</h5>
+                            <ListGroup variant="flush" style={{fontSize : '14px'}} >
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>Have your own portfolio dashboard in which you can see information about all your of your portfolios </ListGroup.Item>
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>Check the sum of any portfolio you own</ListGroup.Item>
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>See your Profit and Loss overall or for each individual portfolio</ListGroup.Item>
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>Always know the 24hour change that happened on your portfolio and the number of coins you own</ListGroup.Item>
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>Check the history of the transactions that you made and know the PnL for each of them</ListGroup.Item>
+                                <ListGroup.Item style={{backgroundColor: "inherit"}}>Have a pie chart representation of your portfolio</ListGroup.Item>
+
+                            </ListGroup>
+                            </p>
+                        </Col>
+                    </Row>
+                    
                 </Col>
             </Row>
             </Container>

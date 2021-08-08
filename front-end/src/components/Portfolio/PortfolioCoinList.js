@@ -64,7 +64,10 @@ const PortfolioCoinList = (props) => {
 
 
     const percChangeCalc = (pnl , position ) => {
-        if(pnl < 0){
+        if(position === 0){
+            return 0
+        }
+        else if(pnl < 0){
             let x = (100*(-1*pnl)) / position;
             return (-1*x) 
         }else{
