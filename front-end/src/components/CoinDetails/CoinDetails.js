@@ -5,7 +5,6 @@ import CurrencyContext from '../../context/currency/currencyContext';
 import  {coinInfo,exchangeRates } from '@arisk1/cg-functions';
 import Spinner from '../Spinner/Spinner';
 import NotFound from '../NotFound/NotFound';
-import axios from 'axios';
 
 const CoinDetails = () => {
 
@@ -22,8 +21,6 @@ const CoinDetails = () => {
             try{
                 const res2 = await coinInfo(coinid);
                 const res = await exchangeRates();
-                // const url = "https://api.coingecko.com/api/v3" + "/coins/" + coinid;
-                // const res2 = await axios.get(url);
                 setCoin(res2.data);
                 setBtcExRateArray(res.data.rates);
             }catch(e){
