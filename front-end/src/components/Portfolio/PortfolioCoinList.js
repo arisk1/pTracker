@@ -153,7 +153,7 @@ const PortfolioCoinList = (props) => {
                                 {coin.market_cap_rank}
                             </Col>
                             <Col style={{textAlign: 'left',fontSize : '12px'}}>
-                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                                <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                             </Col>
                             <Col>{(coin.current_price).toLocaleString()}</Col>
                             <Col> 
@@ -226,7 +226,7 @@ const PortfolioCoinList = (props) => {
                                 {coin.market_cap_rank}
                             </Col>
                             <Col style={{textAlign: 'left',fontSize : '12px'}}>
-                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                                <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                             </Col>
                             <Col>{(coin.current_price).toLocaleString()}</Col>
                             <Col> 

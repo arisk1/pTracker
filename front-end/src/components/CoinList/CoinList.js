@@ -4,6 +4,8 @@ import upArrow from './up-arrow.png';
 import downArrow from './down-arrow.png';
 import SmallPriceChart from '../PriceChart/SmallPriceChart';
 import PercChange from '../PercChange/PercChange';
+import { Link} from 'react-router-dom';
+
 
 const CoinList = (props) => {
     const { coins } = props
@@ -69,7 +71,8 @@ const CoinList = (props) => {
                                 {coin.market_cap_rank}
                             </Col>
                             <Col style={{textAlign: 'left'}}>
-                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                                <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
+                                
                             </Col>
                             <Col>{coin.current_price}</Col>
                             <Col> 
@@ -97,7 +100,7 @@ const CoinList = (props) => {
                                 {coin.market_cap_rank}
                             </Col>
                             <Col style={{textAlign: 'left'}}>
-                                <img alt={coin.id} className="img" src={coin.image}/>{coin.name}
+                                <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                             </Col>
                             <Col>{coin.current_price}</Col>
                             <Col> 

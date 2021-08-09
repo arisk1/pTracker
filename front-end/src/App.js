@@ -15,6 +15,7 @@ import PortfolioDetails from './components/Portfolio/PortfolioDetails'
 import Converter from './components/Tools/Converter';
 import PriceCalculator from './components/Tools/PriceCalculator';
 import TransactionHistory from './components/TransactionHistory/TransactionHistory';
+import CoinDetails from './components/CoinDetails/CoinDetails';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                         <Route exact path="/portfolio" component={Portfolio}></Route>
                         <PrivateRoute exact path="/portfolio/:pname" component={PortfolioDetails}></PrivateRoute>
                         <PrivateRoute exact path="/portfolio/:pname/history/:coinid" component={TransactionHistory}></PrivateRoute>
+                        <Route exact path='/coins/:coinid' component ={CoinDetails}></Route>
                         <Route exact path="/heatmap" component={Heatmap}></Route>
                         <Route exact path="/converter" component={Converter}></Route>
                         <Route exact path="/price-calculator" component={PriceCalculator}></Route>

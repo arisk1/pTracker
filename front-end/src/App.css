@@ -96,6 +96,13 @@ body .bg-dark {
     margin-right: 10px;
 }
 
+.coin-details-img {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+    
+}
+
 .img-coinlist {
     width: 18px;
     height: auto;
