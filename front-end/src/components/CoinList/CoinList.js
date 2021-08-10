@@ -74,7 +74,7 @@ const CoinList = (props) => {
                                 <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                                 
                             </Col>
-                            <Col>{coin.current_price}</Col>
+                            <Col>{coin.current_price.toLocaleString()}</Col>
                             <Col> 
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>

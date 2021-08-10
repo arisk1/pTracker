@@ -50,7 +50,7 @@ const PortfolioDetails = () => {
                 }
             }catch(e){
                 console.log(e)
-                if(e.response.status === 404){
+                if(e.response.status === 404 || e.response.status === 400){
                     setNotFound(true)
                 }
             }

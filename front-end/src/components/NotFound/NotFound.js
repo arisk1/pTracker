@@ -5,7 +5,7 @@ const NotFound = () => {
     return (
         <div>
             <br />
-            <i class="far fa-grin-beam-sweat" />{" "}<i class="far fa-grin-beam-sweat" />{" "}<i class="far fa-grin-beam-sweat" />
+            <i className="far fa-grin-beam-sweat" />{" "}<i className="far fa-grin-beam-sweat" />{" "}<i className="far fa-grin-beam-sweat" />
             <h3>Oops, this page does not exist</h3><br />
             <h5>Click
             {" "}<Link to="/" style={{fontWeight:"bold"}}>here</Link>{" "}

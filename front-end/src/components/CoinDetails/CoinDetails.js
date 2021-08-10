@@ -52,7 +52,7 @@ const CoinDetails = () => {
                         </Row>
                         <Row>
                             <Col style={{padding : '10px',fontSize : '25px'}}>
-                                Current Price : {coin.market_data.current_price[currency]}{' '}{btcExRateArray[currency].unit}
+                                Current Price : {coin.market_data.current_price[currency].toLocaleString()}{' '}{btcExRateArray[currency].unit}
                             </Col>
                         </Row>
                         <Row>
