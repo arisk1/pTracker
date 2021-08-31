@@ -338,3 +338,13 @@ inside-row-top-header {
       margin-right: 5px;
       background-color: grey;
   }
+
+  #contract-dropdown {
+      padding : 0px;
+      color : black;
+      background-color: lightblue;
+      border-radius: 5px 5px 5px 5px;
+      font-weight: 500;
+  }
+
+

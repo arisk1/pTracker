@@ -1,11 +1,14 @@
 import React, {useEffect, useState, useContext, Fragment} from 'react';
 import { useParams} from "react-router"; 
-import {Container,Row,Col,ListGroup} from 'react-bootstrap';
+import {Container,Row,Col,ListGroup,Dropdown,NavDropdown} from 'react-bootstrap';
 import CurrencyContext from '../../context/currency/currencyContext';
-import  {coinInfo,coinList,exchangeRates,globalInfo } from '@arisk1/cg-functions';
+import  {coinInfo,coinList,exchangeRates,globalInfo,chartInfo } from '@arisk1/cg-functions';
 import Spinner from '../Spinner/Spinner';
 import NotFound from '../NotFound/NotFound';
 import { Link} from 'react-router-dom';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,ResponsiveContainer } from 'recharts';
+
+
 
 const CoinDetails = () => {
 
@@ -17,6 +20,8 @@ const CoinDetails = () => {
     const [btcExRateArray , setBtcExRateArray] = useState({});
     const [globalInf,setGlobalInfo] = useState({});
     const [notfound , setNotFound] = useState(false);
+    const [chartData , setChartData] = useState([]);
+    const [timeline,setTimeline] = useState(1);
 
     const normalizeUrl = (url) => {
         if(url.includes('https://')){
@@ -94,6 +99,10 @@ const CoinDetails = () => {
                 const res2 = await coinInfo(coinid);
                 const res = await exchangeRates();
                 const res3 = await globalInfo();
+                const res4 = await chartInfo(coinid,currency,timeline);
+                setChartData(((res4.data).prices).map((priceAndDate,idx)=>{
+                    return { "name" : new Date(priceAndDate[0]) , "value" : priceAndDate[1]}
+                }))
                 setCoin(res2.data);
                 setGlobalInfo(res3.data);
                 setBtcExRateArray(res.data.rates);
@@ -105,6 +114,8 @@ const CoinDetails = () => {
         }
         fetchData();
     },[])
+
+
 
     return(
         <Container>
@@ -124,6 +135,27 @@ const CoinDetails = () => {
                                 <span style={{backgroundColor: "grey",borderRadius: '5px 5px 5px 5px',padding : '3px',fontWeight : 'bold',color : 'white'}} >Links & Info</span>
                             </Col>
                         </Row>
+                        {coin.platforms[""] !== "" ?
+                        <Row>
+                        <Col style={{padding : '10px',textAlign : 'right'}}>
+                            Contract 
+                        </Col>
+                        <Col style={{padding : '10px',textAlign : 'left'}}>
+                        
+                            <NavDropdown bg="dark" title={"Watch Addresses"} id="contract-dropdown">
+                            <Dropdown.Header> List Of Contract Addresses - click the address to copy it</Dropdown.Header>
+                            <Dropdown.Divider />
+                            {Object.keys(coin.platforms).map(platform => {
+                                return(<NavDropdown.Item>
+                                    {platform + " -> " + coin.platforms[platform]  }
+                                </NavDropdown.Item>)
+                            })}
+                            </NavDropdown>         
+                        </Col>
+                    </Row>
+                        
+                        : null}
+                        
                         <Row>
                             <Col style={{padding : '10px',textAlign : 'right'}}>
                                 Website 
@@ -228,6 +260,11 @@ const CoinDetails = () => {
                                             <ListGroup.Item style={{backgroundColor : '#ECECEC'}}>
                                             24 Hour Trading Vol <br/> {coin.market_data.total_volume[currency].toLocaleString()}{' '}{btcExRateArray[currency].unit}
                                             </ListGroup.Item>
+                                            {"total_value_locked" in coin.market_data && coin.market_data.total_value_locked !== null ? 
+                                                <ListGroup.Item style={{backgroundColor : '#ECECEC'}}>
+                                                    Total Value Locked <br/> {coin.market_data.total_value_locked["usd"].toLocaleString()}{' '}{btcExRateArray[currency].unit}
+                                                </ListGroup.Item>
+                                            :null}
                                         </ListGroup>
                                     </Col>
                                     <Col>
@@ -246,6 +283,11 @@ const CoinDetails = () => {
                                             { coin.market_data.max_supply !== null ? 
                                                 <ListGroup.Item style={{backgroundColor : '#ECECEC'}}>
                                                     Max Supply <br/> {coin.market_data.max_supply.toLocaleString()}
+                                                </ListGroup.Item>
+                                            :null}
+                                            { "mcap_to_tvl_ratio" in coin.market_data && coin.market_data.mcap_to_tvl_ratio !== null ? 
+                                                <ListGroup.Item style={{backgroundColor : '#ECECEC'}}>
+                                                    MCap / TVL Ratio <br/> {coin.market_data.mcap_to_tvl_ratio.toLocaleString()}
                                                 </ListGroup.Item>
                                             :null}
                                         </ListGroup>
@@ -328,10 +370,32 @@ const CoinDetails = () => {
                         </Row>
                     </Col>
                     </Row>
-                    <Row  style={{   }}>
+                    <Row style={{padding : '20px'}} >
+                        
+                        {chartData.length > 0 ? 
                         <Col>
-                            chart
+                            <Row>
+                                <Col style={{fontSize : '30px' , textDecoration : 'underline'}}>
+                                    Currency : {currency}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col style={{width:"100%", height:300}}>
+                                    <ResponsiveContainer width="100%">
+                                        <LineChart width={600} height={300} data={chartData}  margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                                        <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} dot={false} />
+                                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis domain={['auto', 'auto']}/>
+                                        <Tooltip />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </Col>
+                            </Row>
                         </Col>
+                        : <Spinner />
+                        }
+                        
                     </Row>
                     </Fragment>
                 }
