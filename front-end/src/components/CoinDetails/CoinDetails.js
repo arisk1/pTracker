@@ -1,13 +1,12 @@
 import React, {useEffect, useState, useContext, Fragment} from 'react';
 import { useParams} from "react-router"; 
-import {Container,Row,Col,ListGroup,Dropdown,NavDropdown} from 'react-bootstrap';
+import {Container,Row,Col,ListGroup,Dropdown,NavDropdown,Button,Navbar} from 'react-bootstrap';
 import CurrencyContext from '../../context/currency/currencyContext';
 import  {coinInfo,coinList,exchangeRates,globalInfo,chartInfo } from '@arisk1/cg-functions';
 import Spinner from '../Spinner/Spinner';
 import NotFound from '../NotFound/NotFound';
 import { Link} from 'react-router-dom';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,ResponsiveContainer } from 'recharts';
-
 
 
 const CoinDetails = () => {
@@ -22,6 +21,9 @@ const CoinDetails = () => {
     const [notfound , setNotFound] = useState(false);
     const [chartData , setChartData] = useState([]);
     const [timeline,setTimeline] = useState(1);
+    const [clicked,setClicked] = useState(['info','outline-info','outline-info','outline-info']);
+    const [chartLoading,setChartLoading]=useState(false);
+    const [exchangesBoolean,setExchangeBoolean]=useState(false);
 
     const normalizeUrl = (url) => {
         if(url.includes('https://')){
@@ -76,7 +78,6 @@ const CoinDetails = () => {
     }
 
     const parseISODate = (dateIso) => {
-        console.log(dateIso)
         const x = new Date(dateIso)
         return x.getFullYear()+ ' / ' + (x.getMonth()+1) + ' / '+x.getDate() + ' - ' + x.toLocaleTimeString() ;
     }
@@ -99,10 +100,6 @@ const CoinDetails = () => {
                 const res2 = await coinInfo(coinid);
                 const res = await exchangeRates();
                 const res3 = await globalInfo();
-                const res4 = await chartInfo(coinid,currency,timeline);
-                setChartData(((res4.data).prices).map((priceAndDate,idx)=>{
-                    return { "name" : new Date(priceAndDate[0]) , "value" : priceAndDate[1]}
-                }))
                 setCoin(res2.data);
                 setGlobalInfo(res3.data);
                 setBtcExRateArray(res.data.rates);
@@ -114,6 +111,17 @@ const CoinDetails = () => {
         }
         fetchData();
     },[])
+
+    useEffect(()=>{
+        const drawChart = async() => {
+            const res4 = await chartInfo(coinid,currency,timeline);
+            setChartData(((res4.data).prices).map((priceAndDate,idx)=>{
+                return { "name" : new Date(priceAndDate[0]) , "value" : priceAndDate[1]}
+            }))
+            setChartLoading(false);
+        }
+        drawChart();
+    },[timeline,currency])
 
 
 
@@ -371,12 +379,42 @@ const CoinDetails = () => {
                     </Col>
                     </Row>
                     <Row style={{padding : '20px'}} >
-                        
+                        <Col>
+                            <Button variant="info" onClick={()=>setExchangeBoolean(!exchangesBoolean)}>
+                                Click to learn where to buy
+                            </Button>
+                            {exchangesBoolean ? 
+                                <h1>buy allllllllllll</h1> 
+                            : null }
+                        </Col>
+                    </Row>
+                    <Row style={{padding : '20px'}} >
                         {chartData.length > 0 ? 
                         <Col>
                             <Row>
-                                <Col style={{fontSize : '30px' , textDecoration : 'underline'}}>
-                                    Currency : {currency}
+                                <Col>
+                                    <Row>
+                                        <Col style={{fontSize : '30px' , textDecoration : 'underline'}}>
+                                        Currency : {currency}
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button variant={clicked[0]} onClick={()=>{setChartLoading(true);setTimeline(1);setClicked(['info','outline-info','outline-info','outline-info'])}}>24hr</Button>{' '}
+                                            <Button variant={clicked[1]} onClick={()=>{setChartLoading(true);setTimeline(7);setClicked(['outline-info','info','outline-info','outline-info'])}}>7d</Button>{' '}
+                                            <Button variant={clicked[2]} onClick={()=>{setChartLoading(true);setTimeline(30);setClicked(['outline-info','outline-info','info','outline-info'])}}>30d</Button>{' '}
+                                            <Button variant={clicked[3]} onClick={()=>{setChartLoading(true);setTimeline(365);setClicked(['outline-info','outline-info','outline-info','info'])}}>365d</Button>{' '}
+                                        </Col>
+                                    </Row> 
+                                    {chartLoading ? 
+                                    <Row>
+                                        <Col>
+                                            <h3>Chart Loading. . .</h3>
+                                        </Col>
+                                    </Row>
+                                    :null
+                                    }
+                                    
                                 </Col>
                             </Row>
                             <Row>
