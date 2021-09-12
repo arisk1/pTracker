@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext, Fragment} from 'react';
 import { useParams} from "react-router"; 
-import {Container,Row,Col,ListGroup,Dropdown,NavDropdown,Button,Navbar} from 'react-bootstrap';
+import {Container,Row,Col,ListGroup,Dropdown,NavDropdown,Button,Modal} from 'react-bootstrap';
 import CurrencyContext from '../../context/currency/currencyContext';
 import  {coinInfo,coinList,exchangeRates,globalInfo,chartInfo } from '@arisk1/cg-functions';
 import Spinner from '../Spinner/Spinner';
@@ -25,6 +25,12 @@ const CoinDetails = () => {
     const [clicked,setClicked] = useState(['info','outline-info','outline-info','outline-info']);
     const [chartLoading,setChartLoading]=useState(false);
     const [exchangesBoolean,setExchangeBoolean]=useState(false);
+    const [show, setShow] = useState({
+        network : '',
+        address : '',
+        modalshow : 'false'
+    });
+
 
     const normalizeUrl = (url) => {
         if(url.includes('https://')){
@@ -120,8 +126,25 @@ const CoinDetails = () => {
         }
     }
 
-    const myAlert = () => {
-        alert("Copied Contract Address to Clipboard!");
+    const ModalCopyToClipboard = () => {
+        return(
+            <Modal show={show.modalshow} onHide={()=>setShow({network : '' , address : '' ,modalshow : false})}>
+        <Modal.Header closeButton>
+          <Modal.Title>Contract Address </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <span>Token id : {coin.id}<br/></span>
+            <span>Network : {show.network}<br/></span>
+            <span>Contract Address : {show.address}<br/></span>
+            <span style={{color : 'green'}}>Contract Address Successfully Copied to Clipboard!</span>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={()=>setShow({network : '' , address : '' ,modalshow : false})}>
+            OK
+            </Button>
+            </Modal.Footer>
+            </Modal>
+        )
     }
 
     useEffect(() => {  
@@ -184,13 +207,15 @@ const CoinDetails = () => {
                             <Dropdown.Header> List Of Contract Addresses - click the address to copy it</Dropdown.Header>
                             <Dropdown.Divider />
                             {Object.keys(coin.platforms).map((platform,idx) => {
-                                return(<NavDropdown.Item key={idx} onClick={() => {navigator.clipboard.writeText(coin.platforms[platform]);myAlert();}}
+                                return(<NavDropdown.Item key={idx} onClick={() => {navigator.clipboard.writeText(coin.platforms[platform]);setShow({ network : platform ,address : coin.platforms[platform],modalshow : true});}}
                                 >
                                     {platform + " -> " + coin.platforms[platform]  }
                                 </NavDropdown.Item>)
+                                
                             })}
                             </NavDropdown>
                         </Col>
+                        {show.modalshow ? <ModalCopyToClipboard /> : null }
                     </Row>
                         
                         : null}
