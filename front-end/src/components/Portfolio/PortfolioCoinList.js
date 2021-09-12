@@ -155,7 +155,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left',fontSize : '12px'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                             </Col>
-                            <Col>{(coin.current_price).toLocaleString()}</Col>
+                            <Col>{(coin.current_price).toLocaleString()}{' '}{currency}</Col>
                             <Col> 
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>
@@ -228,7 +228,7 @@ const PortfolioCoinList = (props) => {
                             <Col style={{textAlign: 'left',fontSize : '12px'}}>
                                 <img alt={coin.id} className="img" src={coin.image}/><Link style={{ color: '#000',fontWeight : 'bold' }} to={{pathname:`/coins/${coin.id}`}} >{coin.name}</Link>
                             </Col>
-                            <Col>{(coin.current_price).toLocaleString()}</Col>
+                            <Col>{(coin.current_price).toLocaleString()}{' '}{currency}</Col>
                             <Col> 
                                 <PercChange perc_change={coin.price_change_percentage_24h_in_currency} />
                             </Col>

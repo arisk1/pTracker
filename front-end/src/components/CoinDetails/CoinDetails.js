@@ -9,6 +9,7 @@ import { Link} from 'react-router-dom';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,ResponsiveContainer } from 'recharts';
 
 
+
 const CoinDetails = () => {
 
     let { coinid } = useParams();
@@ -94,6 +95,35 @@ const CoinDetails = () => {
         return percentage.toFixed(2) + "%";
     }
 
+    const shortenString = (str) => {
+        if(str.length > 6){
+            return str.substr(0, 3) + '...' + str.substr(str.length-3,str.length);
+        }
+        return str;
+    }
+
+    const calculateCurrency = (portfoliosum) => {
+        if(currency === 'usd'){
+            //do nothing
+            return portfoliosum;
+        //calculate base on btc exchange rate
+        }else {
+            //first convert to btc 
+            const res = portfoliosum / btcExRateArray['usd'].value;
+            if(currency === 'btc'){
+                return res;
+            }else{
+                //then to the desired currency
+                const res2 = (btcExRateArray[currency].value)*res;
+                return res2;
+            } 
+        }
+    }
+
+    const myAlert = () => {
+        alert("Copied Contract Address to Clipboard!");
+    }
+
     useEffect(() => {  
         const fetchData = async() => {
             try{
@@ -153,12 +183,13 @@ const CoinDetails = () => {
                             <NavDropdown bg="dark" title={"Watch Addresses"} id="contract-dropdown">
                             <Dropdown.Header> List Of Contract Addresses - click the address to copy it</Dropdown.Header>
                             <Dropdown.Divider />
-                            {Object.keys(coin.platforms).map(platform => {
-                                return(<NavDropdown.Item>
+                            {Object.keys(coin.platforms).map((platform,idx) => {
+                                return(<NavDropdown.Item key={idx} onClick={() => {navigator.clipboard.writeText(coin.platforms[platform]);myAlert();}}
+                                >
                                     {platform + " -> " + coin.platforms[platform]  }
                                 </NavDropdown.Item>)
                             })}
-                            </NavDropdown>         
+                            </NavDropdown>
                         </Col>
                     </Row>
                         
@@ -169,9 +200,9 @@ const CoinDetails = () => {
                                 Website 
                             </Col>
                             <Col style={{padding : '10px',textAlign : 'left'}}>
-                                {coin.links.homepage.map((homepage)=>{
+                                {coin.links.homepage.map((homepage,idx)=>{
                                     if(homepage !== ""){
-                                        return (<span style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:homepage}}  target="_blank">{normalizeUrl(homepage)}</Link></span>)
+                                        return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:homepage}}  target="_blank">{normalizeUrl(homepage)}</Link></span>)
                                     }
                                 })}                            
                             </Col>
@@ -181,9 +212,9 @@ const CoinDetails = () => {
                                 Explorers 
                             </Col>
                             <Col style={{padding : '10px',textAlign : 'left' , display : 'flex',flexWrap : 'wrap'}}>
-                                {coin.links.blockchain_site.map((explorer)=>{
+                                {coin.links.blockchain_site.map((explorer,idx)=>{
                                     if(explorer !== ""){
-                                        return (<span style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:explorer}}  target="_blank">{normalizeUrl(explorer)}</Link></span>)
+                                        return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:explorer}}  target="_blank">{normalizeUrl(explorer)}</Link></span>)
                                     }
                                 })}
                             </Col>
@@ -193,9 +224,9 @@ const CoinDetails = () => {
                                 Community 
                             </Col>
                             <Col style={{padding : '10px',textAlign : 'left',display : 'flex',flexWrap : 'wrap'}}>
-                            {coin.links.official_forum_url.map((forum)=>{
+                            {coin.links.official_forum_url.map((forum,idx)=>{
                                     if(forum !== ""){
-                                        return (<span style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:forum}} target="_blank">{normalizeUrl(forum)}</Link></span>)
+                                        return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:forum}} target="_blank">{normalizeUrl(forum)}</Link></span>)
                                     }
                             })}
                             {coin.links.twitter_screen_name !== null && coin.links.twitter_screen_name !== ""  ? 
@@ -232,9 +263,9 @@ const CoinDetails = () => {
                                 Tags 
                             </Col>
                             <Col style={{padding : '10px',textAlign : 'left'}}>
-                                {coin.categories.map((category)=>{
+                                {coin.categories.map((category,idx)=>{
                                         if(category !== ""){
-                                            return (<span style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><span style={{color : "#000" , fontWeight : '500'}}>{category}</span></span>)
+                                            return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><span style={{color : "#000" , fontWeight : '500'}}>{category}</span></span>)
                                         }
                                 })}
                             </Col>
@@ -383,11 +414,46 @@ const CoinDetails = () => {
                             <Button variant="info" onClick={()=>setExchangeBoolean(!exchangesBoolean)}>
                                 Click to learn where to buy
                             </Button>
-                            {exchangesBoolean ? 
-                                <h1>buy allllllllllll</h1> 
-                            : null }
+                            
+                               
+                            
                         </Col>
                     </Row>
+                    {exchangesBoolean ? 
+                    <Fragment>
+                        <ListGroup variant="flush">
+                        <ListGroup.Item
+                            style={{
+                            backgroundColor: '#C0C0C0'
+
+                        }}>
+                        <Row style={{fontWeight : '500'}}>
+                            <Col>Exchange</Col>
+                            <Col> Pair</Col>
+                            <Col> Price</Col>
+                            <Col>Trust Score</Col>
+                        </Row>
+                        </ListGroup.Item>
+                        {coin.tickers.map((markets,idx)=>{
+                            return (
+                                <ListGroup.Item key={idx}>
+                                <Row style={{fontWeight : '500'}}>
+                                    <Col> {markets.market.name}</Col>
+                                    <Col  > <Link title="This Link will take you to the exchange" to={{pathname : markets.trade_url}} target="_blank" style={{textDecoration : 'underline'}}>{shortenString(markets.base)}/{shortenString(markets.target)}</Link></Col>
+                                    <Col> {calculateCurrency(markets.converted_last['usd'])}{' '}{btcExRateArray[currency].unit}</Col>
+                                    <Col> <span style={{height : '15px',width : '15px' , borderRadius : '50%',display:'inline-block',backgroundColor : markets.trust_score}}></span></Col>
+                                </Row>
+                                </ListGroup.Item>
+                            )
+                        })}
+                        <Row>
+                            <Col style={{padding : '20px'}}>
+                                <Button  variant='outline-danger' onClick={()=>setExchangeBoolean(false)}>Close Exchanges' List</Button>
+                            </Col>
+                        </Row>
+                    </ListGroup>
+                    </Fragment>
+                    : null}
                     <Row style={{padding : '20px'}} >
                         {chartData.length > 0 ? 
                         <Col>
