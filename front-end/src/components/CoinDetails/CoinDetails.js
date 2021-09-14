@@ -28,7 +28,7 @@ const CoinDetails = () => {
     const [show, setShow] = useState({
         network : '',
         address : '',
-        modalshow : 'false'
+        modalshow : false
     });
 
 
@@ -224,7 +224,7 @@ const CoinDetails = () => {
                             <Col style={{padding : '10px',textAlign : 'right'}}>
                                 Website 
                             </Col>
-                            <Col style={{padding : '10px',textAlign : 'left'}}>
+                            <Col style={{padding : '10px',textAlign : 'left', display : 'flex',flexWrap : 'wrap'}}>
                                 {coin.links.homepage.map((homepage,idx)=>{
                                     if(homepage !== ""){
                                         return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><Link style={{color : "#000" , fontWeight : '500'}} to={{pathname:homepage}}  target="_blank">{normalizeUrl(homepage)}</Link></span>)
@@ -287,7 +287,7 @@ const CoinDetails = () => {
                         <Col style={{padding : '10px',textAlign : 'right'}}>
                                 Tags 
                             </Col>
-                            <Col style={{padding : '10px',textAlign : 'left'}}>
+                            <Col style={{padding : '10px',textAlign : 'left', display : 'flex',flexWrap : 'wrap'}}>
                                 {coin.categories.map((category,idx)=>{
                                         if(category !== ""){
                                             return (<span key={idx} style={{backgroundColor: "lightblue",borderRadius: '5px 5px 5px 5px',padding : '3px',margin : '2px'}} ><span style={{color : "#000" , fontWeight : '500'}}>{category}</span></span>)
