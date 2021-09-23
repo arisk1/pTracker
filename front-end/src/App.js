@@ -23,6 +23,7 @@ function App() {
         <CurrencyState>
         <AuthState>
         <Router >
+        
             <div className="App">
             <Header/>
                 <Container>
@@ -41,6 +42,7 @@ function App() {
                 </Container>
                 <Footer/>
             </div>
+            
         </Router>
         </AuthState>
         </CurrencyState>

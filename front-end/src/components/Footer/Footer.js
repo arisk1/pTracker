@@ -11,12 +11,12 @@ const Footer = () => {
                     <Col>©2021 pTracker</Col>
                 </Row>
             </Container>
-            <Container fluid className="Footer">
+            <Container fluid className="Footer" style={{paddingBottom : '8px'}}>
                 <Container
                     style={{
                     padding: '0 20px 0 20px'
                 }}>
-                    <Row>
+                    {/* <Row>
                         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                             <Row className="text-md-left">
                                 <Col >
@@ -57,7 +57,7 @@ const Footer = () => {
 
                             </Row>
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row className="cop">
                         <Col>©2021 pTracker</Col>
                     </Row>

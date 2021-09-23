@@ -25,6 +25,7 @@ const CoinDetails = () => {
     const [clicked,setClicked] = useState(['info','outline-info','outline-info','outline-info']);
     const [chartLoading,setChartLoading]=useState(false);
     const [exchangesBoolean,setExchangeBoolean]=useState(false);
+    const [bool , setBool] = useState(false); 
     const [show, setShow] = useState({
         network : '',
         address : '',
@@ -150,12 +151,14 @@ const CoinDetails = () => {
     useEffect(() => {  
         const fetchData = async() => {
             try{
+                setBool(true)
                 const res2 = await coinInfo(coinid);
                 const res = await exchangeRates();
                 const res3 = await globalInfo();
                 setCoin(res2.data);
                 setGlobalInfo(res3.data);
                 setBtcExRateArray(res.data.rates);
+                setBool(false)
             }catch(e){
                 if(e.response.status === 404){
                     setNotFound(true)
@@ -163,7 +166,7 @@ const CoinDetails = () => {
             }
         }
         fetchData();
-    },[])
+    },[coinid])
 
     useEffect(()=>{
         const drawChart = async() => {
@@ -174,7 +177,7 @@ const CoinDetails = () => {
             setChartLoading(false);
         }
         drawChart();
-    },[timeline,currency])
+    },[timeline,currency,coinid])
 
 
 
@@ -182,7 +185,7 @@ const CoinDetails = () => {
         <Container>
             {notfound ? <NotFound /> :
             <Fragment>
-            {( Object.keys(btcExRateArray).length === 0 || Object.keys(globalInf).length === 0  || Object.keys(coin).length ===0 ) ? <Spinner /> 
+            {( Object.keys(btcExRateArray).length === 0 || Object.keys(globalInf).length === 0  || Object.keys(coin).length ===0 ) || bool ? <Spinner /> 
                 :<Fragment>
                     <Row style={{ padding :'20px'}}>
                         <Col style={{fontSize : '35px',fontWeight : 'bold'}}>
